@@ -4,13 +4,11 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 10:49:22
+ * @Last Modified time: 2019-02-06 11:10:52
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH."reports\PIByPaymentModeChart.php";
-require APPPATH."reports\PIByPaymentModeBarChart.php";
-require APPPATH."reports\PIByLeadSourceLineChart.php";
+
 
 class Dashboard extends MY_Controller {
 
@@ -24,7 +22,7 @@ class Dashboard extends MY_Controller {
 
 		$content = $this->load->view('dashboard/main', ['report' => $report, 'PILSReport' => $PILSReport], TRUE);
 
-		$this->put_contents($content);
+		$this->put_contents($content,"Dashboard");
 			
 			
 	}
