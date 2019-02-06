@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-05 15:11:28
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 10:25:14
+ * @Last Modified time: 2019-02-06 10:45:29
  */
 
 ?>
@@ -15,7 +15,7 @@
 		$('.pibmp-chart-selector.bg-gray').removeClass('bg-gray');
 		$(this).addClass('bg-gray');
 		var chart = $(this).attr('chart');
-		$.post("<?= base_url('index.php/login/select_chart/') ?>"+chart, function(r){
+		$.post("<?= base_url('index.php/dashboard/select_chart/') ?>"+chart, function(r){
 			$('#pimp-chart').html(r);
 			$('#pimp-chart').css({opacity:'1'});
 		})
