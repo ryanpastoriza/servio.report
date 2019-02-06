@@ -4,14 +4,14 @@
  * @Author: ET
  * @Date:   2019-02-05 12:03:30
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 14:42:16
+ * @Last Modified time: 2019-02-06 14:51:59
  */
 require APPPATH."/libraries/koolreport/autoload.php";
 use \koolreport\querybuilder\DB;
 use \koolreport\querybuilder\MySQL;
 
 
-class PIByLeadSourceLineChart extends \koolreport\KoolReport
+class PIByLeadSourceBarChart extends \koolreport\KoolReport
 {
 
     use \koolreport\clients\Bootstrap;
