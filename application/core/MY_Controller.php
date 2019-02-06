@@ -30,8 +30,14 @@ class MY_Controller extends CI_Controller {
 	}
 	function put_contents($content,$contentHeader)
 	{
-		$vars = ['addStyles' => [],
-				'addPlugins' => []];
+		$vars = [
+					'addStyles'  => [ 
+										asset_url('plugins/datatables/dataTables.bootstrap.css'),
+										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css') 
+									],
+					'addPlugins' => [ asset_url('plugins/datatables/jquery.dataTables.min.js') ]
+				];
+
 
 
 		$content_vars = ['contentHeader' => $contentHeader,
