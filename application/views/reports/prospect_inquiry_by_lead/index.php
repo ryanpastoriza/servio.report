@@ -13,8 +13,17 @@
 			<table id="lead_table" class="table table-striped table-bordered" style="width:100%">
 	            <thead>
 	                <tr>
-	                    <th>First Name</th>
-	                    <th>Last Name</th>
+	                    <th rowspan="2">SOURCE OF SALE</th>
+
+						<?php foreach($base_model as $value): ?>
+							<th colspan="2"> <?= $value->name ?> </th>
+						<?php endforeach ?>
+	                </tr>
+	                <tr>
+	                	<?php foreach($base_model as $value): ?>
+							<th> Value </th>
+							<th> Pct </th>
+						<?php endforeach ?>
 	                </tr>
 	            </thead>
 	            <tbody>
@@ -25,7 +34,6 @@
 		</div>
 	</div>
 </div>
-
 
 <script>
 	
@@ -48,7 +56,7 @@
 	        // stateSave:true,
 	        columns:[
 	        			{'data':'source_of_sale'},
-	                    {'data':'lname'},
+	        			{'data':'value1'},
 			],
 			data: []
       	});
