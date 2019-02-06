@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 14:51:17
+ * @Last Modified time: 2019-02-06 15:56:30
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -14,6 +14,7 @@ require APPPATH."reports\PIByLeadSourceLineChart.php";
 require APPPATH."reports\PIByLeadSourceBarChart.php";
 
 require APPPATH."reports\PIStatusPieChart.php";
+require APPPATH."reports\PerDealerChart.php";
 
 
 class MY_Controller extends CI_Controller {
