@@ -4,9 +4,17 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 10:51:07
+ * @Last Modified time: 2019-02-06 14:51:17
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+require APPPATH."reports\PIByPaymentModeChart.php";
+require APPPATH."reports\PIByPaymentModeBarChart.php";
+require APPPATH."reports\PIByLeadSourceLineChart.php";
+require APPPATH."reports\PIByLeadSourceBarChart.php";
+
+require APPPATH."reports\PIStatusPieChart.php";
+
 
 class MY_Controller extends CI_Controller {
 
@@ -20,13 +28,13 @@ class MY_Controller extends CI_Controller {
 	{
 		
 	}
-	function put_contents($content)
+	function put_contents($content,$contentHeader)
 	{
 		$vars = ['addStyles' => [],
 				'addPlugins' => []];
 
 
-		$content_vars = ['contentHeader' => 'Servio-DMS Dashboard',
+		$content_vars = ['contentHeader' => $contentHeader,
 							'content' => $content
 						];
 
@@ -40,11 +48,11 @@ class MY_Controller extends CI_Controller {
 						'searchBar' => false,
 						'options' => ['Dashboard' => 
 										['icon' => 'fa fa-dashboard', 
-										'link' => base_url('index.php/dashboard')
+										'link' => base_url('dashboard')
 											],
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
-										'link' => base_url('index.php/reports')
+										'link' => base_url('reports')
 											]
 									],
 					];

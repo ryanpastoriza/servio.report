@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-05 12:03:30
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 10:23:20
+ * @Last Modified time: 2019-02-06 11:03:25
  */
 require APPPATH."/libraries/koolreport/autoload.php";
 use \koolreport\querybuilder\DB;
@@ -43,14 +43,6 @@ class PIByPaymentModeChart extends \koolreport\KoolReport
                         (SELECT count(id_c) WHERE payment_terms_c = 'financing') as financingterm
                         FROM pi_prospect_inquiry_cstm 
                         GROUP BY payment_terms_c, month ORDER BY inquiry_date_c asc")
-        // ->query(MySQL::type(
-        // 		DB::table("pi_prospect_inquiry_cstm")
-        // 		->count('id_c')->alias('total')
-        // 		->addSelect('inquiry_date_c')->alias('month')
-        // 		->addSelect('payment_terms_c')
-        // 		->groupBy('inquiry_date_c')
-
-        // 	))
         ->pipe($this->dataStore("PiByPaymentMode"));
     }
 }
