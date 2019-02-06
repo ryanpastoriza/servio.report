@@ -14,8 +14,15 @@ $prospectInquiryContent .=  $this->load->view('reports/PI_by_lead_source/widget'
 
 
 ?>
+
+<div class="row col-sm-12">
+    <div class="col-sm-12">
+        <?php $this->load->view('reports/PIStatusPieChart/widget.php'); ?>    
+    </div>
+</div>
 <div class="row col-sm-9">
 <?php
+
 
 	$accord_vars = ['header' => '',
 						'items' => [
@@ -33,6 +40,11 @@ $prospectInquiryContent .=  $this->load->view('reports/PI_by_lead_source/widget'
 					];
 
 	echo lte_load_view('accordion',$accord_vars);
+
+
+	echo lte_load_view('accordion',[]);
+// prospect inquiry by payment mode
+ $this->load->view('reports/prospect_inquiry_by_payment_mode/widget', [], False);
 
 
  ?>
