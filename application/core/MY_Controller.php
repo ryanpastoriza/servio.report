@@ -4,13 +4,14 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 11:18:52
+ * @Last Modified time: 2019-02-06 14:51:17
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH."reports\PIByPaymentModeChart.php";
 require APPPATH."reports\PIByPaymentModeBarChart.php";
 require APPPATH."reports\PIByLeadSourceLineChart.php";
+require APPPATH."reports\PIByLeadSourceBarChart.php";
 
 require APPPATH."reports\PIStatusPieChart.php";
 
