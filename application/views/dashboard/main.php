@@ -12,3 +12,6 @@
 
  // prospect inquiry by lead source
  $this->load->view('reports/PI_by_lead_source/widget', [], False);
+
+ // prospect inquiry status - pie chart
+//  $this->load->view('' , [], False);

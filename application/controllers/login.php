@@ -11,6 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH."reports\PIByPaymentModeChart.php";
 require APPPATH."reports\PIByPaymentModeBarChart.php";
 require APPPATH."reports\PIByLeadSourceLineChart.php";
+require APPPATH."reports\PIStatusPieChart.php";
 
 class Login extends CI_Controller {
 
@@ -61,7 +62,6 @@ class Login extends CI_Controller {
 		$this->load->view('reports/prospect_inquiry_by_payment_mode/chart', ['report' => $report], false);
 
 	}
-
 
 }
 
