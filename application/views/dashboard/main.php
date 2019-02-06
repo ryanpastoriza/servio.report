@@ -8,10 +8,15 @@
  */
 
 ?>
+
+<div class="row col-sm-12">
+    <div class="col-sm-12">
+        <?php $this->load->view('reports/PIStatusPieChart/widget.php'); ?>    
+    </div>
+</div>
 <div class="row col-sm-9">
 <?php
 	echo lte_load_view('accordion',[]);
-
 // prospect inquiry by payment mode
  $this->load->view('reports/prospect_inquiry_by_payment_mode/widget', [], False);
 

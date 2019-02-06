@@ -12,6 +12,8 @@ require APPPATH."reports\PIByPaymentModeChart.php";
 require APPPATH."reports\PIByPaymentModeBarChart.php";
 require APPPATH."reports\PIByLeadSourceLineChart.php";
 
+require APPPATH."reports\PIStatusPieChart.php";
+
 
 class MY_Controller extends CI_Controller {
 

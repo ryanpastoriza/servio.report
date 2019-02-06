@@ -34,7 +34,7 @@ class PIStatusPieChart extends \koolreport\KoolReport {
 
         # setup for prospect inquiry status - piechart
         # you can view the pie chart code in MyDashboard.view.php
-        $this->src('suitecrm')
+        $this->src('automaker')
         ->query(
                 DB::table('pi_prospect_inquiry')
                     ->join('pi_prospect_inquiry_cstm', 'pi_prospect_inquiry.id', '=', 'pi_prospect_inquiry_cstm.id_c')

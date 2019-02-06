@@ -19,8 +19,9 @@ class Dashboard extends MY_Controller {
 
 		$report = new PIByPaymentModeChart;
 		$PILSReport = new PIByLeadSourceLineChart;
+		$PIStatusReport = new PIStatusPieChart();
 
-		$content = $this->load->view('dashboard/main', ['report' => $report, 'PILSReport' => $PILSReport], TRUE);
+		$content = $this->load->view('dashboard/main', ['report' => $report, 'PILSReport' => $PILSReport, 'PIStatusReport' => $PIStatusReport], TRUE);
 
 		$this->put_contents($content,"Dashboard");
 			
@@ -30,6 +31,12 @@ class Dashboard extends MY_Controller {
 	{
 		$report = new $chart;
 		$this->load->view('reports/prospect_inquiry_by_payment_mode/chart', ['report' => $report], false);
+
+	}
+
+	function prospect_status_chart(){
+
+
 
 	}
 
