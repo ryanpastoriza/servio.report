@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-05 17:29:08
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 15:18:59
+ * @Last Modified time: 2019-02-06 15:58:15
  */
 
 
@@ -14,9 +14,19 @@ $prospectInquiryContent .=  $this->load->view('reports/PI_by_lead_source/widget'
 ?>
 
 <div class="row col-sm-9">
-<div class="col-sm-12">
+<div class="col-sm-5">
         <?php $this->load->view('reports/PIStatusPieChart/widget.php'); ?>    
-    </div>
+</div>
+<div class="col-sm-7">
+	<?php 
+		$vars = ['header' => "Dealers",
+				'boxOptions' => false,
+				'body' =>  $this->load->view('reports/per_dealer/chart', [], True),
+				'col_grid' => "row"];
+
+		echo lte_load_view('widget5',$vars);
+	 ?>
+</div>
 <?php
 
 
