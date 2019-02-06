@@ -26,16 +26,23 @@ class Reports extends MY_Controller {
 		
 		$array = [];
 
-		for ( $i = 0; $i < 5 ; $i++) { 
+		$query = $this->db->get('lead_lead_source')->result();
+
+		foreach ($query as $key => $value) {
 			$array[] = [
-						"fname" => "fname".$i,
-						"lname" => "lname".$i,
+						"source_of_sale" => ucwords($value->name),
+						"lname" => ucwords($value->name),
 					 ];
 		}
 
 		echo json_encode([
 			"data" => $array
 		]);
+
+	}
+
+	public function test_method(){
+
 
 	}
 

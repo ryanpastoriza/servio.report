@@ -47,9 +47,10 @@
 	        "bPaginate": false,
 	        // stateSave:true,
 	        columns:[
-	        			{'data':'fname'},
+	        			{'data':'source_of_sale'},
 	                    {'data':'lname'},
-			]
+			],
+			data: []
       	});
 
     }
