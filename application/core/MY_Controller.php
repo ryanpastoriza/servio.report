@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 15:56:30
+ * @Last Modified time: 2019-02-07 16:04:01
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -31,6 +31,11 @@ class MY_Controller extends CI_Controller {
 	}
 	function put_contents($content,$contentHeader)
 	{
+		$vars = ['addStyles' => [],
+				'addPlugins' => [
+									asset_url('plugins/chartjs/Chart.js'),
+									asset_url('plugins/momentjs/moment.js'),
+									 ]];
 		$vars = [
 					'addStyles'  => [ 
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),

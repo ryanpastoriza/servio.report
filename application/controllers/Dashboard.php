@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 15:57:22
+ * @Last Modified time: 2019-02-07 16:52:38
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -15,6 +15,8 @@ class Dashboard extends MY_Controller {
 	public function index()
 	{	
 
+		$this->load->model('pi_prospect_inquiry_cstm');
+
 		set_header_title('Servio-DMS Dashboard');
 
 		$report 			= new PIByPaymentModeChart;
@@ -22,7 +24,13 @@ class Dashboard extends MY_Controller {
 		$PIStatusReport 	= new PIStatusPieChart();
 		$PerDealer 			= new PerDealerChart;
 
-		$content = $this->load->view('dashboard/main', ['report' => $report, 'PILSReport' => $PILSReport, 'PIStatusReport' => $PIStatusReport, 'PerDealer' => $PerDealer], TRUE);
+		$cashTerm  = new Pi_prospect_inquiry_cstm;
+
+			$cashTerm = $cashTerm->search(['payment_terms_c' => 'cash']);
+
+		$dashboard = $this;
+
+		$content = $this->load->view('dashboard/main', ['dashboard' => $dashboard, 'cashTerm' => $cashTerm,'report' => $report, 'PILSReport' => $PILSReport, 'PIStatusReport' => $PIStatusReport, 'PerDealer' => $PerDealer], TRUE);
 
 		$this->put_contents($content,"Dashboard");
 			
@@ -35,9 +43,9 @@ class Dashboard extends MY_Controller {
 
 	}
 
-	function prospect_status_chart(){
+	public function create_chart($data){
 
-
+		$this->load->view('chartjs/bar_chart', $data, FALSE);
 
 	}
 
