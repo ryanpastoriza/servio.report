@@ -13,6 +13,6 @@
 
 			]
 
-	$dashboard->create_chart([$da]);
+	// $dashboard->create_chart([$da]);
 
 ?>
