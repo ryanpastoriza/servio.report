@@ -135,7 +135,7 @@ class Reports extends MY_Controller {
 
 		$grand_total = 0;
 
-		$	 = [];
+		$base_model_columns = [];
 
 		foreach ($leads as $lead_key => $lead) {
 
