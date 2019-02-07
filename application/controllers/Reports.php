@@ -28,14 +28,50 @@ class Reports extends MY_Controller {
 		
 		$array = [];
 
-		$query = $this->db->get('lead_lead_source')->result();
+		$leads 		 = $this->db->get('lead_lead_source')->result();
+		$base_models = $this->base_model_records();
+		$main_query  = $this->main_query();
 
-		foreach ($query as $key => $value) {
-			$array[] = [
-						"source_of_sale" => ucwords($value->name),
-						"value1" => "value1",
-					];
+		foreach ($leads as $lead_key => $lead) {
+
+			$lead_total_value = 0;
+			$lead_total_pct   = 0;
+
+			$array[$lead_key] = [
+				"source_of_sale" => ucwords($lead->name)
+			];
+
+			foreach ($base_models as $bm_key => $model) {
+
+				$total_value = "";
+
+				foreach ($main_query as $query_key => $query_value) {
+					
+					if($lead->name == $query_value->lead_source &&  $model->name == $query_value->base_model){
+						$total_value = $query_value->total_value;
+					} 
+
+				}
+				$total_value = (int) $total_value;
+
+				$lead_total_value = (int) $lead_total_value + (int) $total_value;
+
+				$array[$lead_key] += ["v".$model->name => $total_value];
+				$array[$lead_key] += ["p".$model->name => "va1"];
+
+			}
+
+			$array[$lead_key] += ["total_value" => $lead_total_value];
+			$array[$lead_key] += ["total_pct" => $lead_total_pct];
+
 		}
+
+
+		
+		// $grand_total_array = [
+		// 	"source_of_sale" => "grand total"
+		// ];
+		// array_push($array, (object)$grand_total_array);
 
 		echo json_encode([
 			"data" => $array
@@ -43,36 +79,18 @@ class Reports extends MY_Controller {
 	}
 
 	public function base_model_records(){
-		return  $this->db->query('SELECT name from jump_base_model')->result();
+		return  $this->db->query('SELECT * from jump_base_model')->result();
 	}
 
-	public function test_method(){
+	public function main_query(){
 
-		$query = $this->db->query('SELECT
+		$query = $this->db->query("	SELECT
 										pi_prospect_inquiry.id,
 										pi_prospect_inquiry.name,
-										pi_prospect_inquiry_cstm.fname_c,
-										pi_prospect_inquiry_cstm.mname_c,
-										pi_prospect_inquiry_cstm.lname_c,
-										pi_prospect_inquiry_cstm.prospect_type_c,
-										pi_prospect_inquiry_cstm.payment_terms_c,
-										fnct_financing_terms.name AS financing_term,
-										pi_prospect_inquiry_cstm.inquiry_date_c,
-										pi_prospect_inquiry_cstm.editable_date_created_c,
-										pi_prospect_inquiry_cstm.status_c,
-										pi_prospect_inquiry_cstm.disq_reason_c,
-										city_city.name AS city,
-										prvn_province.name AS province,
-										rgin_region.name AS region,
-										ctry_country.name AS country,
-										jump_model_description.name AS model_description,
-										jump_base_model.name AS base_model,
-										jump_body_type.name AS body_type,
-										jump_color.name AS color,
-										lead_lead_source.name AS lead_source,
-										users.user_name AS employee_username,
-										jump_dealer.name AS dealer,
-										jump_branch.name AS branch
+										jump_model_description.`name` AS model_description,
+										jump_base_model.`name` AS base_model,
+										lead_lead_source.`name` AS lead_source,
+										count(jump_base_model.`name`) as total_value
 									FROM
 										pi_prospect_inquiry
 									INNER JOIN pi_prospect_inquiry_cstm ON pi_prospect_inquiry.id = pi_prospect_inquiry_cstm.id_c
@@ -98,10 +116,86 @@ class Reports extends MY_Controller {
 									INNER JOIN users ON pi_prospect_inquiry.assigned_user_id = users.id
 									INNER JOIN users_cstm ON users_cstm.id_c = users.id
 									LEFT JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
-									INNER JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c')->result();
+									INNER JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c
+
+
+									GROUP by lead_lead_source.id, jump_base_model.id
+
+									ORDER by model_description")->result();
+		
+		return $query;
+	}
+
+	public function test_method(){
+		$array = [];
+
+		$leads 		 = $this->db->get('lead_lead_source')->result();
+		$base_models = $this->base_model_records();
+		$main_query  = $this->main_query();
+
+		$grand_total = 0;
+
+		$	 = [];
+
+		foreach ($leads as $lead_key => $lead) {
+
+			$lead_total_value = 0;
+			$lead_total_pct   = 0;
+
+			$array[$lead_key] = [
+				"source_of_sale" => ucwords($lead->name)
+			];
+
+			foreach ($base_models as $bm_key => $model) {
+
+				$base_model_columns[$model->name] = 0;
+
+				$total_value = "";
+
+				foreach ($main_query as $query_key => $query_value) {
+					
+					if($lead->name == $query_value->lead_source &&  $model->name == $query_value->base_model){
+						$total_value = $query_value->total_value;
+					} 
+
+				}
+
+				$total_value = (int) $total_value;
+				$lead_total_value = (int) $lead_total_value + (int) $total_value;
+				$array[$lead_key] += ["v".$model->name => $total_value];
+				$array[$lead_key] += ["p".$model->name => "va1"];
+
+				echo $lead->name . " => " . $model->name . ": " . $total_value . "<br>";
+			
+				$base_model_columns[$model->name] = (int)$total_value + (int)$base_model_columns[$model->name] ;
+			}
+
+			$array[$lead_key] += ["total_value" => $lead_total_value];
+			$array[$lead_key] += ["total_pct" => $lead_total_pct];
+
+			$grand_total = (int) $grand_total + (int) $lead_total_value;
+			echo "<br>";
+		}
+
+
+		$grand_total_array = [
+			"source_of_sale" => "grand total",
+			"total_value" => $grand_total,
+			"total_pct" => ""
+		];
 
 		echo "<pre>";
-		print_r($query);
+		print_r($base_model_columns);
+
+		// $grand_total_array += $base_model_columns;
+		// array_push($array, (object)$grand_total_array);
+
+		// echo "<pre>";
+		// print_r($array);
+
+		// echo "<pre>";
+		// print_r($base_model_columns);
+
 	}
 
 }
