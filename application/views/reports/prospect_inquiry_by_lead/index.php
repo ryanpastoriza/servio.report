@@ -14,12 +14,14 @@
 	            <thead>
 	                <tr>
 	                    <th rowspan="2">SOURCE OF SALE</th>
-
+						<th colspan="2"> TOTAL </th>
 						<?php foreach($base_model as $value): ?>
 							<th colspan="2"> <?= $value->name ?> </th>
 						<?php endforeach ?>
 	                </tr>
 	                <tr>
+	                	<th> Value </th>
+	                	<th> Pct </th>
 	                	<?php foreach($base_model as $value): ?>
 							<th> Value </th>
 							<th> Pct </th>
@@ -43,9 +45,8 @@
         lead_datatable("");
     });
 
-
     function lead_datatable($data){
-    	
+
     	table = $('#lead_table').DataTable({
 	        ajax:{
 	        	url:'<?php echo base_url('index.php/reports/lead_data'); ?>',
@@ -53,10 +54,14 @@
 	        },
 	        destroy: true,
 	        "bPaginate": false,
-	        // stateSave:true,
 	        columns:[
-	        			{'data':'source_of_sale'},
-	        			{'data':'value1'},
+				{"data" : "source_of_sale"},
+				{"data" : "total_value"},
+				{"data" : "total_pct"},
+				<?php foreach($base_model as $value): ?>
+				{"data" : "v<?=$value->name?>"},
+				{"data" : "p<?=$value->name?>"},
+				<?php endforeach ?>
 			],
 			data: []
       	});

@@ -33,9 +33,13 @@ class MY_Controller extends CI_Controller {
 		$vars = [
 					'addStyles'  => [ 
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),
-										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css') 
+										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css'),
+										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css')
 									],
-					'addPlugins' => [ asset_url('plugins/datatables/jquery.dataTables.min.js') ]
+					'addPlugins' => [ 
+										asset_url('plugins/datatables/jquery.dataTables.min.js'),
+										asset_url('plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js')
+									]
 				];
 
 
