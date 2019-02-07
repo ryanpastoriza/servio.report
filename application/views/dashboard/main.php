@@ -4,13 +4,17 @@
  * @Author: ET
  * @Date:   2019-02-05 17:29:08
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 15:58:15
+ * @Last Modified time: 2019-02-07 11:25:24
  */
 
 
 $prospectInquiryContent = $this->load->view('reports/prospect_inquiry_by_payment_mode/widget', [], True);
 
 $prospectInquiryContent .=  $this->load->view('reports/PI_by_lead_source/widget', [], True);
+
+$testChart = $this->load->view('charts/sample', [], TRUE);
+
+
 ?>
 
 <div class="row col-sm-9">
@@ -36,7 +40,7 @@ $prospectInquiryContent .=  $this->load->view('reports/PI_by_lead_source/widget'
 										'content' => $prospectInquiryContent
 										],
 										['title' => "Sales Order",
-										'content' => "content 2"
+										'content' => $testChart
 										],
 										['title' => "Sales Invoice",
 										'content' => "content 3"

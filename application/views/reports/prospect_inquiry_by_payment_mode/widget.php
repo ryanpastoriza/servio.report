@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-05 15:11:28
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 15:00:44
+ * @Last Modified time: 2019-02-06 17:14:35
  */
 
 ?>
@@ -25,7 +25,7 @@
 <?php
 echo lte_load_view('widget5', ['header' => "Prospect Inquiry by Mode of Payment",
 								'bgColor' => "box-navy",
-								'col_grid' => col_grid(6),
+								'col_grid' => col_grid(12,6),
 								'boxOptions' => [
 												'<button type="button" chart="PIByPaymentModeChart" class="pibmp-chart-selector btn btn-box-tool bg-gray" ><i class="fa fa-line-chart"></i></button>',
 												'<button type="button" chart="PIByPaymentModeBarChart" class="pibmp-chart-selector btn btn-box-tool " ><i class="fa fa-bar-chart"></i></button>',
