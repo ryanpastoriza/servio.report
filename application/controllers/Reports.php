@@ -198,6 +198,15 @@ class Reports extends MY_Controller {
 
 	}
 
+	public function prospect_inquiry_details(){
+
+		$this->load->model('setup/LeadSource');
+
+		var_dump($this->LeadSource->getLeadSource());
+
+
+	}
+
 }
 
 /* End of file Reports.php */

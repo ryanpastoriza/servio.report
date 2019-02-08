@@ -32,6 +32,13 @@ class Pi_prospect_inquiry_cstm extends MY_Model {
 	public $jump_customers_id_c;
 
 
+
+	function populateProspect(){
+	
+	}
+
+
+
 }
 
 /* End of file Prospect_inquiry_cstm.php */
