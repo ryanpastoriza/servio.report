@@ -200,10 +200,18 @@ class Reports extends MY_Controller {
 
 	public function prospect_inquiry_details(){
 
-		$this->load->model('setup/LeadSource');
 
-		var_dump($this->LeadSource->getLeadSource());
+		$this->load->model('Pi_prospect_inquiry_cstm');
+		// $filters['dealer'] = $this->Dealer->getDealer();
+		$filters['dealer_branch'] = $this->Dealer->getDealerBranch();
+		// var_dump($filters['dealer_branch']);
+		$pi_records = $this->Pi_prospect_inquiry_cstm->populateProspect();
 
+		$content = $this->load->view("reports/prospect_inquiry_details/filter.php" ,[ "filters" => $filters ],TRUE);
+		$content .= $this->load->view("reports/prospect_inquiry_details/prospect_inquiry_details.php" ,[ "pi_records" => $pi_records ],TRUE);
+
+		set_header_title("Reports - Prospect Inquiry Details");
+		$this->put_contents($content,"Prospect Inquiry Details");
 
 	}
 

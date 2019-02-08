@@ -10,6 +10,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Branch extends MY_Model {
 	
-    function getBranch(){}
+    function getBranch(){
+
+
+    }
         
 }

@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array();
+$autoload['model'] = array('setup/LeadSource', 'setup/BaseModel', 'setup/Branch', 'setup/Dealer', 'setup/ModelDescription');
