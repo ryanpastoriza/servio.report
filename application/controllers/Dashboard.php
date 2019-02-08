@@ -12,6 +12,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboard extends MY_Controller {
 
+	function __construct()
+	{
+		parent::__construct();
+		if (!$this->session->userdata('id')){
+			redirect('login');
+		}
+	}
+
 	public function index()
 	{	
 
@@ -47,6 +55,14 @@ class Dashboard extends MY_Controller {
 
 		$this->load->view('chartjs/bar_chart', $data, FALSE);
 
+	}
+	public function logout(){
+		unset(
+        	$_SESSION['username'],
+			$_SESSION['id'],
+			$_SESSION['title']
+        );
+        redirect('login');
 	}
 
 
