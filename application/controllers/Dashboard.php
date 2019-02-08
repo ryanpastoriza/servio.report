@@ -4,13 +4,15 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-07 16:52:38
+ * @Last Modified time: 2019-02-08 17:02:00
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
 class Dashboard extends MY_Controller {
+
+
 
 	public function index()
 	{	
@@ -25,8 +27,7 @@ class Dashboard extends MY_Controller {
 		$PerDealer 			= new PerDealerChart;
 
 		$cashTerm  = new Pi_prospect_inquiry_cstm;
-
-			$cashTerm = $cashTerm->search(['payment_terms_c' => 'cash']);
+		$cashTerm = $cashTerm->by_MOP();
 
 		$dashboard = $this;
 
@@ -36,16 +37,47 @@ class Dashboard extends MY_Controller {
 			
 			
 	}
-	function select_chart($chart)
+	function select_PIbyMOP_chart($chart, $str = FALSE)
 	{
-		$report = new $chart;
-		$this->load->view('reports/prospect_inquiry_by_payment_mode/chart', ['report' => $report], false);
+		$this->load->model('pi_prospect_inquiry_cstm');
+		$cashTerm  = new Pi_prospect_inquiry_cstm;
+		$cashTerm = $cashTerm->by_MOP();
 
+		$data = [
+				'dataset' 	=> $cashTerm,
+				'chartType' => $chart,
+				'chartId' => 'slsOrderByMOP',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "payment_terms_c"
+
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function PI_by_LS($chart, $str = FALSE)
+	{
+		
+		$this->load->model('pi_prospect_inquiry_cstm');
+		$res  = new Pi_prospect_inquiry_cstm;
+		$res = $res->by_LS();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'slsOrderByLS',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "ls_name"
+
+			];
+
+		return $this->create_chart($data, $str);
 	}
 
-	public function create_chart($data){
+	public function create_chart($data, $str = FALSE){
 
-		$this->load->view('chartjs/bar_chart', $data, FALSE);
+		return $this->load->view('chartjs/bar_chart', $data, $str);
 
 	}
 

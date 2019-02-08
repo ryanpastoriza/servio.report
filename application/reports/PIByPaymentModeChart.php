@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-05 12:03:30
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 11:03:25
+ * @Last Modified time: 2019-02-08 09:45:33
  */
 require APPPATH."/libraries/koolreport/autoload.php";
 use \koolreport\querybuilder\DB;
@@ -35,7 +35,7 @@ class PIByPaymentModeChart extends \koolreport\KoolReport
     function setup()
     {
         $this->src('automaker')
-        ->query("SELECT  CONCAT('WEEK ', WEEK(inquiry_date_c, 3) -
+        ->query("SELECT  CONCAT('WEEK ',  WEEK(inquiry_date_c, 3) -
                       WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b'))
                       as month, 
                         count(id_c) as total,

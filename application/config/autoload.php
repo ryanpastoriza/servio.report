@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('admin_lte','url');
+$autoload['helper'] = array('admin_lte','url','chartJs');
 
 /*
 | -------------------------------------------------------------------

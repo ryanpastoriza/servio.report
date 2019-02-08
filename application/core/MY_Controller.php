@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-07 16:04:01
+ * @Last Modified time: 2019-02-08 09:08:38
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -56,7 +56,9 @@ class MY_Controller extends CI_Controller {
 											],
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
-										'link' => base_url('reports')
+										'link' => [
+													'Taa' => "asdsa"
+													]
 											]
 									],
 					];
