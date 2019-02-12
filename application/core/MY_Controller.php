@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-07 16:04:01
+ * @Last Modified time: 2019-02-11 17:45:01
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -31,10 +31,13 @@ class MY_Controller extends CI_Controller {
 	}
 	function put_contents($content,$contentHeader)
 	{
-		$vars = ['addStyles' => [],
+		$vars = ['addStyles' => [
+									asset_url('plugins/select2/select2.min.css'),
+								],
 				'addPlugins' => [
 									asset_url('plugins/chartjs/Chart.js'),
 									asset_url('plugins/momentjs/moment.js'),
+									asset_url('plugins/select2/select2.full.min.js'),
 									 ]];
 		$vars = [
 					'addStyles'  => [ 

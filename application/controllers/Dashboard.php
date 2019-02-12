@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-07 16:52:38
+ * @Last Modified time: 2019-02-11 17:53:47
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -12,6 +12,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboard extends MY_Controller {
 
+
+
+	function test(){
+
+		$this->load->model('jump_dealer');
+
+		$dso = new jump_dealer;
+		$dso = $dso->get();
+
+		echo "<pre>";
+		print_r ($dso);
+		echo "</pre>";
+
+	}
 	function __construct()
 	{
 		parent::__construct();
@@ -24,36 +38,166 @@ class Dashboard extends MY_Controller {
 	{	
 
 		$this->load->model('pi_prospect_inquiry_cstm');
+		$this->load->model('jump_dealer');
+		$this->load->model('jump_branch');
 
 		set_header_title('Servio-DMS Dashboard');
 
-		$report 			= new PIByPaymentModeChart;
-		$PILSReport 		= new PIByLeadSourceLineChart;
 		$PIStatusReport 	= new PIStatusPieChart();
 		$PerDealer 			= new PerDealerChart;
+		$jd 				= new Jump_dealer;
+		$branch 			= new Jump_branch;
+
+		$branch->selects = ['name','id'];
+
+
+
+
+		$jd->selects = ['name as text', 'id'];
+		$dealers = $jd->get();
+
+		$dealersSelect = [];
+
+		foreach ($dealers as $value) {
+			$dealersSelect[] = (object)['id' => $value->id, 'text' => $value->name];
+		}
+
+
 
 		$cashTerm  = new Pi_prospect_inquiry_cstm;
-
-			$cashTerm = $cashTerm->search(['payment_terms_c' => 'cash']);
+		$cashTerm = $cashTerm->by_MOP();
 
 		$dashboard = $this;
 
-		$content = $this->load->view('dashboard/main', ['dashboard' => $dashboard, 'cashTerm' => $cashTerm,'report' => $report, 'PILSReport' => $PILSReport, 'PIStatusReport' => $PIStatusReport, 'PerDealer' => $PerDealer], TRUE);
+		$content = $this->load->view('dashboard/main', ['dealers' => $dealersSelect, 'dashboard' => $dashboard, 'cashTerm' => $cashTerm, 'PIStatusReport' => $PIStatusReport, 'PerDealer' => $PerDealer], TRUE);
 
 		$this->put_contents($content,"Dashboard");
 			
 			
 	}
-	function select_chart($chart)
-	{
-		$report = new $chart;
-		$this->load->view('reports/prospect_inquiry_by_payment_mode/chart', ['report' => $report], false);
-
+	function find_branch(){
+		
 	}
+	function select_PIbyMOP_chart($chart, $str = FALSE)
+	{
+		$this->load->model('pi_prospect_inquiry_cstm');
+		$cashTerm  = new Pi_prospect_inquiry_cstm;
+		$cashTerm = $cashTerm->by_MOP();
 
-	public function create_chart($data){
+		$data = [
+				'dataset' 	=> $cashTerm,
+				'chartType' => $chart,
+				'chartId' => 'PiByMOP',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "payment_terms_c"
 
-		$this->load->view('chartjs/bar_chart', $data, FALSE);
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function PI_by_LS($chart, $str = FALSE)
+	{
+		
+		$this->load->model('pi_prospect_inquiry_cstm');
+		$res  = new Pi_prospect_inquiry_cstm;
+		$res = $res->by_LS();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'PiByLeadSource',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "ls_name"
+
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function PI_by_model($chart, $str = FALSE){
+		$this->load->model('pi_prospect_inquiry_cstm');
+		$res  = new Pi_prospect_inquiry_cstm;
+		$res = $res->by_Model();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'PiByModel',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "model_name"
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function SObyMOP_chart($chart, $str = FALSE){
+		$this->load->model('Ddms_sales_order');
+		$res  = new Ddms_sales_order;
+		$res = $res->by_MOP();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'SOByMOP',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "model_name"
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function SObyLS_chart($chart, $str = FALSE){
+		$this->load->model('Ddms_sales_order');
+		$res  = new Ddms_sales_order;
+		$res = $res->by_LS();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'SOByLeadSource',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "lead_source"
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function SObyModel_chart($chart, $str = FALSE){
+		$this->load->model('Ddms_sales_order');
+		$res  = new Ddms_sales_order;
+		$res = $res->by_Model();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'SOByModel',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "model_name"
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	function SOInvoiced_chart($chart, $str = false){
+		$this->load->model('Ddms_sales_order');
+		$res  = new Ddms_sales_order;
+		$res = $res->invoiced();
+
+		$data = [
+				'dataset' 	=> $res,
+				'chartType' => $chart,
+				'chartId' => 'soInvoiced',
+				'sumField' => 'total',
+				'xAxis' => "month",
+				'labelField' => "model_name"
+			];
+
+		return $this->create_chart($data, $str);
+	}
+	public function create_chart($data, $str = FALSE){
+
+		return $this->load->view('chartjs/bar_chart', $data, $str);
 
 	}
 	public function logout(){
