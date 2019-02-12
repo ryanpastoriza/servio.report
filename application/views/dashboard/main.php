@@ -7,7 +7,6 @@
  * @Last Modified time: 2019-02-07 11:25:24
  */
 
-
 $prospectInquiryContent = $this->load->view('reports/prospect_inquiry_by_payment_mode/widget', [], True);
 
 $prospectInquiryContent .=  $this->load->view('reports/PI_by_lead_source/widget', [], True);
