@@ -23,9 +23,8 @@ class Login extends CI_Controller {
 		$check = $this->main_model->validate();
 		if ($check) 
 		{
-		    $this->session->set_userdata('id',$check->id);
-			$this->session->set_userdata('username',$check->user_name);
-			$this->session->set_userdata('title',$check->title);
+			unset($check->user_hash);
+		    $this->session->set_userdata('id',$check);
 		    redirect('dashboard');
 		}
 		else

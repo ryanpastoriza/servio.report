@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 13:53:53
+ * @Last Modified time: 2019-02-12 16:18:11
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -17,9 +17,8 @@ class Dashboard extends MY_Controller {
 	function test(){
 
 		echo "<pre>";
-		print_r ($_SESSION);
+		print_r ($this->user_info);
 		echo "</pre>";
-
 
 	}
 	function __construct()
@@ -191,6 +190,7 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function get_branches(){
+
 		$this->load->model('setup/dealer');
 		$selected = $this->input->post('selected');
 		$selected = explode(",", $selected);
@@ -203,8 +203,8 @@ class Dashboard extends MY_Controller {
 			$dealer->load($value);
 
 			$branches = $dealer->branches();
-			
-			
+
+
 			foreach ($branches as $value2) {
 				$all_branches[] = (object)['id' => $value2->id, 'text' => $value2->branch_name];
 			}
@@ -214,8 +214,6 @@ class Dashboard extends MY_Controller {
 
 
 		echo json_encode($all_branches);
-
-
 	}
 	public function create_chart($data, $str = FALSE){
 
