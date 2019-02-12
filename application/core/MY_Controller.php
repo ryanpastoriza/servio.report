@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 14:51:17
+ * @Last Modified time: 2019-02-12 08:42:50
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -14,6 +14,7 @@ require APPPATH."reports\PIByLeadSourceLineChart.php";
 require APPPATH."reports\PIByLeadSourceBarChart.php";
 
 require APPPATH."reports\PIStatusPieChart.php";
+require APPPATH."reports\PerDealerChart.php";
 
 
 class MY_Controller extends CI_Controller {
@@ -30,6 +31,14 @@ class MY_Controller extends CI_Controller {
 	}
 	function put_contents($content,$contentHeader)
 	{
+		$vars = ['addStyles' => [
+									asset_url('plugins/select2/select2.min.css'),
+								],
+				'addPlugins' => [
+									asset_url('plugins/chartjs/Chart.js'),
+									asset_url('plugins/momentjs/moment.js'),
+									asset_url('plugins/select2/select2.full.min.js'),
+									 ]];
 		$vars = [
 					'addStyles'  => [ 
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),
@@ -62,7 +71,24 @@ class MY_Controller extends CI_Controller {
 											],
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
-										'link' => base_url('reports')
+
+										'link' => ""
+
+										'link' => [
+													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
+													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
+													'Prospect Inquiry by Mode of Payment' => '',
+													'Inquiry per Dealer' => '',
+													'Inquiry per Model' => '',
+													'Sales Summary per Dealer' => '',
+													'Sales Summary per Model' => '',
+													'Lead Source of Prospect Inquiries' => '',
+													'Sales Order Details' => '',
+													'Sales Order by Lead Source' => '',
+													'Sales Order by Payment Mode' => '',
+
+ 												  ]
+
 											]
 									],
 					];

@@ -37,7 +37,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 <script src="<?= asset_url('plugins/jQuery/jQuery-1.11.3.min.js') ?>"></script>
-<script src="<?= asset_url('plugins/jQueryUI/jquery-ui.min.js') ?> ?>"></script>
+<script src="<?= asset_url('plugins/jQueryUI/jquery-ui.min.js') ?>"></script>
 <script src="<?= asset_url('bootstrap/js/bootstrap.min.js') ?>"></script>
 <script src="<?= asset_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') ?>"></script>
 <!-- Slimscroll -->
@@ -79,7 +79,7 @@
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
-
+      <a href="<?php echo base_url();?>dashboard/logout" class="logo" style="float: right; width:50px;"><span class="glyphicon glyphicon-log-out"></span></a>
       <?php if (isset($rightNav) && $rightNav != false): ?>
         
       <div class="navbar-custom-menu">

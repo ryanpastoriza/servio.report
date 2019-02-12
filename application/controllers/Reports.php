@@ -265,7 +265,13 @@ class Reports extends MY_Controller {
 		$base_models = $this->base_model_records();
 		$main_query  = $this->main_query();
 
+
 		$base_models_grand_values = [];
+
+		$grand_total = 0;
+
+		$base_model_columns = [];
+
 
 		foreach ($leads as $lead_key => $lead) {
 			$lead = (object) $lead;
@@ -365,6 +371,23 @@ class Reports extends MY_Controller {
 
 									where jump_dealer.id = '{$dealer_id}'")->result();
 		echo json_encode($query);
+	}
+
+	public function prospect_inquiry_details(){
+
+
+		$this->load->model('Pi_prospect_inquiry_cstm');
+		// $filters['dealer'] = $this->Dealer->getDealer();
+		$filters['dealer_branch'] = $this->Dealer->getDealerBranch();
+		// var_dump($filters['dealer_branch']);
+		$pi_records = $this->Pi_prospect_inquiry_cstm->populateProspect();
+
+		$content = $this->load->view("reports/prospect_inquiry_details/filter.php" ,[ "filters" => $filters ],TRUE);
+		$content .= $this->load->view("reports/prospect_inquiry_details/prospect_inquiry_details.php" ,[ "pi_records" => $pi_records ],TRUE);
+
+		set_header_title("Reports - Prospect Inquiry Details");
+		$this->put_contents($content,"Prospect Inquiry Details");
+
 	}
 
 
