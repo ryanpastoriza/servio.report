@@ -8,9 +8,13 @@
  */
 
 
+$prospectInquiryContent = $this->load->view('reports/prospect_inquiry_by_payment_mode/widget', [], True);
+
+
 $prospectInquiryContent = $this->load->view('charts/PIbyMOP', [], True);
 $prospectInquiryContent .=  $this->load->view('charts/PIbyLS', [], True);
 $prospectInquiryContent .=  $this->load->view('charts/PIperModel', [], True);
+
 
 $soContent = $this->load->view('charts/SObyMOP', [], True);
 $soContent .= $this->load->view('charts/SObyLS', [], True);
