@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 17:45:01
+ * @Last Modified time: 2019-02-12 08:42:50
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -71,6 +71,9 @@ class MY_Controller extends CI_Controller {
 											],
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
+
+										'link' => ""
+
 										'link' => [
 													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
@@ -85,6 +88,7 @@ class MY_Controller extends CI_Controller {
 													'Sales Order by Payment Mode' => '',
 
  												  ]
+
 											]
 									],
 					];

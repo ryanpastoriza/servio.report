@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:36:41
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 17:29:57
+ * @Last Modified time: 2019-02-12 09:20:08
  */
 ?>
 <div class="form-group">
@@ -19,9 +19,9 @@
   <label>Dealer</label>
   <input type="text" class="form-control" id='dealer-select' placeholder="Dealer Name">
 </div>
-<div class="form-group">
+<div class="form-group hidden">
   <label>Branch</label>
-  <input type="text" class="form-control" placeholder="Branch Name">
+  <input type="text" class="form-control" id='branch-select' placeholder="Branch Name">
 </div>
 <div class="form-group">
   <label>Mode of Payment</label>
