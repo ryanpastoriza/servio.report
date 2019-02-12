@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:27:19
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 17:41:11
+ * @Last Modified time: 2019-02-12 09:19:38
  */
 
 
@@ -13,6 +13,8 @@
 <script>
 	$(function(){
 		$('#dealer-select').select2({data : <?= json_encode($dealers) ?>});
+		$('#branch-select').select2({data : <?= json_encode($branches) ?>});
+
 	})
 </script>
 

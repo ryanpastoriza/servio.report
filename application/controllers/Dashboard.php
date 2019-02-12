@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 17:53:47
+ * @Last Modified time: 2019-02-12 09:19:00
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -43,8 +43,13 @@ class Dashboard extends MY_Controller {
 		$branch 			= new Jump_branch;
 
 		$branch->selects = ['name','id'];
+		$branches = $branch->get();
 
+		$branchesSelect = [];
 
+		foreach ($branches as $value) {
+			$branchesSelect[] = (object)['id' => $value->id, 'text' => $value->name];
+		}
 
 
 		$jd->selects = ['name as text', 'id'];
@@ -63,7 +68,14 @@ class Dashboard extends MY_Controller {
 
 		$dashboard = $this;
 
-		$content = $this->load->view('dashboard/main', ['dealers' => $dealersSelect, 'dashboard' => $dashboard, 'cashTerm' => $cashTerm, 'PIStatusReport' => $PIStatusReport, 'PerDealer' => $PerDealer], TRUE);
+		$content = $this->load->view('dashboard/main', ['dealers' => $dealersSelect, 
+														'dashboard' => $dashboard, 
+														'cashTerm' => $cashTerm, 
+														'PIStatusReport' => $PIStatusReport,
+														'PerDealer' => $PerDealer,
+														'branches' => $branchesSelect
+													]
+													, TRUE);
 
 		$this->put_contents($content,"Dashboard");
 			
