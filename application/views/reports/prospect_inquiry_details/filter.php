@@ -60,7 +60,7 @@
                         <tr>
                             <td>Branch</td>
                             <td>
-                                <select class="form-control input-sm">
+                                <select id="select-branch" class="form-control input-sm">
                                     <?php foreach ($filters['dealer_branch'] as $key => $value ): ?>
                                         <?php foreach ($value as $k => $v ): ?>
                                             <option> <?= $value[$k]; ?> </option>
@@ -163,8 +163,17 @@
 
             var dealer = $('#select-dealer option:selected').val();
             var branches = $.parseJSON('<?php echo json_encode($filters['dealer_branch']); ?>');
-            console.log(branches);
-            console.log(branches[dealer]);
+            // console.log(branches);
+            // console.log(branches[dealer]);
+            var options = branches[dealer];
+
+            $el = $('#select-branch');
+            $el.empty();
+            $.each(options, function(key, value){
+                    $el.append($("<option></option>")
+                    .attr("value", value).text(value));
+                // console.log(value);
+            });
 
         });
 

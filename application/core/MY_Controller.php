@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 16:49:56
+ * @Last Modified time: 2019-02-12 16:54:45
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -38,7 +38,8 @@ class MY_Controller extends CI_Controller {
 	}
 	function put_contents($content,$contentHeader)
 	{
-		$vars = [
+
+			$vars = [
 					'addStyles'  => [ 
 										asset_url('plugins/select2/select2.min.css'),
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),
@@ -116,7 +117,6 @@ class MY_Controller extends CI_Controller {
 		$dealer_user 	= in_array($this->dealer_user_titles, $this->user_info->title);
 		$branch_user 	= in_array($this->branch_user_tiles, $this->user_info->title);
 	}
-
 }
 
 /* End of file MY_Controller.php */

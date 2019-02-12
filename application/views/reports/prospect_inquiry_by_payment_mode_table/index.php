@@ -2,7 +2,7 @@
 <div class="col-lg-12">
 	<div class="box box-default box-solid">
 		<div class="box-header with-border">
-	  		<h3 class="box-title"><b>Lead Source</b> <small> Prospect Inquiry Report</small></h3>
+	  		<h3 class="box-title"><b>Payment Mode</b> <small> Prospect Inquiry Report</small></h3>
 
 		  	<div class="box-tools pull-right">
 	    		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -150,7 +150,7 @@
 
     	var table = $('#lead_table').DataTable({
 	        ajax:{
-	        	url:'<?php echo base_url('index.php/reports/lead_data'); ?>',
+	        	url:'<?php echo base_url('index.php/reports/payment_mode_data'); ?>',
 	            cache:true,
 	        },
 			dom: 'Bfrtip',

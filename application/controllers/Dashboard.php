@@ -4,15 +4,12 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 16:18:11
+ * @Last Modified time: 2019-02-12 16:59:51
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-
 class Dashboard extends MY_Controller {
-
-
 
 	function test(){
 
@@ -24,7 +21,7 @@ class Dashboard extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		if (!$this->session->userdata('id')){
+		if (!$this->session->userdata('user')){
 			redirect('login');
 		}
 	}
@@ -220,14 +217,9 @@ class Dashboard extends MY_Controller {
 		return $this->load->view('chartjs/bar_chart', $data, $str);
 	}
 	public function logout(){
-		unset(
-        	$_SESSION['username'],
-			$_SESSION['id'],
-			$_SESSION['title']
-        );
+		$this->session->unset_userdata('user');
         redirect('login');
 	}
-
 
 }
 
