@@ -18,19 +18,33 @@ class Reports extends MY_Controller {
 	public function lead_source(){
 		
 		$base_model = $this->base_model_records();
+		$dealers    = $this->dealers();
 
-		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model],TRUE);
+		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
 		set_header_title("Reports - Lead Source");
 		$this->put_contents($content,"Lead Source");
+	}
+
+	public function payment_mode(){
+		
+		$base_model = $this->base_model_records();
+		$dealers    = $this->dealers();
+
+		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
+		set_header_title("Reports - Payment Mode");
+		$this->put_contents($content,"Payment Mode");
 	}
 
 	public function lead_data(){
 		
 		$array = [];
+		$grand_total = 0;
 
 		$leads 		 = $this->db->get('lead_lead_source')->result();
 		$base_models = $this->base_model_records();
 		$main_query  = $this->main_query();
+
+		$base_models_grand_values = [];
 
 		foreach ($leads as $lead_key => $lead) {
 
@@ -38,7 +52,7 @@ class Reports extends MY_Controller {
 			$lead_total_pct   = 0;
 
 			$array[$lead_key] = [
-				"source_of_sale" => ucwords($lead->name)
+				"source_of_sale" => ucwords($lead->name),
 			];
 
 			foreach ($base_models as $bm_key => $model) {
@@ -52,27 +66,140 @@ class Reports extends MY_Controller {
 					} 
 
 				}
+
+				if(array_key_exists("v".$model->name, $base_models_grand_values)){
+					$base_models_grand_values["v".$model->name]["value"] = $base_models_grand_values["v".$model->name]["value"] + (int) $total_value;
+				}
+				else{
+					$base_models_grand_values["v".$model->name] = ["value" => (int) $total_value];
+				}
+
 				$total_value = (int) $total_value;
 
 				$lead_total_value = (int) $lead_total_value + (int) $total_value;
 
 				$array[$lead_key] += ["v".$model->name => $total_value];
-				$array[$lead_key] += ["p".$model->name => "va1"];
+				$array[$lead_key] += ["p".$model->name => 0];
 
 			}
 
 			$array[$lead_key] += ["total_value" => $lead_total_value];
 			$array[$lead_key] += ["total_pct" => $lead_total_pct];
 
+			$grand_total = (int) $grand_total + (int) $lead_total_value;
+		}
+			
+		foreach ($array as $key => $value) {
+
+			// calculate lead subtotal percentage 
+			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+
+			foreach ($base_models as $bm_key => $model) {
+				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
+					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
+				}
+				else{
+					$array[$key]["p".$model->name] = "0%";
+				}
+			}
 		}
 
+		$array[count($leads)] = [
+			"source_of_sale" => "<b>Total</b>",
+			"total_value" => "<b>".$grand_total."</b>",
+			"total_pct" => "<b>100</b>%"
+		];
 
+		foreach ($base_models as $key => $value) {
+			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
+			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+		}
+
+		echo json_encode([
+			"data" => $array
+		]);
+	}
+
+	public function payment_mode_data(){
 		
-		// $grand_total_array = [
-		// 	"source_of_sale" => "grand total"
-		// ];
-		// array_push($array, (object)$grand_total_array);
+		$array = [];
+		$grand_total = 0;
 
+		// $leads 		 = $this->db->get('lead_lead_source')->result();
+		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
+		$base_models = $this->base_model_records();
+		$main_query  = $this->main_query();
+
+		$base_models_grand_values = [];
+
+		foreach ($leads as $lead_key => $lead) {
+			$lead = (object) $lead;
+			$lead_total_value = 0;
+			$lead_total_pct   = 0;
+
+			$array[$lead_key] = [
+				"source_of_sale" => ucwords($lead->name),
+			];
+
+			foreach ($base_models as $bm_key => $model) {
+
+				$total_value = "";
+
+				foreach ($main_query as $query_key => $query_value) {
+
+					if($lead->name == $query_value->payment_terms_c &&  $model->name == $query_value->base_model){
+						$total_value = $query_value->total_value;
+					} 
+
+				}
+
+				if(array_key_exists("v".$model->name, $base_models_grand_values)){
+					$base_models_grand_values["v".$model->name]["value"] = $base_models_grand_values["v".$model->name]["value"] + (int) $total_value;
+				}
+				else{
+					$base_models_grand_values["v".$model->name] = ["value" => (int) $total_value];
+				}
+
+				$total_value = (int) $total_value;
+
+				$lead_total_value = (int) $lead_total_value + (int) $total_value;
+
+				$array[$lead_key] += ["v".$model->name => $total_value];
+				$array[$lead_key] += ["p".$model->name => 0];
+
+			}
+
+			$array[$lead_key] += ["total_value" => $lead_total_value];
+			$array[$lead_key] += ["total_pct" => $lead_total_pct];
+
+			$grand_total = (int) $grand_total + (int) $lead_total_value;
+		}
+			
+		foreach ($array as $key => $value) {
+
+			// calculate lead subtotal percentage
+			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+
+			foreach ($base_models as $bm_key => $model) {
+				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
+					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
+				}
+				else{
+					$array[$key]["p".$model->name] = "0%";
+				}
+			}
+		}
+
+		$array[count($leads)] = [
+			"source_of_sale" => "<b>Total</b>",
+			"total_value" => "<b>".$grand_total."</b>",
+			"total_pct" => "<b>100</b>%"
+		];
+
+		foreach ($base_models as $key => $value) {
+			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
+			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+		}	
 		echo json_encode([
 			"data" => $array
 		]);
@@ -87,6 +214,7 @@ class Reports extends MY_Controller {
 		$query = $this->db->query("	SELECT
 										pi_prospect_inquiry.id,
 										pi_prospect_inquiry.name,
+										pi_prospect_inquiry_cstm.payment_terms_c,
 										jump_model_description.`name` AS model_description,
 										jump_base_model.`name` AS base_model,
 										lead_lead_source.`name` AS lead_source,
@@ -127,76 +255,118 @@ class Reports extends MY_Controller {
 	}
 
 	public function test_method(){
-		$array = [];
 
-		$leads 		 = $this->db->get('lead_lead_source')->result();
+
+		$array = [];
+		$grand_total = 0;
+
+		// $leads 		 = $this->db->get('lead_lead_source')->result();
+		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"]];
 		$base_models = $this->base_model_records();
 		$main_query  = $this->main_query();
 
-		$grand_total = 0;
-
-		$	 = [];
+		$base_models_grand_values = [];
 
 		foreach ($leads as $lead_key => $lead) {
-
+			$lead = (object) $lead;
 			$lead_total_value = 0;
 			$lead_total_pct   = 0;
 
 			$array[$lead_key] = [
-				"source_of_sale" => ucwords($lead->name)
+				"source_of_sale" => ucwords($lead->name),
 			];
 
 			foreach ($base_models as $bm_key => $model) {
 
-				$base_model_columns[$model->name] = 0;
-
 				$total_value = "";
 
 				foreach ($main_query as $query_key => $query_value) {
-					
-					if($lead->name == $query_value->lead_source &&  $model->name == $query_value->base_model){
+
+					if($lead->name == $query_value->payment_terms_c &&  $model->name == $query_value->base_model){
 						$total_value = $query_value->total_value;
 					} 
 
 				}
 
-				$total_value = (int) $total_value;
-				$lead_total_value = (int) $lead_total_value + (int) $total_value;
-				$array[$lead_key] += ["v".$model->name => $total_value];
-				$array[$lead_key] += ["p".$model->name => "va1"];
+				if(array_key_exists("v".$model->name, $base_models_grand_values)){
+					$base_models_grand_values["v".$model->name]["value"] = $base_models_grand_values["v".$model->name]["value"] + (int) $total_value;
+				}
+				else{
+					$base_models_grand_values["v".$model->name] = ["value" => (int) $total_value];
+				}
 
-				echo $lead->name . " => " . $model->name . ": " . $total_value . "<br>";
-			
-				$base_model_columns[$model->name] = (int)$total_value + (int)$base_model_columns[$model->name] ;
+				$total_value = (int) $total_value;
+
+				$lead_total_value = (int) $lead_total_value + (int) $total_value;
+
+				$array[$lead_key] += ["v".$model->name => $total_value];
+				$array[$lead_key] += ["p".$model->name => 0];
+
 			}
 
 			$array[$lead_key] += ["total_value" => $lead_total_value];
 			$array[$lead_key] += ["total_pct" => $lead_total_pct];
 
 			$grand_total = (int) $grand_total + (int) $lead_total_value;
-			echo "<br>";
+		}
+			
+		foreach ($array as $key => $value) {
+
+			// calculate lead subtotal percentage
+			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+
+			foreach ($base_models as $bm_key => $model) {
+				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
+					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
+				}
+				else{
+					$array[$key]["p".$model->name] = "0%";
+				}
+			}
 		}
 
-
-		$grand_total_array = [
-			"source_of_sale" => "grand total",
-			"total_value" => $grand_total,
-			"total_pct" => ""
+		$array[count($leads)] = [
+			"source_of_sale" => "<b>Total</b>",
+			"total_value" => "<b>".$grand_total."</b>",
+			"total_pct" => "<b>100</b>%"
 		];
 
+		foreach ($base_models as $key => $value) {
+			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
+			// $array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+		}
+
 		echo "<pre>";
-		print_r($base_model_columns);
-
-		// $grand_total_array += $base_model_columns;
-		// array_push($array, (object)$grand_total_array);
-
-		// echo "<pre>";
-		// print_r($array);
-
-		// echo "<pre>";
-		// print_r($base_model_columns);
-
+		print_r($array);
 	}
+
+	public function dealers(){
+		
+		$query = $this->db->query("SELECT * from jump_dealer")->result();
+		return $query;	
+	}
+
+	public function branch(){
+
+		$dealer_id = $_GET['dealer_id'];
+
+		$query = $this->db->query("	SELECT
+										jump_dealer.id,
+										jump_dealer.name,
+										jump_branch.name as branch_name
+									FROM
+										jump_dealer
+
+									INNER JOIN jump_branch_cstm
+									ON jump_branch_cstm.jump_dealer_id_c = jump_dealer.id  
+
+									INNER JOIN jump_branch
+									ON jump_branch_cstm.id_c = jump_branch.id
+
+									where jump_dealer.id = '{$dealer_id}'")->result();
+		echo json_encode($query);
+	}
+
 
 }
 

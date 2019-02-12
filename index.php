@@ -54,7 +54,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  */
 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
-	define('RYAN_IP', '192.168.1.6');
+	define('RYAN_IP', '192.168.1.11');
 	define('RYAN_USER', 'developers');
 	define('RYAN_PASSWORD', '1234');
 	define('RYAN_DB', 'suitecrm_dms_final');
