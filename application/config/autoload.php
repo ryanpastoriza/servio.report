@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('admin_lte','url');
+$autoload['helper'] = array('admin_lte','url','chartJs');
 
 /*
 | -------------------------------------------------------------------
@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array();
+$autoload['model'] = array('setup/LeadSource', 'setup/BaseModel', 'setup/Branch', 'setup/Dealer', 'setup/ModelDescription');
