@@ -378,7 +378,7 @@ class Reports extends MY_Controller {
 
 		$this->load->model('Pi_prospect_inquiry_cstm');
 		// $filters['dealer'] = $this->Dealer->getDealer();
-		$filters['dealer_branch'] = $this->Dealer->getDealerBranch($_SESSION['dealer'], $_SESSION['branch']);
+		$filters['dealer_branch'] = $this->Dealer->getDealerBranch();
 		// var_dump($filters['dealer_branch']);
 		$pi_records = $this->Pi_prospect_inquiry_cstm->populateProspect();
 
