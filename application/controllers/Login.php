@@ -33,8 +33,9 @@ class Login extends CI_Controller {
 				if($check->title == "MMPC" | $check->title == "Dealer Sales Manager" | $check->title == "Branch Sales Manager")
 				{
 					$check = $this->main_model->validate();
-					$dealer =$this->main_model->get_branch($check->id);
+					$dealer =$this->Branch->getBranch($check->id);
 					$check->fullname = $check->first_name." ".$check->last_name; 
+					$check->dealer = $dealer;
 					unset($check->user_hash);
 					$this->session->set_userdata('user', $check);
 					// $this->session->set_userdata('id',$check->id);
