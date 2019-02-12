@@ -96,7 +96,7 @@ class Pi_prospect_inquiry_cstm extends My_Model {
 		return $res;
 	}
 
-	function populateProspect(){
+	function populateProspect($cond = array()){
 
 		
 		$this->db->select(['pi_prospect_inquiry.id',
@@ -161,6 +161,8 @@ class Pi_prospect_inquiry_cstm extends My_Model {
 
 		->where('pi_prospect_inquiry.deleted', 0);
 		// additional where clause for dealer, branch etc.. . 
+
+		
 		$result = $this->db->get()->result();
 		return $result;
 		

@@ -1,12 +1,5 @@
-<?php
-
-    var_dump($_SESSION);
-
-?>
 <div class="col-sm-12">
-    <!-- <pre>  -->
-    <?php //var_export($pi_records); ?>
-     <!-- </pre>  -->
+   
     <div class="box box-default box-solid">
         <div class="box-header with-border">
             <h3 class="box-title"><b>Details</b> <small> Prospect Inquiry Report</small></h3>
