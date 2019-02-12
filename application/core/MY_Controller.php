@@ -72,8 +72,6 @@ class MY_Controller extends CI_Controller {
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
 
-										'link' => ""
-
 										'link' => [
 													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
