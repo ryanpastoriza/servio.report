@@ -1,3 +1,8 @@
+<?php
+
+    var_dump($_SESSION);
+
+?>
 <div class="col-sm-12">
     <!-- <pre>  -->
     <?php //var_export($pi_records); ?>
