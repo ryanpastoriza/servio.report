@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-08 15:40:46
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-08 15:41:54
+ * @Last Modified time: 2019-02-11 09:23:31
  */
 ?>
 
@@ -27,7 +27,7 @@
 <?php
 
 
-	echo lte_load_view('widget5', ['header' => "Prospect Inquiry by Mode of Payment",
+	echo lte_load_view('widget5', ['header' => "Prospect Inquiry by Lead Source",
 								'bgColor' => "box-navy",
 								'col_grid' => col_grid(12,6),
 								'boxOptions' => [

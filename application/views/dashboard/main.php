@@ -4,13 +4,19 @@
  * @Author: ET
  * @Date:   2019-02-05 17:29:08
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-08 16:52:01
+ * @Last Modified time: 2019-02-11 17:05:10
  */
 
 
 $prospectInquiryContent = $this->load->view('charts/PIbyMOP', [], True);
-
 $prospectInquiryContent .=  $this->load->view('charts/PIbyLS', [], True);
+$prospectInquiryContent .=  $this->load->view('charts/PIperModel', [], True);
+
+$soContent = $this->load->view('charts/SObyMOP', [], True);
+$soContent .= $this->load->view('charts/SObyLS', [], True);
+$soContent .= $this->load->view('charts/SObyModel', [], True);
+
+$siContent = $this->load->view('charts/SOInvoiced', [], True);
 
 
 
@@ -39,10 +45,10 @@ $prospectInquiryContent .=  $this->load->view('charts/PIbyLS', [], True);
 										'content' => $prospectInquiryContent
 										],
 										['title' => "Sales Order",
-										'content' => "asdasd"
+										'content' => $soContent
 										],
 										['title' => "Sales Invoice",
-										'content' => "content 3"
+										'content' => $siContent
 										]
 									],
 					'col_grid' => col_grid(12)

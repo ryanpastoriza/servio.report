@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-08 16:59:16
+ * @Last Modified time: 2019-02-11 17:09:53
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -34,7 +34,7 @@ class Pi_prospect_inquiry_cstm extends MY_Model {
 
 	function by_MOP()
 	{
-		$this->selects = [ $this::DB_TABLE_PK, 'count('.$this::DB_TABLE_PK.') as total', 'payment_terms_c', "CONCAT('WEEK ',  WEEK(inquiry_date_c, 3) -
+		$this->selects = [ $this::DB_TABLE_PK, 'count('.$this::DB_TABLE_PK.') as total', 'payment_terms_c', "CONCAT('WK ',  WEEK(inquiry_date_c, 3) -
                       							WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b %Y')) as month"];
 
 		$this->sqlQueries['toGroup'] = "payment_terms_c,  month";
@@ -45,8 +45,8 @@ class Pi_prospect_inquiry_cstm extends MY_Model {
 		return $res;
 	}
 	function by_LS(){
-		$this->selects = [$this::DB_TABLE_PK, "CONCAT('WEEK ', WEEK(inquiry_date_c, 3) -
-                      	WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b')) as month",
+		$this->selects = [$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
+                      	WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b %Y')) as month",
                       	'count('.$this::DB_TABLE_PK.') as total', "lead_lead_source.name as ls_name"
                   		];
 
@@ -60,8 +60,40 @@ class Pi_prospect_inquiry_cstm extends MY_Model {
 		$res = $this->search();
 
 		return $res;
+	}
+	function by_Model(){
+		$this->selects = [$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
+                      	WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b %Y')) as month",
+                      	'count('.$this::DB_TABLE_PK.') as total', "jump_base_model.name as model_name"
+                  		];
+
+        $this->sqlQueries['order_type'] = "asc";
+		$this->sqlQueries['order_field'] = "inquiry_date_c";
+		$this->sqlQueries['toGroup'] = "month, model_name";
+		$this->toJoin = [['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"]];
 
 
+		$res = $this->search();
+
+		return $res;
+	}
+	function by_Variance(){
+		$this->selects = [$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
+                      	WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b %Y')) as month",
+                      	'count('.$this::DB_TABLE_PK.') as total', "jump_base_model.name as model_name"
+                  		];
+
+        $this->sqlQueries['order_type'] = "asc";
+		$this->sqlQueries['order_field'] = "inquiry_date_c";
+		$this->sqlQueries['toGroup'] = "month, model_name";
+		$this->toJoin = [['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"]];
+
+
+		$res = $this->search();
+
+		return $res;
 	}
 
 }
