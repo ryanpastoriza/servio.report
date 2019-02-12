@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 09:19:00
+ * @Last Modified time: 2019-02-12 13:53:53
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -16,14 +16,10 @@ class Dashboard extends MY_Controller {
 
 	function test(){
 
-		$this->load->model('jump_dealer');
-
-		$dso = new jump_dealer;
-		$dso = $dso->get();
-
 		echo "<pre>";
-		print_r ($dso);
+		print_r ($_SESSION);
 		echo "</pre>";
+
 
 	}
 	function __construct()
@@ -39,24 +35,12 @@ class Dashboard extends MY_Controller {
 
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$this->load->model('jump_dealer');
-		$this->load->model('jump_branch');
 
 		set_header_title('Servio-DMS Dashboard');
 
 		$PIStatusReport 	= new PIStatusPieChart();
 		$PerDealer 			= new PerDealerChart;
 		$jd 				= new Jump_dealer;
-		$branch 			= new Jump_branch;
-
-		$branch->selects = ['name','id'];
-		$branches = $branch->get();
-
-		$branchesSelect = [];
-
-		foreach ($branches as $value) {
-			$branchesSelect[] = (object)['id' => $value->id, 'text' => $value->name];
-		}
-
 
 		$jd->selects = ['name as text', 'id'];
 		$dealers = $jd->get();
@@ -79,7 +63,6 @@ class Dashboard extends MY_Controller {
 														'cashTerm' => $cashTerm, 
 														'PIStatusReport' => $PIStatusReport,
 														'PerDealer' => $PerDealer,
-														'branches' => $branchesSelect
 													]
 													, TRUE);
 
@@ -207,10 +190,36 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
+	function get_branches(){
+		$this->load->model('setup/dealer');
+		$selected = $this->input->post('selected');
+		$selected = explode(",", $selected);
+
+		$all_branches = [];
+
+		foreach ($selected as $value) {
+			if($value != ""){
+			$dealer = new Dealer;
+			$dealer->load($value);
+
+			$branches = $dealer->branches();
+			
+			
+			foreach ($branches as $value2) {
+				$all_branches[] = (object)['id' => $value2->id, 'text' => $value2->branch_name];
+			}
+			}
+
+		}
+
+
+		echo json_encode($all_branches);
+
+
+	}
 	public function create_chart($data, $str = FALSE){
 
 		return $this->load->view('chartjs/bar_chart', $data, $str);
-
 	}
 	public function logout(){
 		unset(

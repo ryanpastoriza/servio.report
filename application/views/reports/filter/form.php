@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:36:41
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 09:20:08
+ * @Last Modified time: 2019-02-12 10:51:24
  */
 ?>
 <div class="form-group">
@@ -17,9 +17,9 @@
 </div>
 <div class="form-group">
   <label>Dealer</label>
-  <input type="text" class="form-control" id='dealer-select' placeholder="Dealer Name">
+  <input type="text" class="form-control" multiple="multiple" name='dealers[]'  id='dealer-select' placeholder="Dealer Name">
 </div>
-<div class="form-group hidden">
+<div class="form-group hidden branch-selector">
   <label>Branch</label>
   <input type="text" class="form-control" id='branch-select' placeholder="Branch Name">
 </div>

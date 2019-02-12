@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 08:42:50
+ * @Last Modified time: 2019-02-12 10:06:00
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -31,23 +31,19 @@ class MY_Controller extends CI_Controller {
 	}
 	function put_contents($content,$contentHeader)
 	{
-		$vars = ['addStyles' => [
-									asset_url('plugins/select2/select2.min.css'),
-								],
-				'addPlugins' => [
-									asset_url('plugins/chartjs/Chart.js'),
-									asset_url('plugins/momentjs/moment.js'),
-									asset_url('plugins/select2/select2.full.min.js'),
-									 ]];
 		$vars = [
 					'addStyles'  => [ 
+										asset_url('plugins/select2/select2.min.css'),
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),
 										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css'),
 										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css')
 									],
 					'addPlugins' => [ 
 										asset_url('plugins/datatables/jquery.dataTables.min.js'),
-										asset_url('plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js')
+										asset_url('plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js'),
+										asset_url('plugins/chartjs/Chart.js'),
+										asset_url('plugins/momentjs/moment.js'),
+										asset_url('plugins/select2/select2.full.min.js'),
 									]
 				];
 
@@ -71,9 +67,6 @@ class MY_Controller extends CI_Controller {
 											],
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
-
-										'link' => ""
-
 										'link' => [
 													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
