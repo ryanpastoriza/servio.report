@@ -9,7 +9,7 @@ class Login extends CI_Controller {
 		parent::__construct();
 		$this->load->library('form_validation');
 		$this->load->model('main_model');
-		if ($this->session->userdata('id')){
+		if ($this->session->userdata('user')){
 			redirect('dashboard');
 		}
 	}
@@ -34,13 +34,15 @@ class Login extends CI_Controller {
 				{
 					$check = $this->main_model->validate();
 					$dealer =$this->main_model->get_branch($check->id);
-					$fullname=$check->first_name." ".$check->last_name; 
-					$this->session->set_userdata('id',$check->id);
-					$this->session->set_userdata('username',$check->user_name);
-					$this->session->set_userdata('fullname',$fullname);
-					$this->session->set_userdata('dealer',$dealer->dealer);
-					$this->session->set_userdata('branch',$dealer->branch);
-					$this->session->set_userdata('title',$check->title);
+					$check->fullname = $check->first_name." ".$check->last_name; 
+					unset($check->user_hash);
+					$this->session->set_userdata('user', $check);
+					// $this->session->set_userdata('id',$check->id);
+					// $this->session->set_userdata('username',$check->user_name);
+					// $this->session->set_userdata('fullname',$fullname);
+					// $this->session->set_userdata('dealer',$dealer->dealer);
+					// $this->session->set_userdata('branch',$dealer->branch);
+					// $this->session->set_userdata('title',$check->title);
 					redirect('dashboard');
 				}
 				else
