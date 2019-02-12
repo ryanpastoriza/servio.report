@@ -79,7 +79,7 @@
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
-
+      <a href="<?php echo base_url();?>dashboard/logout" class="logo" style="float: right; width:50px;"><span class="glyphicon glyphicon-log-out"></span></a>
       <?php if (isset($rightNav) && $rightNav != false): ?>
         
       <div class="navbar-custom-menu">

@@ -39,6 +39,18 @@ class MY_Controller extends CI_Controller {
 									asset_url('plugins/momentjs/moment.js'),
 									asset_url('plugins/select2/select2.full.min.js'),
 									 ]];
+		$vars = [
+					'addStyles'  => [ 
+										asset_url('plugins/datatables/dataTables.bootstrap.css'),
+										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css'),
+										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css')
+									],
+					'addPlugins' => [ 
+										asset_url('plugins/datatables/jquery.dataTables.min.js'),
+										asset_url('plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js')
+									]
+				];
+
 
 
 		$content_vars = ['contentHeader' => $contentHeader,
@@ -59,7 +71,24 @@ class MY_Controller extends CI_Controller {
 											],
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
+
 										'link' => ""
+
+										'link' => [
+													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
+													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
+													'Prospect Inquiry by Mode of Payment' => '',
+													'Inquiry per Dealer' => '',
+													'Inquiry per Model' => '',
+													'Sales Summary per Dealer' => '',
+													'Sales Summary per Model' => '',
+													'Lead Source of Prospect Inquiries' => '',
+													'Sales Order Details' => '',
+													'Sales Order by Lead Source' => '',
+													'Sales Order by Payment Mode' => '',
+
+ 												  ]
+
 											]
 									],
 					];

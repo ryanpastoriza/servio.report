@@ -25,7 +25,13 @@ class Dashboard extends MY_Controller {
 		print_r ($dso);
 		echo "</pre>";
 
-
+	}
+	function __construct()
+	{
+		parent::__construct();
+		if (!$this->session->userdata('id')){
+			redirect('login');
+		}
 	}
 
 	public function index()
@@ -205,6 +211,14 @@ class Dashboard extends MY_Controller {
 
 		return $this->load->view('chartjs/bar_chart', $data, $str);
 
+	}
+	public function logout(){
+		unset(
+        	$_SESSION['username'],
+			$_SESSION['id'],
+			$_SESSION['title']
+        );
+        redirect('login');
 	}
 
 
