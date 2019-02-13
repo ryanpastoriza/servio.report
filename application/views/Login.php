@@ -4,44 +4,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!DOCTYPE html>
 <html>
 <head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>DMS | Login</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+	<link rel="stylesheet" href="<?php echo base_url('public/adminlte/bootstrap/css/bootstrap.min.css'); ?>">
+	<link rel="stylesheet" href="<?php echo base_url('public/adminlte/dist/css/AdminLTE.css'); ?>">
+	<script src="<?php echo base_url('public/adminlte/plugins/jQuery/jquery-1.11.3.min.js'); ?>"></script>
+	<script src="<?php echo base_url('public/adminlte/bootstrap/js/bootstrap.min.js'); ?>"></script>
+	
 </head>
-<body>
-	<section class="content">
-      	<div class="row" >
-        	<section class="col-xs-12">
-         		<div class="box box-primary">
-					<div class="box-body">
-					
+<body class="hold-transition login-page">
 
-
-						<div class="login col-md-3 box-primary" style="margin-top: 15%;margin-left: 35%; margin-right: 35%;">
-							<form method="post" action="<?php echo base_url(); ?>login/verify">
-								<div class="form-group">
-									<input type="text" name="username" class="form-control" placeholder="Username" >
-									<span class="text-danger"><?php echo form_error('username'); ?></span>
-								</div>
-								<div class="form-group">
-									<input type="password" name="password" class="form-control" placeholder="Password" >
-									<span class="text-danger"><?php echo form_error('password'); ?></span>
-									</div>
-								<div class="form-group">
-									<span class="text-danger"><?php echo $this->session->flashdata('error'); ?></span>
-								</div>
-								<div class="form-group">
-									<input type="submit" name="insert" value="Login" class="btn btn-primary">
-								</div>
-							</form>
-						</div>
+		<div class="login-box">
+			<div class="login-logo">
+			<!-- <img src="<?php //echo base_url('public/images/dms_header.png'); ?>" style="width: 100%;" /> -->
+				<a href=""><b>SERVIO</b>REPORTS</a>
+			</div>
+			<!-- /.login-logo -->
+			<div class="login-box-body">
+				<p class="login-box-msg">Sign in to start your session</p>
+				<form method="post" action="<?php echo base_url(); ?>login/verify">
+					<div class="form-group">
+						<input type="text" name="username" class="form-control" placeholder="Username" >
+						<span class="text-danger"><?php echo form_error('username'); ?></span>
 					</div>
-				</div>
-			</section>
+					<div class="form-group">
+						<input type="password" name="password" class="form-control" placeholder="Password" >
+						<span class="text-danger"><?php echo form_error('password'); ?></span>
+					</div>
+					<div class="form-group">
+						<span class="text-danger"><?php echo $this->session->flashdata('error'); ?></span>
+					</div>
+					<div class="form-group">
+						<input type="submit" name="insert" value="Login" class="btn btn-primary btn-block">
+					</div>
+				</form>
+			</div>
+			<!-- /.login-box-body -->
 		</div>
-	</section>
-		
-
 </body>
 </html>
