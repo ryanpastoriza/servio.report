@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 16:54:45
+ * @Last Modified time: 2019-02-13 09:43:09
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -39,7 +39,7 @@ class MY_Controller extends CI_Controller {
 	function put_contents($content,$contentHeader)
 	{
 
-			$vars = [
+		$vars = [
 					'addStyles'  => [ 
 										asset_url('plugins/select2/select2.min.css'),
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),
@@ -76,15 +76,13 @@ class MY_Controller extends CI_Controller {
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
 										'link' => [
-													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
+													// 'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
 													'Prospect Inquiry by Mode of Payment' => '',
 													'Inquiry per Dealer' => '',
 													'Inquiry per Model' => '',
-													'Sales Summary per Dealer' => '',
-													'Sales Summary per Model' => '',
-													'Lead Source of Prospect Inquiries' => '',
-													'Sales Order Details' => '',
+													// 'Sales Summary per Dealer' => '',
+													// 'Sales Summary per Model' => '',
 													'Sales Order by Lead Source' => '',
 													'Sales Order by Payment Mode' => '',
 
