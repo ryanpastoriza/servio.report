@@ -4,17 +4,34 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-07 16:34:01
+ * @Last Modified time: 2019-02-12 13:53:24
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dealer extends MY_Model {
+
+    const DB_TABLE = 'jump_dealer';
+    const DB_TABLE_PK = 'id';
+
 	
     function getDealer($dealer_id = null){
         return
         $this->db->select('jump_dealer.`name` AS dealer, jump_dealer.id')
                  ->group_by('jump_dealer.id')
                  ->get('jump_dealer')->result();
+    }
+
+    function branches(){
+        $this->load->model('branch');
+
+        $branch = new Branch;
+
+        $branch->selects = ['jump_branch.id', 'jump_branch.`name` AS branch_name'];
+        $branch->toJoin = [
+                            ['jump_branch_cstm', 'jump_branch.id = jump_branch_cstm.id_c', 'inner'],
+                        ];
+        $res = $branch->search(["jump_branch_cstm.jump_dealer_id_c" => $this->{$this::DB_TABLE_PK}]);
+        return $res;
     }
 
     function getDealerBranch($dealer = null, $branch = null) {

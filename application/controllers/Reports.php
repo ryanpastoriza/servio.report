@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:50:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-06 10:50:44
+ * @Last Modified time: 2019-02-13 09:44:53
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -44,6 +44,8 @@ class Reports extends MY_Controller {
 		$leads 		 = $this->db->get('lead_lead_source')->result();
 		$base_models = $this->base_model_records();
 		$main_query  = $this->lead_payment_query();
+
+		$base_models_grand_values = [];
 
 		$base_models_grand_values = [];
 
@@ -115,6 +117,37 @@ class Reports extends MY_Controller {
 			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
 			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
 		}
+			
+		foreach ($array as $key => $value) {
+
+			// calculate lead subtotal percentage 
+			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+
+			foreach ($base_models as $bm_key => $model) {
+				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
+					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
+				}
+				else{
+					$array[$key]["p".$model->name] = "0%";
+				}
+			}
+		}
+
+		$array[count($leads)] = [
+			"source_of_sale" => "<b>Total</b>",
+			"total_value" => "<b>".$grand_total."</b>",
+			"total_pct" => "<b>100</b>%"
+		];
+
+		foreach ($base_models as $key => $value) {
+			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
+			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+		}
+
+		echo json_encode([
+			"data" => $array
+		]);
+	}
 
 		echo json_encode([
 			"data" => $array
@@ -125,6 +158,11 @@ class Reports extends MY_Controller {
 		
 		$array = [];
 		$grand_total = 0;
+
+		// $leads 		 = $this->db->get('lead_lead_source')->result();
+		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
+		$base_models = $this->base_model_records();
+		$main_query  = $this->main_query();
 
 		// $leads 		 = $this->db->get('lead_lead_source')->result();
 		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
@@ -255,6 +293,147 @@ class Reports extends MY_Controller {
 		return $query;
 	}
 
+	public function test_method(){
+
+
+		$array = [];
+		$grand_total = 0;
+
+		// $leads 		 = $this->db->get('lead_lead_source')->result();
+		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"]];
+		$base_models = $this->base_model_records();
+		$main_query  = $this->main_query();
+
+
+		$base_models_grand_values = [];
+
+		$grand_total = 0;
+	public function dealers(){
+		
+		$query = $this->db->query("SELECT * from jump_dealer")->result();
+		return $query;	
+	}
+
+	public function branch(){
+
+		$dealer_id = $_GET['dealer_id'];
+
+		$query = $this->db->query("	SELECT
+										jump_dealer.id,
+										jump_dealer.name,
+										jump_branch.name as branch_name
+									FROM
+										jump_dealer
+
+
+		foreach ($leads as $lead_key => $lead) {
+			$lead = (object) $lead;
+			$lead_total_value = 0;
+			$lead_total_pct   = 0;
+
+			$array[$lead_key] = [
+				"source_of_sale" => ucwords($lead->name),
+			];
+									INNER JOIN jump_branch_cstm
+									ON jump_branch_cstm.jump_dealer_id_c = jump_dealer.id  
+
+									INNER JOIN jump_branch
+									ON jump_branch_cstm.id_c = jump_branch.id
+
+									where jump_dealer.id = '{$dealer_id}'")->result();
+		echo json_encode($query);
+	}
+
+	public function prospect_inquiry_details(){
+
+				$total_value = "";
+
+				foreach ($main_query as $query_key => $query_value) {
+
+					if($lead->name == $query_value->payment_terms_c &&  $model->name == $query_value->base_model){
+						$total_value = $query_value->total_value;
+					} 
+
+		$this->load->model('Pi_prospect_inquiry_cstm');
+		// $filters['dealer'] = $this->Dealer->getDealer();
+		$filters['dealer_branch'] = $this->Dealer->getDealerBranch();
+		// var_dump($filters['dealer_branch']);
+		$pi_records = $this->Pi_prospect_inquiry_cstm->populateProspect();
+
+		$content = $this->load->view("reports/prospect_inquiry_details/filter.php" ,[ "filters" => $filters ],TRUE);
+		$content .= $this->load->view("reports/prospect_inquiry_details/prospect_inquiry_details.php" ,[ "pi_records" => $pi_records ],TRUE);
+
+		set_header_title("Reports - Prospect Inquiry Details");
+		$this->put_contents($content,"Prospect Inquiry Details");
+	}
+
+				if(array_key_exists("v".$model->name, $base_models_grand_values)){
+					$base_models_grand_values["v".$model->name]["value"] = $base_models_grand_values["v".$model->name]["value"] + (int) $total_value;
+				}
+				else{
+					$base_models_grand_values["v".$model->name] = ["value" => (int) $total_value];
+				}
+
+				$total_value = (int) $total_value;
+
+				$lead_total_value = (int) $lead_total_value + (int) $total_value;
+
+				$array[$lead_key] += ["v".$model->name => $total_value];
+				$array[$lead_key] += ["p".$model->name => 0];
+
+			}
+	public function inquiry_per_dealer(){
+		
+		$base_model = $this->base_model_records();
+		$dealers    = $this->dealers();
+		$user = $_SESSION;
+
+		if( strtolower($user['title']) == "mmpc"){	
+			$content = $this->load->view("reports/prospect_inquiry_per_dealer/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
+		}
+		else{
+			$content = $this->load->view("errors/unauthorized.php" ,[ ], TRUE);
+		}
+
+		set_header_title("Reports - Inquiry per Dealer");
+		$this->put_contents($content, "Inquiry Per Dealer");
+	}
+
+	public function per_dealer_json(){
+
+			$grand_total = (int) $grand_total + (int) $lead_total_value;
+		}
+			
+		foreach ($array as $key => $value) {
+
+			// calculate lead subtotal percentage
+			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+
+			foreach ($base_models as $bm_key => $model) {
+				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
+					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
+				}
+				else{
+					$array[$key]["p".$model->name] = "0%";
+				}
+			}
+		}
+
+		$array[count($leads)] = [
+			"source_of_sale" => "<b>Total</b>",
+			"total_value" => "<b>".$grand_total."</b>",
+			"total_pct" => "<b>100</b>%"
+		];
+
+		foreach ($base_models as $key => $value) {
+			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
+			// $array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+		}
+
+		echo "<pre>";
+		print_r($array);
+	}
+
 	public function dealers(){
 		
 		$query = $this->db->query("SELECT * from jump_dealer")->result();
@@ -281,44 +460,6 @@ class Reports extends MY_Controller {
 									where jump_dealer.id = '{$dealer_id}'")->result();
 		echo json_encode($query);
 	}
-
-	public function prospect_inquiry_details(){
-
-
-		$this->load->model('Pi_prospect_inquiry_cstm');
-		// $filters['dealer'] = $this->Dealer->getDealer();
-		$filters['dealer_branch'] = $this->Dealer->getDealerBranch();
-		// var_dump($filters['dealer_branch']);
-		$pi_records = $this->Pi_prospect_inquiry_cstm->populateProspect();
-
-		$content = $this->load->view("reports/prospect_inquiry_details/filter.php" ,[ "filters" => $filters ],TRUE);
-		$content .= $this->load->view("reports/prospect_inquiry_details/prospect_inquiry_details.php" ,[ "pi_records" => $pi_records ],TRUE);
-
-		set_header_title("Reports - Prospect Inquiry Details");
-		$this->put_contents($content,"Prospect Inquiry Details");
-	}
-
-	public function inquiry_per_dealer(){
-		
-		$base_model = $this->base_model_records();
-		$dealers    = $this->dealers();
-		$user = $_SESSION;
-
-		if( strtolower($user['title']) == "mmpc"){	
-			$content = $this->load->view("reports/prospect_inquiry_per_dealer/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
-		}
-		else{
-			$content = $this->load->view("errors/unauthorized.php" ,[ ], TRUE);
-		}
-
-		set_header_title("Reports - Inquiry per Dealer");
-		$this->put_contents($content, "Inquiry Per Dealer");
-	}
-
-	public function per_dealer_json(){
-
-
-
 		$array[] = [
 			"dealer" => "asdasd",
 			// "code" => "asdasd",
@@ -456,6 +597,7 @@ class Reports extends MY_Controller {
 		return $this->db->query($query)->result();
 
 	}
+
 
 }
 
