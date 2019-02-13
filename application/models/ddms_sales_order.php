@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 10:58:40
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 17:10:22
+ * @Last Modified time: 2019-02-13 11:36:03
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -78,7 +78,7 @@ class Ddms_sales_order extends MY_Model {
 		$this->toJoin = [['Ddms_sales_order_cstm', $this::DB_TABLE.".id = Ddms_sales_order_cstm.id_c", "INNER" ]];
 
 
-		$res = $this->search(["Ddms_sales_order_cstm.invoiced_cb_c" => "1"]);
+		$res = $this->search("Ddms_sales_order_cstm.invoiced_c !=  ''");
 
 		return $res;
 	}
