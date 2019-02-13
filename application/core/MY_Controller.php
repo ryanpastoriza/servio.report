@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-13 09:43:09
+ * @Last Modified time: 2019-02-13 14:36:26
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -22,12 +22,15 @@ class MY_Controller extends CI_Controller {
 	public function __construct()
 	{
 
+
+		parent::__construct();
+
+
 		$this->dealer_user_titles 	= ['dealer_sales_manager'];
 		$this->branch_user_tiles 	= ['branch_sales_manager'];
 		$this->mmpc_user_titles 	= ['mmpc'];
+		$this->user_info = $this->session->get_userdata('user')['user'];
 
-		parent::__construct();
-		$this->user_info = $this->session->get_userdata('user');
 
 		//Do your magic here
 	}
@@ -101,19 +104,47 @@ class MY_Controller extends CI_Controller {
 	}
 
 	function allowed_dealers(){
-		$mmpc_user 		= in_array($this->mmpc_user_titles, $this->user_info->title);
+		$this->load->model('setup/Dealer');
 
-		// if($mmpc_user){
+		$mmpc_user 		= in_array(strtolower($this->user_info->title),$this->mmpc_user_titles);
 
-		// }
-		// else($dealer_user){
+		$dealer_user 	= in_array($this->user_info->title,$this->dealer_user_titles);
+		$dealer = new Dealer;
 
-		// }
+		if($mmpc_user){
+			return $dealer->get();
+		}
+		else{
+			$dealer = $dealer->search(['id' => $this->user_info->dealer->dealer_id]);
+			return $dealer;
+		}
 	}
 	function allowed_branches(){
-		$mmpc_user 		= in_array($this->mmpc_user_titles, $this->user_info->title);
-		$dealer_user 	= in_array($this->dealer_user_titles, $this->user_info->title);
-		$branch_user 	= in_array($this->branch_user_tiles, $this->user_info->title);
+		$this->load->model('dealer');
+		$this->load->model('branch');
+
+
+		$mmpc_user 		= in_array(strtolower($this->user_info->title), $this->mmpc_user_titles);
+		$dealer_user 	= in_array(strtolower($this->user_info->title), $this->dealer_user_titles);
+		$branch_user 	= in_array(	strtolower($this->user_info->title), $this->branch_user_tiles);
+		$branch = new Branch;
+
+
+		$dealer = new Dealer;
+		$dealer->load($this->user_info->dealer->dealer_id);
+
+		if($mmpc_user)
+		{
+			return $branch->get();
+		}
+		elseif($dealer_user){
+			return $dealer->branches();
+		}
+		else
+		{
+			echo "asdasd";
+			return $branch->load($this->user_info->dealer->branch_id);
+		}
 	}
 }
 
