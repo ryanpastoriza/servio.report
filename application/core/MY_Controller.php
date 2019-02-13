@@ -70,15 +70,13 @@ class MY_Controller extends CI_Controller {
 										['icon' => 'fa fa-line-chart', 
 
 										'link' => [
-													'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
+													// 'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
 													'Prospect Inquiry by Mode of Payment' => '',
 													'Inquiry per Dealer' => '',
 													'Inquiry per Model' => '',
-													'Sales Summary per Dealer' => '',
-													'Sales Summary per Model' => '',
-													'Lead Source of Prospect Inquiries' => '',
-													'Sales Order Details' => '',
+													// 'Sales Summary per Dealer' => '',
+													// 'Sales Summary per Model' => '',
 													'Sales Order by Lead Source' => '',
 													'Sales Order by Payment Mode' => '',
 

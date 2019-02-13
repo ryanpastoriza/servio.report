@@ -38,12 +38,6 @@ class Login extends CI_Controller {
 					$check->dealer = $dealer;
 					unset($check->user_hash);
 					$this->session->set_userdata('user', $check);
-					// $this->session->set_userdata('id',$check->id);
-					// $this->session->set_userdata('username',$check->user_name);
-					// $this->session->set_userdata('fullname',$fullname);
-					// $this->session->set_userdata('dealer',$dealer->dealer);
-					// $this->session->set_userdata('branch',$dealer->branch);
-					// $this->session->set_userdata('title',$check->title);
 					redirect('dashboard');
 				}
 				else
