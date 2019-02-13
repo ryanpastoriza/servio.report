@@ -51,7 +51,9 @@ class MY_Controller extends CI_Controller {
 									],
 					'addPlugins' => [ 
 										asset_url('plugins/datatables/jquery.dataTables.min.js'),
-										asset_url('plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js'),
+										asset_url('plugins/datatables/extensions/buttons/js/buttons.print.min.js'),
+										asset_url('plugins/datatables/extensions/buttons/js/buttons.html5.min.js'),
+										asset_url('plugins/datatables/jszip.min.js'),
 										asset_url('plugins/chartjs/Chart.js'),
 										asset_url('plugins/momentjs/moment.js'),
 										asset_url('plugins/select2/select2.full.min.js'),
