@@ -4,12 +4,11 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:50:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-13 09:44:53
+ * @Last Modified time: 2019-02-06 10:50:44
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Reports extends MY_Controller {
-
 
 	public function index()
 	{
@@ -44,8 +43,6 @@ class Reports extends MY_Controller {
 		$leads 		 = $this->db->get('lead_lead_source')->result();
 		$base_models = $this->base_model_records();
 		$main_query  = $this->lead_payment_query();
-
-		$base_models_grand_values = [];
 
 		$base_models_grand_values = [];
 
@@ -117,37 +114,6 @@ class Reports extends MY_Controller {
 			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
 			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
 		}
-			
-		foreach ($array as $key => $value) {
-
-			// calculate lead subtotal percentage 
-			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
-
-			foreach ($base_models as $bm_key => $model) {
-				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
-					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
-				}
-				else{
-					$array[$key]["p".$model->name] = "0%";
-				}
-			}
-		}
-
-		$array[count($leads)] = [
-			"source_of_sale" => "<b>Total</b>",
-			"total_value" => "<b>".$grand_total."</b>",
-			"total_pct" => "<b>100</b>%"
-		];
-
-		foreach ($base_models as $key => $value) {
-			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
-			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
-		}
-
-		echo json_encode([
-			"data" => $array
-		]);
-	}
 
 		echo json_encode([
 			"data" => $array
@@ -158,11 +124,6 @@ class Reports extends MY_Controller {
 		
 		$array = [];
 		$grand_total = 0;
-
-		// $leads 		 = $this->db->get('lead_lead_source')->result();
-		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
-		$base_models = $this->base_model_records();
-		$main_query  = $this->main_query();
 
 		// $leads 		 = $this->db->get('lead_lead_source')->result();
 		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
@@ -293,21 +254,6 @@ class Reports extends MY_Controller {
 		return $query;
 	}
 
-	public function test_method(){
-
-
-		$array = [];
-		$grand_total = 0;
-
-		// $leads 		 = $this->db->get('lead_lead_source')->result();
-		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"]];
-		$base_models = $this->base_model_records();
-		$main_query  = $this->main_query();
-
-
-		$base_models_grand_values = [];
-
-		$grand_total = 0;
 	public function dealers(){
 		
 		$query = $this->db->query("SELECT * from jump_dealer")->result();
@@ -325,15 +271,6 @@ class Reports extends MY_Controller {
 									FROM
 										jump_dealer
 
-
-		foreach ($leads as $lead_key => $lead) {
-			$lead = (object) $lead;
-			$lead_total_value = 0;
-			$lead_total_pct   = 0;
-
-			$array[$lead_key] = [
-				"source_of_sale" => ucwords($lead->name),
-			];
 									INNER JOIN jump_branch_cstm
 									ON jump_branch_cstm.jump_dealer_id_c = jump_dealer.id  
 
@@ -346,13 +283,6 @@ class Reports extends MY_Controller {
 
 	public function prospect_inquiry_details(){
 
-				$total_value = "";
-
-				foreach ($main_query as $query_key => $query_value) {
-
-					if($lead->name == $query_value->payment_terms_c &&  $model->name == $query_value->base_model){
-						$total_value = $query_value->total_value;
-					} 
 
 		$this->load->model('Pi_prospect_inquiry_cstm');
 		// $filters['dealer'] = $this->Dealer->getDealer();
@@ -367,28 +297,13 @@ class Reports extends MY_Controller {
 		$this->put_contents($content,"Prospect Inquiry Details");
 	}
 
-				if(array_key_exists("v".$model->name, $base_models_grand_values)){
-					$base_models_grand_values["v".$model->name]["value"] = $base_models_grand_values["v".$model->name]["value"] + (int) $total_value;
-				}
-				else{
-					$base_models_grand_values["v".$model->name] = ["value" => (int) $total_value];
-				}
-
-				$total_value = (int) $total_value;
-
-				$lead_total_value = (int) $lead_total_value + (int) $total_value;
-
-				$array[$lead_key] += ["v".$model->name => $total_value];
-				$array[$lead_key] += ["p".$model->name => 0];
-
-			}
 	public function inquiry_per_dealer(){
 		
 		$base_model = $this->base_model_records();
 		$dealers    = $this->dealers();
-		$user = $_SESSION;
+		$user = $_SESSION['user'];
 
-		if( strtolower($user['title']) == "mmpc"){	
+		if( strtolower($user->title) == "mmpc"){	
 			$content = $this->load->view("reports/prospect_inquiry_per_dealer/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
 		}
 		else{
@@ -401,82 +316,14 @@ class Reports extends MY_Controller {
 
 	public function per_dealer_json(){
 
-			$grand_total = (int) $grand_total + (int) $lead_total_value;
-		}
-			
-		foreach ($array as $key => $value) {
+		$date_from = $_REQUEST['date_from'];
+		$date_to   = $_REQUEST['date_to'];
 
-			// calculate lead subtotal percentage
-			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+		$where_prospect 	= ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
+		$where_sales_order  = ' AND (ddms_sales_order.date_entered BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
+		$where_sales_invoice  = ' AND (ddms_sales_order_cstm.invoiced_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
 
-			foreach ($base_models as $bm_key => $model) {
-				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
-					$array[$key]["p".$model->name] = round(( (int) $value["v".$model->name] / (int) $base_models_grand_values["v".$model->name]["value"] ) * 100, 1) . "%";
-				}
-				else{
-					$array[$key]["p".$model->name] = "0%";
-				}
-			}
-		}
-
-		$array[count($leads)] = [
-			"source_of_sale" => "<b>Total</b>",
-			"total_value" => "<b>".$grand_total."</b>",
-			"total_pct" => "<b>100</b>%"
-		];
-
-		foreach ($base_models as $key => $value) {
-			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
-			// $array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
-		}
-
-		echo "<pre>";
-		print_r($array);
-	}
-
-	public function dealers(){
-		
-		$query = $this->db->query("SELECT * from jump_dealer")->result();
-		return $query;	
-	}
-
-	public function branch(){
-
-		$dealer_id = $_GET['dealer_id'];
-
-		$query = $this->db->query("	SELECT
-										jump_dealer.id,
-										jump_dealer.name,
-										jump_branch.name as branch_name
-									FROM
-										jump_dealer
-
-									INNER JOIN jump_branch_cstm
-									ON jump_branch_cstm.jump_dealer_id_c = jump_dealer.id  
-
-									INNER JOIN jump_branch
-									ON jump_branch_cstm.id_c = jump_branch.id
-
-									where jump_dealer.id = '{$dealer_id}'")->result();
-		echo json_encode($query);
-	}
-		$array[] = [
-			"dealer" => "asdasd",
-			// "code" => "asdasd",
-			"branch" => "asdasd",
-			"prospect_inquiry" => "asdasd",
-			"sales_order" => "asdasd",
-			"sales_invoice" => "asdasd",
-		];
-
-		echo json_encode([
-			"data" => $array
-		]);
-
-	}
-
-	public function test_method(){
-		
+		$array = [];
 		$dealer_branch = $this->db->query("	SELECT
 												jump_dealer.id AS dealer_id,
 												jump_dealer. NAME AS dealer,
@@ -486,6 +333,9 @@ class Reports extends MY_Controller {
 											LEFT JOIN jump_branch_cstm ON jump_branch_cstm.jump_dealer_id_c = jump_dealer.id
 											INNER JOIN jump_branch ON jump_branch.id = jump_branch_cstm.id_c
 											WHERE jump_dealer.name != 'mmpc' ")->result();
+
+		$sales_order = $this->sales_order($where_sales_order);
+		$sales_sales_invoice = $this->sales_invoice($where_sales_invoice);
 
 		$db_array = [];
 		foreach ($dealer_branch as $key => $value) {
@@ -512,8 +362,7 @@ class Reports extends MY_Controller {
 			}
 		}
 
-		$prospects = $this->main_query();
-
+		$prospects = $this->main_query($where_prospect);
 		foreach ($prospects as $p_key => $prospect) {
 
 			// REMOVE THIS CONDITION WHEN DATA IN TABLE IS FIXED
@@ -530,15 +379,164 @@ class Reports extends MY_Controller {
 			else{
 				
 			}
-
 		}
 
-		echo "<pre>";
-		print_r($db_array);
+		foreach ($sales_order as $s_key => $so_value) {
+			
+			// REMOVE THIS CONDITION WHEN DATA IN TABLE IS FIXED
+			if( $so_value->employee_username == "admin" ){
+				continue;
+			}
+			// -------------- until here ------------------
+
+			if( $so_value->branch ){
+				$db_array[$so_value->dealer]["branches"][$so_value->branch]["sales_order"] = $db_array[$so_value->dealer]["branches"][$so_value->branch]["sales_order"] + 1;
+			}
+			else{
+				
+			}
+		}
+
+		foreach ($sales_sales_invoice as $si_key => $si_value) {
+			// REMOVE THIS CONDITION WHEN DATA IN TABLE IS FIXED
+			if( $si_value->employee_username == "admin" ){
+				continue;
+			}
+			// -------------- until here ------------------
+
+			if( $si_value->branch ){
+
+				if( $si_value->invoiced_c ){
+					$db_array[$si_value->dealer]["branches"][$si_value->branch]["sales_invoice"] = $db_array[$si_value->dealer]["branches"][$si_value->branch]["sales_invoice"] + 1;
+				}
+				else{
+					continue;
+				}
+
+			}
+			else{
+				
+			}
+		}
+
+		foreach ($db_array as $dealer => $d_value) {
+
+			$branches_tr  = "";
+			$prospects_tr = "";
+			$sales_order_tr    = "";
+			$sales_invoice_tr  = "";
+			$dealer_total_pros = 0;
+			$dealer_total_so   = 0;
+			$dealer_total_si   = 0;
+
+			foreach ($d_value['branches'] as $branch => $b_value) {
+				
+				$branches_tr  .= "<tr><td>{$branch}</td></tr>";
+				$prospects_tr .= "<tr><td>{$b_value['prospects']}</td></tr>";
+				$sales_order_tr   .= "<tr><td>{$b_value['sales_order']}</td></tr>";
+				$sales_invoice_tr .= "<tr><td>{$b_value['sales_invoice']}</td></tr>";
+
+				$dealer_total_pros += $b_value['prospects'];
+				$dealer_total_so   += $b_value['sales_order'];
+				$dealer_total_si   += $b_value['sales_invoice'];
+
+			}
+
+			$branch = $this->table($branches_tr);
+			$prospect = $this->table($prospects_tr);
+			$sales_order = $this->table($sales_order_tr);
+			$sales_invoice = $this->table($sales_invoice_tr);
+
+			$array[] =  [
+				"dealer" => "<h5><b>{$dealer}</b></h5>",
+				"branch" => $branch,
+				"prospect_inquiry" => $prospect,
+				"sales_order" => $sales_order,
+				"sales_invoice" => $sales_invoice
+			];
+
+			$total_prospect_tr 		= "<tr> <td><b>" . $dealer_total_pros . "</b> </td> </tr>";
+			$total_sales_order_tr 	= "<tr> <td><b>" . $dealer_total_so . "</b> </td> </tr>";
+			$total_sales_invoice_tr = "<tr> <td><b>" . $dealer_total_si . "</b> </td> </tr>";
+
+			$array[] = [
+				"dealer" => "",
+				"branch" => "<i class='pull-right'>Total {$dealer}</i>",
+				"prospect_inquiry" => $this->table($total_prospect_tr),
+				"sales_order" => $this->table($total_sales_order_tr),
+				"sales_invoice" => $this->table($total_sales_invoice_tr)
+			];
+		}
+
+		echo json_encode([
+			"data" => $array
+		]);
 
 	}
 
-	public function main_query(){
+	public function test_method(){
+		
+		$date_from = $_REQUEST['date_from'];
+		$date_to   = $_REQUEST['date_to'];
+
+		$where = ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_from.'") )';
+
+		$data = $this->main_query($where);
+
+		echo json_encode($data);
+
+	}
+
+	public function table($tbody){
+		
+		$table = '<table class="">'.$tbody.'</table>';
+		return $table;
+	}
+
+	public function sales_order($conditions = ""){
+
+		$res = $this->db->query("	SELECT
+										ddms_sales_order.assigned_user_id,
+										ddms_sales_order_cstm.invoiced_c,
+										jump_dealer.name AS dealer,
+										jump_branch.name AS branch,
+										users.user_name AS employee_username
+									FROM
+										ddms_sales_order
+									INNER JOIN ddms_sales_order_cstm ON ddms_sales_order.id = ddms_sales_order_cstm.id_c
+									INNER JOIN users_cstm ON users_cstm.id_c = ddms_sales_order.assigned_user_id
+									INNER JOIN users on users_cstm.id_c = users.id
+									INNER JOIN jump_dealer ON jump_dealer.id = users_cstm.jump_dealer_id_c
+									LEFT JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c
+									WHERE
+										ddms_sales_order.deleted = 0" . $conditions)->result();
+
+		return $res;
+	}
+
+	public function sales_invoice($conditions = ""){
+
+		$res = $this->db->query("	SELECT
+										ddms_sales_order.assigned_user_id,
+										ddms_sales_order_cstm.invoiced_c,
+										jump_dealer.name AS dealer,
+										jump_branch.name AS branch,
+										users.user_name AS employee_username
+									FROM
+										ddms_sales_order
+									INNER JOIN ddms_sales_order_cstm ON ddms_sales_order.id = ddms_sales_order_cstm.id_c
+									INNER JOIN users_cstm ON users_cstm.id_c = ddms_sales_order.assigned_user_id
+									INNER JOIN users on users_cstm.id_c = users.id
+									INNER JOIN jump_dealer ON jump_dealer.id = users_cstm.jump_dealer_id_c
+									LEFT JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c
+									WHERE
+										ddms_sales_order.deleted = 0" . $conditions)->result();
+
+		return $res;
+	}
+
+
+	public function main_query($conditions = ""){
 		
 		$query = "	SELECT
 						pi_prospect_inquiry.id,
@@ -592,12 +590,9 @@ class Reports extends MY_Controller {
 					LEFT JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
 					INNER JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c
 
-					where pi_prospect_inquiry.deleted = 0";
-
+					where pi_prospect_inquiry.deleted = 0" . $conditions ;
 		return $this->db->query($query)->result();
-
 	}
-
 
 }
 
