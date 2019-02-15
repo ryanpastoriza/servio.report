@@ -18,7 +18,7 @@ class Reports extends MY_Controller {
 	public function lead_source(){
 		
 		$base_model = $this->base_model_records();
-		$dealers    = $this->dealers();
+		$dealers    = $this->dealer_with_branches();
 
 		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
 		set_header_title("Reports - Lead Source");
@@ -36,13 +36,31 @@ class Reports extends MY_Controller {
 	}
 
 	public function lead_data(){
-		
+
 		$array = [];
 		$grand_total = 0;
 
+		$conditions  = '';
+
+		$dealer    = trim($_REQUEST['data']['dealer']);
+		$branch    = $_REQUEST['data']['branch'];
+		$status    = $_REQUEST['data']['status'];
+		$date_from = $_REQUEST['data']['date_from'];
+		$date_to   = $_REQUEST['data']['date_to'];
+		
+		if( $dealer ){
+			$conditions .= ' AND jump_dealer.id = ' . '"' . $dealer . '"';
+		}
+		if( $branch ){
+			$conditions .= ' AND jump_branch.id =' . '"' . $branch . '"';
+		}
+		$conditions .= ' AND pi_prospect_inquiry_cstm.status_c =' . '"' . $status . '"';
+		$conditions .= ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
+
+
 		$leads 		 = $this->db->get('lead_lead_source')->result();
 		$base_models = $this->base_model_records();
-		$main_query  = $this->lead_payment_query();
+		$main_query  = $this->lead_payment_query($conditions);
 
 		$base_models_grand_values = [];
 
@@ -209,7 +227,7 @@ class Reports extends MY_Controller {
 		return  $this->db->query('SELECT * from jump_base_model')->result();
 	}
 
-	public function lead_payment_query(){
+	public function lead_payment_query($conditions = ""){
 
 		$query = $this->db->query("	SELECT
 										pi_prospect_inquiry.id,
@@ -246,7 +264,7 @@ class Reports extends MY_Controller {
 									LEFT JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
 									INNER JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c
 
-									WHERE pi_prospect_inquiry.deleted = 0
+									WHERE pi_prospect_inquiry.deleted = 0 {$conditions}
 									GROUP by lead_lead_source.id, jump_base_model.id
 
 									ORDER by model_description")->result();
@@ -267,6 +285,7 @@ class Reports extends MY_Controller {
 		$query = $this->db->query("	SELECT
 										jump_dealer.id,
 										jump_dealer.name,
+										jump_branch.id as branch_id,
 										jump_branch.name as branch_name
 									FROM
 										jump_dealer
@@ -295,6 +314,39 @@ class Reports extends MY_Controller {
 
 		set_header_title("Reports - Prospect Inquiry Details");
 		$this->put_contents($content,"Prospect Inquiry Details");
+	}
+
+	public function dealer_with_branches(){
+		
+		$user_type = $this->user_type();
+		$array = [];
+
+		if( $user_type == "mmpc" ){
+
+			$all_dealers = $this->dealers();
+			foreach ($all_dealers as $dealer_key => $dealer_value) {
+				
+				$dealer = $dealer_value->name;
+
+				$array["dealers"][$dealer] = $dealer_value->id;
+			}
+
+		}
+
+		if( $user_type == "dealer"){
+
+			$dealer_id 	 = $_SESSION['user']->dealer->dealer_id;
+			$dealer_name = $_SESSION['user']->dealer->dealer;
+			$array["dealers"][$dealer] = $dealer_id;
+		}
+
+		if( $user_type == "branch" ){
+
+			$array["branches"][$_SESSION['user']->dealer->branch] = $_SESSION['user']->dealer->branch_id;
+
+		}
+
+		return $array;
 	}
 
 	public function inquiry_per_dealer(){
@@ -471,19 +523,10 @@ class Reports extends MY_Controller {
 		echo json_encode([
 			"data" => $array
 		]);
-
 	}
 
 	public function test_method(){
-		
-		$date_from = $_REQUEST['date_from'];
-		$date_to   = $_REQUEST['date_to'];
 
-		$where = ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_from.'") )';
-
-		$data = $this->main_query($where);
-
-		echo json_encode($data);
 
 	}
 
@@ -534,7 +577,6 @@ class Reports extends MY_Controller {
 
 		return $res;
 	}
-
 
 	public function main_query($conditions = ""){
 		
@@ -594,7 +636,26 @@ class Reports extends MY_Controller {
 		return $this->db->query($query)->result();
 	}
 
+	public function user_type(){
+		
+		$title = trim(strtolower($_SESSION['user']->title));
+		$title = str_replace(" ", "_", $title);
+		$user_type = "";
+
+		if( in_array($title, $this->dealer_user_titles) ){
+			$user_type = "dealer";
+		}
+		if( in_array($title, $this->branch_user_tiles) ){
+			$user_type = "branch";
+		}
+		if( in_array($title, $this->mmpc_user_titles) ){
+			$user_type = "mmpc";
+		}
+		return $user_type;
+	}	
+
 }
 
 /* End of file Reports.php */
 /* Location: ./application/controllers/Reports.php */
+

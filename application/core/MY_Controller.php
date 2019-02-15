@@ -21,6 +21,7 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct()
 	{
+		parent::__construct();
 
 
 		parent::__construct();
@@ -144,6 +145,8 @@ class MY_Controller extends CI_Controller {
 		}
 		else
 		{
+			$branch = $branch->search(['id' => $this->user_info->dealer->branch_id]);
+			return $branch;
 			echo "asdasd";
 			return $branch->load($this->user_info->dealer->branch_id);
 		}
