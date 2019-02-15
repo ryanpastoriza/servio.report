@@ -112,8 +112,8 @@ class MY_Controller extends CI_Controller {
 													'Inquiry per Model' => base_url('ipm/inquiry_per_model'),
 													// 'Sales Summary per Dealer' => '',
 													// 'Sales Summary per Model' => '',
-													'Sales Order by Lead Source' => '',
-													'Sales Order by Payment Mode' => '',
+													'Sales Order by Lead Source' => 'so_by_leads',
+													'Sales Order by Payment Mode' => 'so_by_payment',
 
  												  ]
 
