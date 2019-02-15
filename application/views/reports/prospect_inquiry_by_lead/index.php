@@ -94,6 +94,9 @@
 	                </tr>
 	            </thead>
 	            <tbody>
+	            	<tr>
+	            		<td colspan="<?php echo 2 + (count($base_model)+1)*2 ?>"> Please fill up the fields</td>
+	            	</tr>
 	            </tbody>
 		    </table>
 			
@@ -179,7 +182,7 @@
 	        },
 			dom: 'Bfrtip',
 	        buttons: [
-	            { extend: 'excel', exportOptions:
+	            { extend: 'excel', className: 'btn btn-primary fa fa-download', text: ' Excel', exportOptions:
 	                 { columns: ':visible' }
 	            }
            	],

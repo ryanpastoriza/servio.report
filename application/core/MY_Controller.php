@@ -76,7 +76,7 @@ class MY_Controller extends CI_Controller {
 
 										asset_url('plugins/chartjs/Chart.js'),
 										asset_url('plugins/momentjs/moment.js'),
-										asset_url('plugins/select2/select2.full.min.js'),
+										asset_url('plugins/select2/select2.full.min.js')
 									]
 				];
 
@@ -105,6 +105,9 @@ class MY_Controller extends CI_Controller {
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
 													'Prospect Inquiry by Mode of Payment' => '',
 													'Inquiry per Dealer' => '',
+													'Inquiry per Model' => '',
+													'Prospect Inquiry by Mode of Payment' => base_url('reports/payment_mode'),
+													'Inquiry per Dealer' => base_url('reports/inquiry_per_dealer'),
 													'Inquiry per Model' => base_url('ipm/inquiry_per_model'),
 													// 'Sales Summary per Dealer' => '',
 													// 'Sales Summary per Model' => '',

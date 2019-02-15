@@ -101,7 +101,7 @@
 			dom: 'Bfrtip',
 			destroy: true,
 	        buttons: [
-	            { extend: 'excel', exportOptions:
+	            { extend: 'excel', className: 'btn btn-primary fa fa-download', text: ' Excel', exportOptions:
 	                 { columns: ':visible' }
 	            }
            	],
