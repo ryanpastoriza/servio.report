@@ -41,6 +41,8 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Status: </label>
 							<div class="col-sm-10">
 							    <select name="status" id="status" class="form-control input-sm">
+							    	<option value="">All</option>
+							    	<option value="open">Open</option>
 							    	<option value="qualified">Qualified</option>
 							    	<option value="disqualified">Disqualified</option>
 							    </select>
@@ -129,7 +131,10 @@
 
         	if( branch || dealer ){
         		lead_datatable(data);
-        	}        	
+        	}
+        	else{
+        		alert("Branch or Dealer must have a value.")
+        	}
 
 		}
 		else{
@@ -173,9 +178,11 @@
 				data: {data: data}
 	        },
 			dom: 'Bfrtip',
-			buttons: [
-				'copy',
-			],
+	        buttons: [
+	            { extend: 'excel', exportOptions:
+	                 { columns: ':visible' }
+	            }
+           	],
 	        destroy: true,
 	        "bPaginate": false,
     		"ordering": false,

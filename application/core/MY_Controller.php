@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-14 16:18:49
+ * @Last Modified time: 2019-02-13 09:43:09
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -23,17 +23,15 @@ class MY_Controller extends CI_Controller {
 	{
 		parent::__construct();
 
-
-		parent::__construct();
-
-
 		$this->dealer_user_titles 	= ['dealer_sales_manager'];
 		$this->branch_user_tiles 	= ['branch_sales_manager'];
 		$this->mmpc_user_titles 	= ['mmpc'];
-		$this->user_info = $this->session->get_userdata('user')['user'];
-
-
-		//Do your magic here
+		if($this->session->get_userdata('user')['user']){
+			$this->user_info = $this->session->get_userdata('user')['user'];
+		}
+		else{
+			redirect("login");
+		}
 	}
 
 	public function index()
@@ -45,28 +43,47 @@ class MY_Controller extends CI_Controller {
 
 		$vars = [
 					'addStyles'  => [ 
-										asset_url('plugins/select2/select2.css'),
-										asset_url('plugins/datatables/dataTables.bootstrap.css'),
-										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css'),
-										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css')
+										asset_url('plugins/select2/select2.min.css'),
+										// asset_url('plugins/datatables/dataTables.bootstrap.css'),
+										// asset_url('plugins/datatables/jquery.dataTables.min.css'),
+										// asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css'),
+										// asset_url('plugins/dataTables/extensions/buttons/css/buttons.dataTables.min.css'),
+
+										asset_url('datatable_reports/jquery.dataTables.min.css'),
+										asset_url('datatable_reports/buttons.dataTables.min.css'),
+
 									],
 					'addPlugins' => [ 
-										asset_url('plugins/datatables/jquery.dataTables.min.js'),
-										asset_url('plugins/datatables/extensions/buttons/js/buttons.print.min.js'),
-										asset_url('plugins/datatables/extensions/buttons/js/buttons.html5.min.js'),
-										asset_url('plugins/datatables/jszip.min.js'),
+
+										asset_url('datatable_reports/jquery.dataTables.min.js'),
+										asset_url('datatable_reports/dataTables.buttons.min.js'),
+										asset_url('datatable_reports/buttons.print.min.js'),
+										asset_url('datatable_reports/buttons.flash.min.js'),
+										asset_url('datatable_reports/buttons.html5.min.js'),
+										asset_url('datatable_reports/jszip.min.js'),
+										asset_url('datatable_reports/pdfmake.min.js'),
+										asset_url('datatable_reports/vfs_fonts.js'),
+
+
+										// asset_url('plugins/datatables/jquery.dataTables.min.js'),
+										// asset_url('plugins/datatables/version1/dataTables.buttons.min.js'),
+										// asset_url('plugins/datatables/extensions/buttons/js/buttons.flash.min.js'),
+										// asset_url('plugins/datatables/extensions/buttons/js/buttons.html5.min.js'),
+										// asset_url('plugins/datatables/extensions/buttons/js/buttons.print.min.js'),
+										// asset_url('plugins/datatables/jszip.min.js'),
+										// asset_url('plugins/datatables/pdfmake.min.js'),
+										// asset_url('plugins/datatables/vfs_fonts.js'),
+
 										asset_url('plugins/chartjs/Chart.js'),
 										asset_url('plugins/momentjs/moment.js'),
 										asset_url('plugins/select2/select2.full.min.js'),
-										asset_url('plugins/jquery.form.min.js'),
-									],
-					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
+									]
 				];
 
 
 
 		$content_vars = ['contentHeader' => $contentHeader,
-							'content' => $content,
+							'content' => $content
 						];
 
 
@@ -149,9 +166,6 @@ class MY_Controller extends CI_Controller {
 		{
 			$branch = $branch->search(['id' => $this->user_info->dealer->branch_id]);
 			return $branch;
-			echo "asdasd";
-			return $branch->load($this->user_info->dealer->branch_id);
-
 		}
 	}
 }
