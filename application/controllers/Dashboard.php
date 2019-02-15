@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 16:59:51
+ * @Last Modified time: 2019-02-13 14:36:01
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -13,8 +13,9 @@ class Dashboard extends MY_Controller {
 
 	function test(){
 
+
 		echo "<pre>";
-		print_r ($this->user_info);
+		print_r ($this->allowed_branches());
 		echo "</pre>";
 
 	}

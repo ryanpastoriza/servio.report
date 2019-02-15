@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-12 11:44:27
+ * @Last Modified time: 2019-02-13 14:29:55
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -21,7 +21,7 @@ class Branch extends MY_Model {
 		LEFT JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id 
 		WHERE users_cstm.id_c ='".$id."'";
 		return $this->db->query($sql)->row();	
-
     }
+   
         
 }

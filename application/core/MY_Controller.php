@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-13 09:43:09
+ * @Last Modified time: 2019-02-13 14:36:26
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -23,10 +23,17 @@ class MY_Controller extends CI_Controller {
 	{
 		parent::__construct();
 
+
+		parent::__construct();
+
+
 		$this->dealer_user_titles 	= ['dealer_sales_manager'];
 		$this->branch_user_tiles 	= ['branch_sales_manager'];
 		$this->mmpc_user_titles 	= ['mmpc'];
 		$this->user_info = $this->session->get_userdata('user')['user'];
+
+
+		//Do your magic here
 	}
 
 	public function index()
@@ -140,6 +147,8 @@ class MY_Controller extends CI_Controller {
 		{
 			$branch = $branch->search(['id' => $this->user_info->dealer->branch_id]);
 			return $branch;
+			echo "asdasd";
+			return $branch->load($this->user_info->dealer->branch_id);
 		}
 	}
 }
