@@ -17,6 +17,164 @@ class Main_model extends CI_Model
 
 		return $this->db->get_where('users',$arr1)->row();
 	}
+	function base_model_records(){
+		return  $this->db->query('SELECT * from jump_base_model')->result();
+	}
+	function dealers(){
+		
+		$query = $this->db->query("SELECT * from jump_dealer")->result();
+		return $query;	
+	}
+	function getmmpc(){
+		$arr1['name']='MMPC';
+		return $this->db->get_where('jump_dealer',$arr1)->row('id');	
+	}
+	function branch(){
+
+		$dealer_id = $_GET['dealer_id'];
+
+		$query = $this->db->query("	SELECT
+										jump_dealer.id,
+										jump_dealer.name,
+										jump_branch.name as branch_name
+									FROM
+										jump_dealer
+
+									INNER JOIN jump_branch_cstm
+									ON jump_branch_cstm.jump_dealer_id_c = jump_dealer.id  
+
+									INNER JOIN jump_branch
+									ON jump_branch_cstm.id_c = jump_branch.id
+
+									where jump_dealer.id = '{$dealer_id}'")->result();
+		return json_encode($query);
+	}
+	function getpi($date_from,$date_to,$dealer,$branch,$bm){
+		$basemodel = $bm;
+
+		$query = $this->db->query("	SELECT
+		Count(pi_prospect_inquiry.id) as `pi`
+		FROM
+		pi_prospect_inquiry
+		INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+		INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+		INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+		INNER JOIN users_cstm ON users.id = users_cstm.id_c
+		INNER JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+		INNER JOIN jump_branch ON users_cstm.jump_branch_id_c = jump_branch.id
+		WHERE
+		pi_prospect_inquiry.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		jump_dealer.id = '{$dealer}' AND
+		jump_branch.`name` = '{$branch}' AND
+		pi_prospect_inquiry.deleted = '0' AND
+		jump_model_description.`name` LIKE '{$basemodel}%'")->row('pi');
+
+		return ($query);
+	}
+	function geto($date_from,$date_to,$dealer,$branch,$bm){
+		$basemodel = $bm;
+
+		$query = $this->db->query("	SELECT
+		Count(ddms_sales_order.id) as `o`
+		FROM
+		pi_prospect_inquiry
+		INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+		INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+		INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+		INNER JOIN users_cstm ON users.id = users_cstm.id_c
+		INNER JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+		INNER JOIN jump_branch ON users_cstm.jump_branch_id_c = jump_branch.id
+		INNER JOIN pi_prospect_inquiry_ddms_sales_order_1_c ON pi_prospect_inquiry.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1pi_prospect_inquiry_ida
+		INNER JOIN ddms_sales_order ON ddms_sales_order.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1ddms_sales_order_idb
+		WHERE		
+		pi_prospect_inquiry.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		jump_dealer.id = '{$dealer}' AND
+		jump_branch.`name` = '{$branch}' AND
+		ddms_sales_order.deleted = '0' AND
+		jump_model_description.`name` LIKE '{$basemodel}%'")->row('o');
+
+		return ($query);
+	}
+	function getpi1($date_from,$date_to,$dealer,$branch,$bm){
+		$basemodel = $bm;
+
+		$query = $this->db->query("SELECT
+		Count(pi_prospect_inquiry.id) AS pi
+		FROM
+		pi_prospect_inquiry
+		INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+		INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+		INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+		INNER JOIN users_cstm ON users.id = users_cstm.id_c
+		WHERE		
+		pi_prospect_inquiry.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		pi_prospect_inquiry.deleted = '0' AND
+		jump_model_description.`name` LIKE '{$basemodel}%'")->row('pi');
+
+		return ($query);
+	}
+	function geto1($date_from,$date_to,$dealer,$branch,$bm){
+		$basemodel = $bm;
+
+		$query = $this->db->query("	SELECT
+		Count(ddms_sales_order.id) as `o`
+		FROM
+		pi_prospect_inquiry
+		INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+		INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+		INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+		INNER JOIN users_cstm ON users.id = users_cstm.id_c
+		INNER JOIN pi_prospect_inquiry_ddms_sales_order_1_c ON pi_prospect_inquiry.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1pi_prospect_inquiry_ida
+		INNER JOIN ddms_sales_order ON ddms_sales_order.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1ddms_sales_order_idb
+		WHERE		
+		pi_prospect_inquiry.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		ddms_sales_order.deleted = '0' AND
+		jump_model_description.`name` LIKE '{$basemodel}%'")->row('o');
+
+		return ($query);
+	}
+	function getpi2($date_from,$date_to,$dealer,$branch,$bm){
+		$basemodel = $bm;
+
+		$query = $this->db->query("SELECT
+		Count(pi_prospect_inquiry.id) as `pi`
+		FROM
+		pi_prospect_inquiry
+		INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+		INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+		INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+		INNER JOIN users_cstm ON users.id = users_cstm.id_c
+		INNER JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+		WHERE
+		pi_prospect_inquiry.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		jump_dealer.id = '{$dealer}' AND
+		pi_prospect_inquiry.deleted = '0' AND
+		jump_model_description.`name` LIKE '{$basemodel}%'")->row('pi');
+
+		return ($query);
+	}
+	function geto2($date_from,$date_to,$dealer,$branch,$bm){
+		$basemodel = $bm;
+
+		$query = $this->db->query("	SELECT
+		Count(ddms_sales_order.id) as `o`
+		FROM
+		pi_prospect_inquiry
+		INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+		INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+		INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+		INNER JOIN users_cstm ON users.id = users_cstm.id_c
+		INNER JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+		INNER JOIN pi_prospect_inquiry_ddms_sales_order_1_c ON pi_prospect_inquiry.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1pi_prospect_inquiry_ida
+		INNER JOIN ddms_sales_order ON ddms_sales_order.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1ddms_sales_order_idb
+		WHERE		
+		pi_prospect_inquiry.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		jump_dealer.id = '{$dealer}' AND
+		ddms_sales_order.deleted = '0' AND
+		jump_model_description.`name` LIKE '{$basemodel}%'")->row('o');
+
+		return ($query);
+	}
 
 	// function get_branch($id)
 	// {
