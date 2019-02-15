@@ -61,9 +61,7 @@
 <script>
 	
 	$(function(){
-
-		$("#date_to").attr("disabled", "disabled")
-
+		$("#date_to").attr("disabled", "disabled");
 	});
 
 	$("#date_from").change(function(event) {
@@ -77,8 +75,6 @@
 			ajax(date_from, date_to);
 		}
 
-		
-
 	});
 
 
@@ -88,9 +84,10 @@
 		var date_to   = $("#date_to").val();
 
 		ajax(date_from, date_to);
+		ajax(date_from, date_to);
+		ajax(date_from, date_to);
 	});
 
-	
 	function ajax(date_from, date_to){
 		
 		var table = $('#dealer_tbl').DataTable({
@@ -102,12 +99,12 @@
 	            }
 	        },
 			dom: 'Bfrtip',
-			buttons: [
-		        {
-		            extend: 'excel',
-		            text: 'Save as Excel'
-		        }
-		    ],
+			destroy: true,
+	        buttons: [
+	            { extend: 'excel', exportOptions:
+	                 { columns: ':visible' }
+	            }
+           	],
 	        "bPaginate": false,
     		"ordering": false,
 			"bInfo": false,

@@ -28,7 +28,7 @@ class Reports extends MY_Controller {
 	public function payment_mode(){
 		
 		$base_model = $this->base_model_records();
-		$dealers    = $this->dealers();
+		$dealers    = $this->dealer_with_branches();
 
 		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
 		set_header_title("Reports - Payment Mode");
@@ -44,17 +44,20 @@ class Reports extends MY_Controller {
 
 		$dealer    = trim($_REQUEST['data']['dealer']);
 		$branch    = trim($_REQUEST['data']['branch']);
-		$status    = ucfirst($_REQUEST['data']['status']);
+		$status    = $_REQUEST['data']['status'] ? ucfirst($_REQUEST['data']['status']) : "";
 		$date_from = $_REQUEST['data']['date_from'];
 		$date_to   = $_REQUEST['data']['date_to'];
 		
 		if( $dealer ){
-			$conditions .= ' AND jump_dealer.id = ' . '"' . $dealer . '"';
+			$conditions .= ' AND jump_dealer.id = '.'"'.$dealer.'"';
 		}
 		if( $branch ){
-			$conditions .= ' AND jump_branch.id =' . '"' . $branch . '"';
+			$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
 		}
-		$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = "qualified" ';
+		if( $status != ""){
+			$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = '.'"'. $status .'"';
+		}
+
 		$conditions .= ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
 
 		$leads 		 = $this->db->get('lead_lead_source')->result();
@@ -140,7 +143,6 @@ class Reports extends MY_Controller {
 			}else{
 				$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
 			}
-
 		}
 
 		echo json_encode([
@@ -153,10 +155,29 @@ class Reports extends MY_Controller {
 		$array = [];
 		$grand_total = 0;
 
-		// $leads 		 = $this->db->get('lead_lead_source')->result();
+		$conditions = '';
+
+		$dealer    = trim($_REQUEST['data']['dealer']);
+		$branch    = trim($_REQUEST['data']['branch']);
+		$status    = $_REQUEST['data']['status'] ? ucfirst($_REQUEST['data']['status']) : "";
+		$date_from = $_REQUEST['data']['date_from'];
+		$date_to   = $_REQUEST['data']['date_to'];
+		
+		if( $dealer ){
+			$conditions .= ' AND jump_dealer.id = ' . '"' . $dealer . '"';
+		}
+		if( $branch ){
+			$conditions .= ' AND jump_branch.id =' . '"' . $branch . '"';
+		}
+		if( $status != ""){
+			$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = '.'"'. $status .'"';
+		}
+		$conditions .= ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
+
+
 		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
 		$base_models = $this->base_model_records();
-		$main_query  = $this->lead_payment_query();
+		$main_query  = $this->lead_payment_query($conditions);
 
 		$base_models_grand_values = [];
 
@@ -206,7 +227,12 @@ class Reports extends MY_Controller {
 		foreach ($array as $key => $value) {
 
 			// calculate lead subtotal percentage
-			$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+			if($array[$key]["total_value"] == 0){
+				$array[$key]["total_pct"] = "0%";
+			}
+			else{
+				$array[$key]["total_pct"] = round(($array[$key]["total_value"] / $grand_total) * 100, 1) . "%";
+			}
 
 			foreach ($base_models as $bm_key => $model) {
 				if((int) $base_models_grand_values["v".$model->name]["value"] > 0){
@@ -221,12 +247,16 @@ class Reports extends MY_Controller {
 		$array[count($leads)] = [
 			"source_of_sale" => "<b>Total</b>",
 			"total_value" => "<b>".$grand_total."</b>",
-			"total_pct" => "<b>100</b>%"
+			"total_pct" => ($grand_total) == 0 ? "<b>0</b>%" : "<b>100</b>%"
 		];
 
 		foreach ($base_models as $key => $value) {
 			$array[count($leads)] += ["v".$value->name => "<b>".$base_models_grand_values["v".$value->name]["value"]."</b>"];
-			$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+			if( $base_models_grand_values["v".$value->name]["value"] == 0 ){
+				$array[count($leads)] += ["p".$value->name => "<b>0%</b>"];
+			}else{
+				$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
+			}
 		}	
 		echo json_encode([
 			"data" => $array

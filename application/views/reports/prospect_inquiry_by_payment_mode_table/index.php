@@ -17,8 +17,8 @@
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" class="form-control input-sm">
 							    	<option disabled selected>Click to select</option>
-							    	<?php foreach($dealers as $value):?>
-								    	<option value="<?= $value->id ?>"> <?= $value->name ?> </option>									
+							    	<?php foreach( $dealers["dealers"] as $key => $value ): ?>
+										<option value="<?= $value ?>"> <?= $key ?> </option>
 							    	<?php endforeach?>
 							    </select>
 							</div>
@@ -35,6 +35,8 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Status: </label>
 							<div class="col-sm-10">
 							    <select name="status" id="status" class="form-control input-sm">
+							    	<option value="">All</option>
+							    	<option value="open">Open</option>
 							    	<option value="qualified">Qualified</option>
 							    	<option value="Disqualified">Disqualified</option>
 							    </select>
@@ -108,10 +110,27 @@
 		event.preventDefault();
 		var date_from = $("#date_from").val()
 		var date_to   = $("#date_to").val()
+		var status    = $("#status").val()
+		var dealer    = $("#dealer").val();
+		var branch    = $("#branch").val();
+
+		data =  { 
+					date_from : date_from, 
+					date_to: date_to,
+					status: status,
+					branch: branch,
+					dealer: dealer
+				};
 
 		if( date_from && date_to ){
-			var data = $("#lead_form").serializeArray();
-        	lead_datatable(data);
+
+        	if( branch || dealer ){
+        		payment_mode_datatable(data);
+        	}
+        	else{
+        		alert("Branch or Dealer must have a value.")
+        	}
+
 		}
 		else{
 			alert("Please fill required fields.")
@@ -146,17 +165,20 @@
 	}
 	
 
-    function lead_datatable(data){
+    function payment_mode_datatable(data){
 
     	var table = $('#lead_table').DataTable({
 	        ajax:{
 	        	url:'<?php echo base_url('index.php/reports/payment_mode_data'); ?>',
 	            cache:true,
+				data: {data: data}
 	        },
 			dom: 'Bfrtip',
-			buttons: [
-				'copy',
-			],
+	        buttons: [
+	            { extend: 'excel', exportOptions:
+	                 { columns: ':visible' }
+	            }
+           	],
 	        destroy: true,
 	        "bPaginate": false,
     		"ordering": false,
@@ -171,8 +193,11 @@
 				{"data" : "p<?=$value->name?>"},
 				<?php endforeach ?>
 			],
-			data: {data: data}
       	});
+
+      	$.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+		    console.log(message);
+		};
 
     }
     
