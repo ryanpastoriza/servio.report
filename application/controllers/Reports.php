@@ -21,7 +21,7 @@ class Reports extends MY_Controller {
 		$dealers    = $this->dealer_with_branches();
 
 		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
-		set_header_title("Reports - Lead Source");
+		set_header_title("Reports - Inquiry Per Lead Source");
 		$this->put_contents($content,"Lead Source");
 	}
 
@@ -31,7 +31,7 @@ class Reports extends MY_Controller {
 		$dealers    = $this->dealer_with_branches();
 
 		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
-		set_header_title("Reports - Payment Mode");
+		set_header_title("Reports - Inquiry Per Payment Mode");
 		$this->put_contents($content,"Payment Mode");
 	}
 
@@ -402,7 +402,7 @@ class Reports extends MY_Controller {
 			$content = $this->load->view("errors/unauthorized.php" ,[ ], TRUE);
 		}
 
-		set_header_title("Reports - Inquiry per Dealer");
+		set_header_title("Reports - Inquiry Per Dealer");
 		$this->put_contents($content, "Inquiry Per Dealer");
 	}
 
