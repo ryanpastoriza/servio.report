@@ -1,0 +1,2 @@
+<?php
+public function getdata(){

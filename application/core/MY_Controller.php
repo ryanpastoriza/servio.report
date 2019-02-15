@@ -88,7 +88,7 @@ class MY_Controller extends CI_Controller {
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
 													'Prospect Inquiry by Mode of Payment' => '',
 													'Inquiry per Dealer' => '',
-													'Inquiry per Model' => '',
+													'Inquiry per Model' => base_url('ipm/inquiry_per_model'),
 													// 'Sales Summary per Dealer' => '',
 													// 'Sales Summary per Model' => '',
 													'Sales Order by Lead Source' => '',
