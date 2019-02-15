@@ -76,7 +76,8 @@ class MY_Controller extends CI_Controller {
 
 										asset_url('plugins/chartjs/Chart.js'),
 										asset_url('plugins/momentjs/moment.js'),
-										asset_url('plugins/select2/select2.full.min.js')
+										asset_url('plugins/select2/select2.full.min.js'),
+										asset_url('plugins/jquery.form.min.js'),
 									]
 				];
 
