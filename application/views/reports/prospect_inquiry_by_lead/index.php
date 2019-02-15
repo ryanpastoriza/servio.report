@@ -9,6 +9,7 @@
 	  		</div>
 		</div>
 		<div class="box-body">
+	
 			<div class="row">
 				<form id="lead_form">
 					<div class="col-lg-4">
@@ -16,9 +17,9 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" class="form-control input-sm">
-							    	<option disabled selected>Click to select</option>
-							    	<?php foreach($dealers as $value):?>
-								    	<option value="<?= $value->id ?>"> <?= $value->name ?> </option>									
+							    	<option disabled selected ></option>
+							    	<?php foreach( $dealers["dealers"] as $key => $value ): ?>
+										<option value="<?= $value ?>"> <?= $key ?> </option>
 							    	<?php endforeach?>
 							    </select>
 							</div>
@@ -27,7 +28,12 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
-							    <select name="branch" id="branch" class="form-control input-sm"></select>
+							    <select name="branch" id="branch" class="form-control input-sm">
+									<option selected disabled></option>
+							    	<?php foreach( $dealers["branches"] as $key => $value ): ?>
+										<option value="<?= $value ?>"> <?= $key ?> </option>
+							    	<?php endforeach?>
+							    </select>
 							</div>
 						</div>
 
@@ -36,7 +42,7 @@
 							<div class="col-sm-10">
 							    <select name="status" id="status" class="form-control input-sm">
 							    	<option value="qualified">Qualified</option>
-							    	<option value="Disqualified">Disqualified</option>
+							    	<option value="disqualified">Disqualified</option>
 							    </select>
 							</div>
 						</div>
@@ -96,7 +102,6 @@
 
 <script>
 	
-	var table;
 
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
@@ -108,10 +113,24 @@
 		event.preventDefault();
 		var date_from = $("#date_from").val()
 		var date_to   = $("#date_to").val()
+		var status    = $("#status").val()
+		var dealer    = $("#dealer").val();
+		var branch    = $("#branch").val();
+
+		data =  { 
+					date_from : date_from, 
+					date_to: date_to,
+					status: status,
+					branch: branch,
+					dealer: dealer
+				};
 
 		if( date_from && date_to ){
-			var data = $("#lead_form").serializeArray();
-        	lead_datatable(data);
+
+        	if( branch || dealer ){
+        		lead_datatable(data);
+        	}        	
+
 		}
 		else{
 			alert("Please fill required fields.")
@@ -129,11 +148,10 @@
 			data: {dealer_id: dealer_id},
 		})
 		.done(function(data) {
-
 			if(data){
 				branches += "<option disabled selected></option>";
 				$.each(data, function(index, val) {
-					branches += "<option value='"+val.branch_name+"' >"+ val.branch_name +"</option>";
+					branches += "<option value='"+val.branch_id+"' >"+ val.branch_name +"</option>";
 				});
 				$("#branch").removeAttr('disabled')
 			}
@@ -147,11 +165,12 @@
 	
 
     function lead_datatable(data){
-
+    	
     	var table = $('#lead_table').DataTable({
 	        ajax:{
 	        	url:'<?php echo base_url('index.php/reports/lead_data'); ?>',
 	            cache:true,
+				data: {data: data}
 	        },
 			dom: 'Bfrtip',
 			buttons: [
@@ -171,9 +190,11 @@
 				{"data" : "p<?=$value->name?>"},
 				<?php endforeach ?>
 			],
-			data: {data: data}
       	});
 
+      	$.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+		    console.log(message);
+		};
     }
     
 
