@@ -29,6 +29,7 @@
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
 							    <select name="branch" id="branch" class="form-control input-sm">
+									<option selected disabled></option>
 							    	<?php foreach( $dealers["branches"] as $key => $value ): ?>
 										<option value="<?= $value ?>"> <?= $key ?> </option>
 							    	<?php endforeach?>
@@ -41,7 +42,7 @@
 							<div class="col-sm-10">
 							    <select name="status" id="status" class="form-control input-sm">
 							    	<option value="qualified">Qualified</option>
-							    	<option value="Disqualified">Disqualified</option>
+							    	<option value="disqualified">Disqualified</option>
 							    </select>
 							</div>
 						</div>
@@ -116,16 +117,20 @@
 		var dealer    = $("#dealer").val();
 		var branch    = $("#branch").val();
 
+		data =  { 
+					date_from : date_from, 
+					date_to: date_to,
+					status: status,
+					branch: branch,
+					dealer: dealer
+				};
+
 		if( date_from && date_to ){
-			
-			data =  { 
-						date_from : date_from, 
-						date_to: date_to,
-						status: status,
-						branch: branch,
-						dealer: dealer
-					};
-        	lead_datatable(data);
+
+        	if( branch || dealer ){
+        		lead_datatable(data);
+        	}        	
+
 		}
 		else{
 			alert("Please fill required fields.")
@@ -160,7 +165,7 @@
 	
 
     function lead_datatable(data){
-
+    	
     	var table = $('#lead_table').DataTable({
 	        ajax:{
 	        	url:'<?php echo base_url('index.php/reports/lead_data'); ?>',
@@ -186,6 +191,10 @@
 				<?php endforeach ?>
 			],
       	});
+
+      	$.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+		    console.log(message);
+		};
     }
     
 
