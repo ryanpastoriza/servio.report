@@ -35,17 +35,19 @@
 
 					<div class="col-lg-4">
 						<div class="form-group row">
-							<label for="date_from" class="col-sm-2 col-form-label">From: *</label>
+							<label for="date_from" class="col-sm-2 col-form-label">From:</label>
 							<div class="col-sm-10">
 							    <input date="date_from" type="date" id="date_from" name="date_from" class="form-control input-sm" required="required">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="date_to" class="col-sm-2 col-form-label">To: *</label>
+							<label for="date_to" class="col-sm-2 col-form-label">To:</label>
 							<div class="col-sm-10">
 							    <input date="date_to" type="date" id="date_to" name="date_to" class="form-control input-sm" required="required">
 							</div>
 						</div>
+					</div>
+					<div class="col-lg-4">
 						<div class="form-group row">
 							<label for="submit" class="col-sm-2 col-form-label"></label>
 							<div class="col-sm-10">
@@ -104,7 +106,7 @@
 	});
 
 	function search(date_from,date_to,dealer,branch){
-		
+		$("#ipmtable").DataTable().destroy();
 		var tbody = "";
 		$.ajax({
 			url: "<?php echo base_url('index.php/ipm/getdata') ?>",
@@ -118,10 +120,24 @@
 				$.each(data, function(index, val) {
 					console.log(val)
 					tbody += "<tr id='trow'><td>"+ val.bm +"</td><td>"+ val.pi +"</td><td>"+ val.o +"</td></tr>";
+
 				});
 			}
 			$("#tbody").html(tbody)
-
+			$("#ipmtable").DataTable({
+				dom: 'Bfrtip',
+	       		buttons: [
+	            { extend: 'excel', exportOptions:
+	                 { columns: ':visible' }
+	            }
+           	],
+	        destroy: true,
+	        "bPaginate": false,
+    		"ordering": false,
+			"bInfo": false,
+			"bFilter": false,
+			})
+			
 		})
 		.fail(function() {
 			console.log("error ");
