@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-13 14:36:01
+ * @Last Modified time: 2019-02-15 09:26:54
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -12,11 +12,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends MY_Controller {
 
 	function test(){
+		// $branches = $this->get_model_descriptions();
 
-
-		echo "<pre>";
-		print_r ($this->allowed_branches());
-		echo "</pre>";
+		// echo "<pre>";
+		// print_r ($branches);
+		// echo "</pre>";
 
 	}
 	function __construct()
@@ -32,18 +32,37 @@ class Dashboard extends MY_Controller {
 
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$this->load->model('jump_dealer');
+		$this->load->model('BaseModel');
+		$this->load->model('modelDescription');
 
 		set_header_title('Servio-DMS Dashboard');
 
 		$PIStatusReport 	= new PIStatusPieChart();
 		$PerDealer 			= new PerDealerChart;
-		$jd 				= new Jump_dealer;
+		$pI 				= new Pi_prospect_inquiry_cstm;
+		$bm 				= new BaseModel;
 
-		$jd->selects = ['name as text', 'id'];
-		$dealers = $jd->get();
+
+		$dealers 	 = $this->allowed_dealers();
+		$pis 		 = $pI->payment_terms();
+		$bms 		 = $bm->get();
+		$mds 	  	 = $this->ModelDescription->get();
 
 		$dealersSelect = [];
+		$MOP 		   = [];
+		$baseModelSelect = [];
+		$moDes 			= [];
 
+
+		foreach ($mds as $value) {
+			$moDes[] = (object)['id' => $value->id, 'text' => $value->name];
+		}
+		foreach ($bms as $value) {
+			$baseModelSelect[] = (object)['id' => $value->id, 'text' => $value->name];
+		}
+		foreach ($pis as $value) {
+			$MOP[] = (object)['id' => $value->payment_terms_c, 'text' => ucfirst($value->payment_terms_c)];
+		}
 		foreach ($dealers as $value) {
 			$dealersSelect[] = (object)['id' => $value->id, 'text' => $value->name];
 		}
@@ -60,6 +79,9 @@ class Dashboard extends MY_Controller {
 														'cashTerm' => $cashTerm, 
 														'PIStatusReport' => $PIStatusReport,
 														'PerDealer' => $PerDealer,
+														'modeOfPayments' => $MOP,
+														'baseModels' => $baseModelSelect,
+														'modelDescriptions' => $moDes
 													]
 													, TRUE);
 
@@ -70,11 +92,11 @@ class Dashboard extends MY_Controller {
 	function find_branch(){
 		
 	}
-	function select_PIbyMOP_chart($chart, $str = FALSE)
+	function select_PIbyMOP_chart($chart, $str = FALSE, $cond = [])
 	{
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$cashTerm  = new Pi_prospect_inquiry_cstm;
-		$cashTerm = $cashTerm->by_MOP();
+		$cashTerm = $cashTerm->by_MOP($cond);
 
 		$data = [
 				'dataset' 	=> $cashTerm,
@@ -194,6 +216,7 @@ class Dashboard extends MY_Controller {
 		$selected = explode(",", $selected);
 
 		$all_branches = [];
+		$all_ids = [];
 
 		foreach ($selected as $value) {
 			if($value != ""){
@@ -202,9 +225,11 @@ class Dashboard extends MY_Controller {
 
 			$branches = $dealer->branches();
 
-
 			foreach ($branches as $value2) {
-				$all_branches[] = (object)['id' => $value2->id, 'text' => $value2->branch_name];
+				if(!in_array($value2->id, $all_ids)){
+					$all_branches[] = (object)['id' => $value2->id, 'text' => $value2->name];
+					$all_ids[] = $value2->id;
+				}
 			}
 			}
 
@@ -212,6 +237,117 @@ class Dashboard extends MY_Controller {
 
 
 		echo json_encode($all_branches);
+	}
+	function refine_condition_for_PI($cond){
+		$qry = "";
+
+
+		if($cond['from_date'] && $cond['to_date']){
+			$qry .= " pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN '{$cond['from_date']}' AND '{$cond['to_date']}' ";
+		}
+		if (isset($cond['dealers'])) {
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['dealers'] as $value) {
+				$counter++;
+				$qry .= " users_cstm.jump_dealer_id_c = '{$value}' ";
+				$qry .= $counter < count($cond['dealers']) ? " OR ": "";
+			}
+			$qry .= ")";
+		}
+		if(isset($cond['branches'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['branches'] as $value) {
+				$counter++;
+				$qry .= " users_cstm.jump_branch_id_c = '{$value}' ";
+				$qry .= $counter < count($cond['branches']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['mode_of_payments'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['mode_of_payments'] as $value) {
+				$counter++;
+				$qry .= " pi_prospect_inquiry_cstm.payment_terms_c = '{$value}' ";
+				$qry .= $counter < count($cond['mode_of_payments']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['base_models'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['base_models'] as $value) {
+				$counter++;
+				$qry .= " Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = '{$value}' ";
+				$qry .= $counter < count($cond['base_models']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['vehicle_descriptions'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['vehicle_descriptions'] as $value) {
+				$counter++;
+				$qry .= " jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = '{$value}' ";
+				$qry .= $counter < count($cond['vehicle_descriptions']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+
+		return $qry;
+	}
+	function apply_search(){
+		$charts = [];
+		$cond = $this->refine_condition_for_PI($_POST);
+
+		$charts['pi_by_mop'] = $this->select_PIbyMOP_chart('line', TRUE, $cond);
+
+		echo json_encode($charts);
+
+	}
+	function get_model_descriptions(){
+		$this->load->model('setup/BaseModel');
+		$selected = $this->input->post('selected');
+		$selected = explode(",", $selected);
+
+		$all_model_descriptions = [];
+		$all_ids = [];
+
+		foreach ($selected as $value) {
+			if($value != ""){
+			$bm = new BaseModel;
+			$bm->load($value);
+
+			$moDes = $bm->model_descriptions();
+
+			foreach ($moDes as $value2) {
+				if(!in_array($value2->id, $all_ids)){
+					$all_model_descriptions[] = (object)['id' => $value2->id, 'text' => $value2->name];
+					$all_ids[] = $value2->id;
+				}
+			}
+			}
+
+		}
+
+		echo json_encode($all_model_descriptions);
+
 	}
 	public function create_chart($data, $str = FALSE){
 

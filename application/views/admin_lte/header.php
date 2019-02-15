@@ -13,7 +13,7 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="<?= asset_url('ionicons/css/ionicons.min.css') ?>">
   <!-- Theme style -->
-  <link rel="stylesheet" href="<?= asset_url('dist/css/AdminLTE.min.css') ?>">
+  <link rel="stylesheet" href="<?= asset_url('dist/css/AdminLTE.css') ?>">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<?= asset_url('dist/css/skins/_all-skins.min.css') ?>">
@@ -85,7 +85,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <?php foreach ($rightNav as $key => $value): ?>
-            <?= $value ?>
+           <li> <?= $value ?> </li>
           <?php endforeach ?>
         </ul>
       </div>
