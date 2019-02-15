@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:36:41
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-14 16:16:40
+ * @Last Modified time: 2019-02-15 09:51:47
  */
 ?>
 <?= form_open(base_url('dashboard/apply_search'), 'id="filterCharts"'); ?>
@@ -23,6 +23,10 @@
 <div class="form-group branch-selector">
   <label>Branch</label>
   <select class="form-control disabled" id='branch-select' name='branches[]' disabled="disabled" multiple="multiple" placeholder="Branch Name"></select>
+</div>
+<div class="form-group">
+  <label>Lead Source</label>
+  <select class="form-control" id='ls-select' multiple="multiple" name='lead_sources[]' placeholder="Enter ..."></select>
 </div>
 <div class="form-group">
   <label>Mode of Payment</label>
