@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 15:32:51
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 16:45:33
+ * @Last Modified time: 2019-02-15 17:35:25
  */
 ?>
 
@@ -16,7 +16,7 @@
 			$(this).addClass('bg-gray');
 			var chart = $(this).attr('chart');
 			var chartName = $(this).attr('chart-name');
-			$.post("<?= base_url('index.php/dashboard/SObyMOP_chart/') ?>"+chart, function(r){
+			$.post("<?= base_url('index.php/dashboard/SObyMOP_chart/') ?>"+chart, $('#filterCharts').serialize(), function(r){
 				$('#somp-chart').html(r);
 				$('#somp-chart').css({opacity:'1'});
 			})

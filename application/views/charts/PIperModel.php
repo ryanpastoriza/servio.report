@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 09:24:10
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 10:10:53
+ * @Last Modified time: 2019-02-15 17:35:01
  */
 ?>
 <script>
@@ -15,7 +15,7 @@
 			$(this).addClass('bg-gray');
 			var chart = $(this).attr('chart');
 			var chartName = $(this).attr('chart-name');
-			$.post("<?= base_url('index.php/dashboard/PI_by_model/') ?>"+chart, function(r){
+			$.post("<?= base_url('index.php/dashboard/PI_by_model/') ?>"+chart, $('#filterCharts').serialize(), function(r){
 				$('#pibm-chart').html(r);
 				$('#pibm-chart').css({opacity:'1'});
 			})

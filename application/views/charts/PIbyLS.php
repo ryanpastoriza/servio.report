@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-08 15:40:46
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 09:23:31
+ * @Last Modified time: 2019-02-15 17:31:20
  */
 ?>
 
@@ -15,7 +15,8 @@
 		$(this).addClass('bg-gray');
 		var chart = $(this).attr('chart');
 		var chartName = $(this).attr('chart-name');
-		$.post("<?= base_url('index.php/dashboard/PI_by_LS/') ?>"+chart, function(r){
+		console.log($('#filterCharts').serialize());
+		$.post("<?= base_url('index.php/dashboard/PI_by_LS/') ?>"+chart, $('#filterCharts').serialize(),function(r){
 			$('#pils-chart').html(r);
 			$('#pils-chart').css({opacity:'1'});
 		})

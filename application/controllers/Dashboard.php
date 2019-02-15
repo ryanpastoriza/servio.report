@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 17:15:54
+ * @Last Modified time: 2019-02-15 17:36:45
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -98,6 +98,10 @@ class Dashboard extends MY_Controller {
 	}
 	function select_PIbyMOP_chart($chart, $str = FALSE, $cond = [])
 	{
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_PI($_POST);
+		}
+
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$cashTerm  = new Pi_prospect_inquiry_cstm;
 		$cashTerm = $cashTerm->by_MOP($cond);
@@ -116,7 +120,11 @@ class Dashboard extends MY_Controller {
 	}
 	function PI_by_LS($chart, $str = FALSE, $cond = [])
 	{
-		
+
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_PI($_POST);
+		}
+
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$res  = new Pi_prospect_inquiry_cstm;
 		$res = $res->by_LS($cond);
@@ -134,6 +142,9 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function PI_by_model($chart, $str = FALSE, $cond = []){
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_PI($_POST);
+		}
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$res  = new Pi_prospect_inquiry_cstm;
 		$res = $res->by_Model($cond);
@@ -150,6 +161,9 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function SObyMOP_chart($chart, $str = FALSE, $cond = []){
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_SO($_POST);
+		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
 		$res = $res->by_MOP($cond);
@@ -166,6 +180,9 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function SObyLS_chart($chart, $str = FALSE, $cond = []){
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_SO($_POST);
+		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
 		$res = $res->by_LS($cond);
@@ -182,6 +199,9 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function SObyModel_chart($chart, $str = FALSE, $cond = []){
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_SO($_POST);
+		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
 		$res = $res->by_Model($cond);
@@ -198,6 +218,9 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function SOInvoiced_chart($chart, $str = false, $cond = []){
+		if (count($_POST) > 0 ) {
+			$cond = $this->refine_condition_for_SO($_POST);
+		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
 		$res = $res->invoiced($cond);
