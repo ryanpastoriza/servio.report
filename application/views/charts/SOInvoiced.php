@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 17:03:07
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-11 17:23:48
+ * @Last Modified time: 2019-02-15 17:35:29
  */
 ?>
 
@@ -16,7 +16,7 @@
 			$(this).addClass('bg-gray');
 			var chart = $(this).attr('chart');
 			var chartName = $(this).attr('chart-name');
-			$.post("<?= base_url('index.php/dashboard/SOInvoiced_chart/') ?>"+chart, function(r){
+			$.post("<?= base_url('index.php/dashboard/SOInvoiced_chart/') ?>"+chart, $('#filterCharts').serialize(), function(r){
 				$('#soInvoiced-chart').html(r);
 				$('#soInvoiced-chart').css({opacity:'1'});
 			})
