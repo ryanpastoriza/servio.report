@@ -8,6 +8,7 @@ class Ipm extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('main_model');
+		set_header_title("Reports - Inquiry per Model");
 	}
 	
 
