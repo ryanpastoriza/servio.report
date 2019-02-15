@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 09:26:11
+ * @Last Modified time: 2019-02-15 14:35:36
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -42,7 +42,8 @@ class Pi_prospect_inquiry_cstm extends My_Model {
         					['users', "users.id = pi_prospect_inquiry.assigned_user_id", "INNER"],
         					['users_cstm', "users_cstm.id_c = users.id", "INNER"],
         					['Jump_base_model_pi_prospect_inquiry_1_c', "Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"],
-        					['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"]
+        					['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
+        					['lead_lead_source_pi_prospect_inquiry_1_c', "lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"]
         				];
 
 
@@ -50,50 +51,63 @@ class Pi_prospect_inquiry_cstm extends My_Model {
 		$this->sqlQueries['order_type'] = "asc";
 		$this->sqlQueries['order_field'] = "inquiry_date_c";
 
-			$conditions = $conditions ?  $conditions." AND (pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0  AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0)" : "pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0 AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0";
+			$conditions = $conditions ?  $conditions." AND (pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0  AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0)" : "pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0 AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0";
 
 
 			$res = $this->search($conditions);
 
 		return $res;
 	}
-	function by_LS(){
-		$this->selects = [$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
+	function by_LS($conditions = false){
+		$this->selects = [ $this::DB_TABLE.".".$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
                       	WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b %Y')) as month",
-                      	'count('.$this::DB_TABLE_PK.') as total', "lead_lead_source.name as ls_name"
+                      	'count('.$this::DB_TABLE.".".$this::DB_TABLE_PK.') as total', "lead_lead_source.name as ls_name"
                   		];
 
         $this->sqlQueries['order_type'] = "asc";
 		$this->sqlQueries['order_field'] = "inquiry_date_c";
 		$this->sqlQueries['toGroup'] = "month, ls_name";
-		$this->toJoin = [['Lead_lead_source_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+
+		$this->toJoin = [
+        			['pi_prospect_inquiry', "pi_prospect_inquiry.id = pi_prospect_inquiry_cstm.id_c", "INNER"],
+        			['Jump_base_model_pi_prospect_inquiry_1_c', "Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"],
+        			['users', "users.id = pi_prospect_inquiry.assigned_user_id", "INNER"],
+					['users_cstm', "users_cstm.id_c = users.id", "INNER"],
+					['Lead_lead_source_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+        			['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
 					['lead_lead_source', "lead_lead_source.id = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1lead_lead_source_ida", "INNER"]];
 
+		$conditions = $conditions ?  $conditions." AND (pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0  AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0)" : "pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0 AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0";
 
-		$res = $this->search();
+
+		$res = $this->search($conditions);
 
 		return $res;
 	}
 	function by_Model($conditions = false){
-		$this->selects = [$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
+		$this->selects = [$this::DB_TABLE.".".$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(inquiry_date_c, 3) -
                       	WEEK(inquiry_date_c - INTERVAL DAY(inquiry_date_c)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(inquiry_date_c, '%b %Y')) as month",
-                      	'count('.$this::DB_TABLE_PK.') as total', "jump_base_model.name as model_name"
+                      	'count('.$this::DB_TABLE.".".$this::DB_TABLE_PK.') as total', "jump_base_model.name as model_name"
                   		];
 
         $this->sqlQueries['order_type'] = "asc";
 		$this->sqlQueries['order_field'] = "inquiry_date_c";
 		$this->sqlQueries['toGroup'] = "month, model_name";
-		$this->toJoin = [['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
-					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"]];
+		$this->toJoin = [
+        			['pi_prospect_inquiry', "pi_prospect_inquiry.id = pi_prospect_inquiry_cstm.id_c", "INNER"],
+        			['users', "users.id = pi_prospect_inquiry.assigned_user_id", "INNER"],
+					['users_cstm', "users_cstm.id_c = users.id", "INNER"],
+					['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"],
+					['Lead_lead_source_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+        			['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
+					];
 
 
-		if($conditions){
-			$res = $this->whereLike(false,false,false,$conditions['or'],$conditions['between']);
-		}
-		else{
-			$res = $this->search();
-		}
+		$conditions = $conditions ?  $conditions." AND (pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0  AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0)" : "pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0 AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0";
 
+
+		$res = $this->search($conditions);
 
 		return $res;
 	}

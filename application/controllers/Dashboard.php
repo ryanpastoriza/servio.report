@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 09:26:54
+ * @Last Modified time: 2019-02-15 17:15:54
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -34,6 +34,7 @@ class Dashboard extends MY_Controller {
 		$this->load->model('jump_dealer');
 		$this->load->model('BaseModel');
 		$this->load->model('modelDescription');
+		$this->load->model('Lead_lead_source');
 
 		set_header_title('Servio-DMS Dashboard');
 
@@ -47,13 +48,18 @@ class Dashboard extends MY_Controller {
 		$pis 		 = $pI->payment_terms();
 		$bms 		 = $bm->get();
 		$mds 	  	 = $this->ModelDescription->get();
+		$ls 		 = $this->Lead_lead_source->get();
 
 		$dealersSelect = [];
 		$MOP 		   = [];
 		$baseModelSelect = [];
 		$moDes 			= [];
+		$lss 			= [];
 
 
+		foreach ($ls as $value) {
+			$lss[] = (object)['id' => $value->id, 'text' => $value->name];
+		}
 		foreach ($mds as $value) {
 			$moDes[] = (object)['id' => $value->id, 'text' => $value->name];
 		}
@@ -81,16 +87,14 @@ class Dashboard extends MY_Controller {
 														'PerDealer' => $PerDealer,
 														'modeOfPayments' => $MOP,
 														'baseModels' => $baseModelSelect,
-														'modelDescriptions' => $moDes
+														'modelDescriptions' => $moDes,
+														'leadSources' 	=> $lss
 													]
 													, TRUE);
 
 		$this->put_contents($content,"Dashboard");
 			
 			
-	}
-	function find_branch(){
-		
 	}
 	function select_PIbyMOP_chart($chart, $str = FALSE, $cond = [])
 	{
@@ -110,12 +114,12 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
-	function PI_by_LS($chart, $str = FALSE)
+	function PI_by_LS($chart, $str = FALSE, $cond = [])
 	{
 		
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$res  = new Pi_prospect_inquiry_cstm;
-		$res = $res->by_LS();
+		$res = $res->by_LS($cond);
 
 		$data = [
 				'dataset' 	=> $res,
@@ -129,10 +133,10 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
-	function PI_by_model($chart, $str = FALSE){
+	function PI_by_model($chart, $str = FALSE, $cond = []){
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$res  = new Pi_prospect_inquiry_cstm;
-		$res = $res->by_Model();
+		$res = $res->by_Model($cond);
 
 		$data = [
 				'dataset' 	=> $res,
@@ -145,10 +149,10 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
-	function SObyMOP_chart($chart, $str = FALSE){
+	function SObyMOP_chart($chart, $str = FALSE, $cond = []){
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
-		$res = $res->by_MOP();
+		$res = $res->by_MOP($cond);
 
 		$data = [
 				'dataset' 	=> $res,
@@ -161,10 +165,10 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
-	function SObyLS_chart($chart, $str = FALSE){
+	function SObyLS_chart($chart, $str = FALSE, $cond = []){
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
-		$res = $res->by_LS();
+		$res = $res->by_LS($cond);
 
 		$data = [
 				'dataset' 	=> $res,
@@ -177,10 +181,10 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
-	function SObyModel_chart($chart, $str = FALSE){
+	function SObyModel_chart($chart, $str = FALSE, $cond = []){
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
-		$res = $res->by_Model();
+		$res = $res->by_Model($cond);
 
 		$data = [
 				'dataset' 	=> $res,
@@ -193,10 +197,10 @@ class Dashboard extends MY_Controller {
 
 		return $this->create_chart($data, $str);
 	}
-	function SOInvoiced_chart($chart, $str = false){
+	function SOInvoiced_chart($chart, $str = false, $cond = []){
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
-		$res = $res->invoiced();
+		$res = $res->invoiced($cond);
 
 		$data = [
 				'dataset' 	=> $res,
@@ -309,14 +313,123 @@ class Dashboard extends MY_Controller {
 
 			$qry .= ")";
 		}
+		if(isset($cond['lead_sources'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['lead_sources'] as $value) {
+				$counter++;
+				$qry .= " lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1lead_lead_source_ida = '{$value}' ";
+				$qry .= $counter < count($cond['lead_sources']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		
+
+		return $qry;
+	}
+	function refine_condition_for_SO($cond){
+		$qry = "";
+
+
+		if($cond['from_date'] && $cond['to_date']){
+			$qry .= " Ddms_sales_order.date_entered BETWEEN '{$cond['from_date']}' AND '{$cond['to_date']}' ";
+		}
+		if (isset($cond['dealers'])) {
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['dealers'] as $value) {
+				$counter++;
+				$qry .= " users_cstm.jump_dealer_id_c = '{$value}' ";
+				$qry .= $counter < count($cond['dealers']) ? " OR ": "";
+			}
+			$qry .= ")";
+		}
+		if(isset($cond['branches'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['branches'] as $value) {
+				$counter++;
+				$qry .= " users_cstm.jump_branch_id_c = '{$value}' ";
+				$qry .= $counter < count($cond['branches']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['mode_of_payments'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['mode_of_payments'] as $value) {
+				$counter++;
+				$qry .= " Ddms_sales_order_cstm.payment_terms_c = '{$value}' ";
+				$qry .= $counter < count($cond['mode_of_payments']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['base_models'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['base_models'] as $value) {
+				$counter++;
+				$qry .= " jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida = '{$value}' ";
+				$qry .= $counter < count($cond['base_models']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['vehicle_descriptions'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['vehicle_descriptions'] as $value) {
+				$counter++;
+				$qry .= " jump_model_description.id = '{$value}' ";
+				$qry .= $counter < count($cond['vehicle_descriptions']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		if(isset($cond['lead_sources'])){
+			$qry .= $qry != "" ? "AND" : "";
+			$qry .= "(";
+
+			$counter = 0;
+			foreach ($cond['lead_sources'] as $value) {
+				$counter++;
+				$qry .= " Lead_lead_source_ddms_sales_order_1_c.lead_lead_source_ddms_sales_order_1lead_lead_source_ida = '{$value}' ";
+				$qry .= $counter < count($cond['lead_sources']) ? " OR ": "";
+			}
+
+			$qry .= ")";
+		}
+		
 
 		return $qry;
 	}
 	function apply_search(){
 		$charts = [];
 		$cond = $this->refine_condition_for_PI($_POST);
+		$SOcond = $this->refine_condition_for_SO($_POST);
 
-		$charts['pi_by_mop'] = $this->select_PIbyMOP_chart('line', TRUE, $cond);
+		$charts['pi_by_mop'] 	= $this->select_PIbyMOP_chart('line', TRUE, $cond);
+		$charts['pi_by_ls'] 	= $this->PI_by_LS('line', TRUE, $cond);
+		$charts['pi_by_model'] 	= $this->PI_by_model('line', TRUE, $cond);
+		$charts['so_by_mop'] 	= $this->SObyMOP_chart('line', TRUE, $SOcond);
+		$charts['so_by_ls'] 	= $this->SObyLS_chart('line', TRUE, $SOcond);
+		$charts['so_by_model'] 	= $this->SObyModel_chart('line', TRUE, $SOcond);
+		$charts['so_invoiced'] 	= $this->SOInvoiced_chart('line', TRUE, $SOcond);
 
 		echo json_encode($charts);
 
@@ -347,10 +460,8 @@ class Dashboard extends MY_Controller {
 		}
 
 		echo json_encode($all_model_descriptions);
-
 	}
 	public function create_chart($data, $str = FALSE){
-
 		return $this->load->view('chartjs/bar_chart', $data, $str);
 	}
 	public function logout(){
