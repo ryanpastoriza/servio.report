@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-13 14:36:26
+ * @Last Modified time: 2019-02-14 16:18:49
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -45,7 +45,7 @@ class MY_Controller extends CI_Controller {
 
 		$vars = [
 					'addStyles'  => [ 
-										asset_url('plugins/select2/select2.min.css'),
+										asset_url('plugins/select2/select2.css'),
 										asset_url('plugins/datatables/dataTables.bootstrap.css'),
 										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css'),
 										asset_url('plugins/dataTables/extensions/buttons/css/buttons.bootstrap.min.css')
@@ -58,13 +58,15 @@ class MY_Controller extends CI_Controller {
 										asset_url('plugins/chartjs/Chart.js'),
 										asset_url('plugins/momentjs/moment.js'),
 										asset_url('plugins/select2/select2.full.min.js'),
-									]
+										asset_url('plugins/jquery.form.min.js'),
+									],
+					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
 				];
 
 
 
 		$content_vars = ['contentHeader' => $contentHeader,
-							'content' => $content
+							'content' => $content,
 						];
 
 
@@ -149,6 +151,7 @@ class MY_Controller extends CI_Controller {
 			return $branch;
 			echo "asdasd";
 			return $branch->load($this->user_info->dealer->branch_id);
+
 		}
 	}
 }

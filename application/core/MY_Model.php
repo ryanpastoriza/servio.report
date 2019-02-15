@@ -103,28 +103,6 @@ class MY_Model extends CI_Model{
 				$this->db->join($value[0], $value[1],$value[2]);
 			}
 		}
-		// if(isset($this->sqlQueries['join_type'])){
-		// 	if($this->sqlQueries['join_type'] != ""){
-		// 		$joinType = $this->sqlQueries['join_type'];
-		// 	}
-		// }
-		// if(count($this->toJoin) > 0){
-		// 	foreach ($this->toJoin as $key => $value) {	
-		// 		$this->load->model($key);
-		// 		$this->load->model($value);
-		// 		$classname2 = ucfirst($value);
-		// 		$classname = ucfirst($key);
-		// 		$model1 	= new $classname;
-		// 		$model2 	= new $classname2;
-		// 		if(property_exists($model2, $model1::DB_TABLE_PK)){
-		// 			$commonPk = $model1::DB_TABLE_PK;
-		// 		}elseif(property_exists($model1, $model2::DB_TABLE_PK)){
-		// 			$commonPk = $model2::DB_TABLE_PK;
-		// 		}
-
-		// 		$this->db->join($model1::DB_TABLE, $model1::DB_TABLE.".".$commonPk." = ".$model2::DB_TABLE.".".$commonPk,$joinType,"left outer");
-		// 	}
-		// }
 	}
 	private function addOrder(){
 		if($this->sqlQueries['order_field'] != '' and $this->sqlQueries['order_type'] != ''){
