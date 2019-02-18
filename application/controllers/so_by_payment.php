@@ -16,7 +16,7 @@ class So_by_payment extends MY_Controller {
 		parent::__construct();
 
      	// Load model
-     	$this->load->model('so_payment_terms');
+     	$this->load->model('so_payment_term');
      	$this->load->model('Pi_prospect_inquiry_cstm');
 	}
 
@@ -30,7 +30,9 @@ class So_by_payment extends MY_Controller {
 		}
 
 
-		$pt = $this->so_payment_terms->soByPaymentTerms($pm);
+		$pt = $this->so_payment_term->soByPaymentTerms($pm);
+		$pt['dealers'] = $this->allowed_dealers();
+		$pt['branches'] = $this->allowed_branches();
 
 		// echo "<pre>";
 		// print_r($pt);

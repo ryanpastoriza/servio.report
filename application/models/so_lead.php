@@ -1,7 +1,7 @@
 <?php
 
 
-Class So_Lead extends CI_MOdel {
+Class So_Lead extends CI_Model {
 
 	public function hello(){
 		return "Hello";

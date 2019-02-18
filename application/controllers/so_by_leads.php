@@ -16,19 +16,29 @@ class So_by_leads extends MY_Controller {
 		parent::__construct();
 
      	// Load model
-     	$this->load->model('so_lead');
+     	$this->load->model('so_leads');
      	$this->load->model('Pi_prospect_inquiry_cstm');
 	}
 
 	public function index()
 	{	
-		$data = $this->so_lead->leads();	
+		$data = $this->so_leads->leads();	
+		$data['dealers'] = $this->allowed_dealers();
+		$data['branches'] = $this->allowed_branches();
+		// $this->pp($allowed_dealers);
 
 		$content = $this->load->view('reports/SO_by_lead/index.php', ['data'=>$data], TRUE);
 		$this->put_contents($content, 'Sales Order Reports');
 		
 		// $pi = new Pi_prospect_inquiry_cstm;
 			
+	}
+
+	public function pp($data){
+		echo "<pre>";
+		print_r($data);
+		echo "<pre>";
+		die();
 	}
 
 }
