@@ -54,7 +54,7 @@
 	            	<?php foreach ($data['ls'] as $key => $value): ?>
 	            		<tr>
 	            			<td><?php echo $value->name ?></td>
-	            			<td><?php echo $value->value->count ?></td>
+	            			<td><?php echo $value->value ?></td>
 	            			<td><?php echo $value->pct ?>%</td>
 	            			<?php foreach ($value->bm as $skey => $svalue): ?>
 	            				<td><?php echo $svalue['value']->count ?></td>

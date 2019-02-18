@@ -55,19 +55,19 @@ Class So_Lead extends CI_MOdel {
 				$data['total'][$svalue->name] += $bm[$skey]['value']->count;
 			}
 		}
-
+		// $data['overall'] = 0;
 		foreach ($data['ls'] as $key => $value) {
-			$data['ls'][$key]->value = $this->valueByLeads($value->id, $sdate, $edate);
+			// $data['ls'][$key]->value = $this->valueByLeads($value->id, $sdate, $edate);
+			$data['ls'][$key]->value = 0;
 			$data['ls'][$key]->pct = 0;
-			if($data['ls'][$key]->value->count > 0){
-				$data['ls'][$key]->pct = round(($data['ls'][$key]->value->count / $data['overall']) * 100, 1);
-			}			
-			// $data['overall'] += $data['ls'][$key]->value->count;
+					
 			$bm = [];
 			foreach ($data['bm'] as $skey => $svalue) {
 				$bm[$skey]['name'] = $svalue->name;
 				$bm[$skey]['id'] = $svalue->id;
 				$bm[$skey]['value'] = $this->getValue($value->id, $svalue->id, $sdate, $edate, $soStatus);
+				// $this->pp($bm[$skey]['value']->count);
+				$data['ls'][$key]->value += $bm[$skey]['value']->count;
 
 				$bm[$skey]['pct'] = 0;
 				if($data['total'][$svalue->name] != 0){
@@ -76,6 +76,11 @@ Class So_Lead extends CI_MOdel {
 				// echo $bm[$skey]['value']->count;
 				// $data['total'][$svalue->name] += $bm[$skey]['value']->count;
 			}
+
+			$data['overall'] += $data['ls'][$key]->value;
+			if($data['ls'][$key]->value > 0){
+				$data['ls'][$key]->pct = round(($data['ls'][$key]->value / $data['overall']) * 100, 1);
+			}	
 			$data['ls'][$key]->bm = $bm;
 		}
 		return $data;
@@ -125,7 +130,7 @@ Class So_Lead extends CI_MOdel {
 		// }
 
 		$query = $this->db->query("SELECT
-			count(DISTINCT 'id') as count
+			count('id') as count
 			FROM
 			ddms_sales_order_cstm
 			INNER JOIN lead_lead_source_ddms_sales_order_1_c ON ddms_sales_order_cstm.id_c = lead_lead_source_ddms_sales_order_1_c.lead_lead_source_ddms_sales_order_1ddms_sales_order_idb
@@ -143,24 +148,24 @@ Class So_Lead extends CI_MOdel {
 			AND ddms_sales_order.deleted = 0
 			GROUP BY ddms_sales_order.id");
 
-		$qquery = "SELECT
-			count(DISTINCT 'id') as count
-			FROM
-			ddms_sales_order_cstm
-			INNER JOIN lead_lead_source_ddms_sales_order_1_c ON ddms_sales_order_cstm.id_c = lead_lead_source_ddms_sales_order_1_c.lead_lead_source_ddms_sales_order_1ddms_sales_order_idb
-			INNER JOIN jump_model_description_ddms_sales_order_1_c ON ddms_sales_order_cstm.id_c = jump_model_description_ddms_sales_order_1_c.jump_model_description_ddms_sales_order_1ddms_sales_order_idb
-			INNER JOIN lead_lead_source ON lead_lead_source.id = lead_lead_source_ddms_sales_order_1_c.lead_lead_source_ddms_sales_order_1lead_lead_source_ida
-			INNER JOIN jump_model_description ON jump_model_description.id = jump_model_description_ddms_sales_order_1_c.jump_model7e53ription_ida
-			INNER JOIN jump_base_model_jump_model_description_1_c ON jump_model_description.id = jump_base_model_jump_model_description_1_c.jump_base_ae81ription_idb
-			INNER JOIN jump_base_model ON jump_base_model.id = jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida
-			INNER JOIN ddms_sales_order ON ddms_sales_order_cstm.id_c = ddms_sales_order.id
-			WHERE lead_lead_source.id = '$lead' AND
-			jump_base_model.id = '$base_model' AND
-			ddms_sales_order.date_entered >= '$sdate' AND
-			ddms_sales_order.date_entered <= '$edate' 
-			AND ddms_sales_order_cstm.status_c = '$soStatus' 
-			AND ddms_sales_order.deleted = 0
-			GROUP BY ddms_sales_order.id";
+		// $qquery = "SELECT
+		// 	count('id') as count
+		// 	FROM
+		// 	ddms_sales_order_cstm
+		// 	INNER JOIN lead_lead_source_ddms_sales_order_1_c ON ddms_sales_order_cstm.id_c = lead_lead_source_ddms_sales_order_1_c.lead_lead_source_ddms_sales_order_1ddms_sales_order_idb
+		// 	INNER JOIN jump_model_description_ddms_sales_order_1_c ON ddms_sales_order_cstm.id_c = jump_model_description_ddms_sales_order_1_c.jump_model_description_ddms_sales_order_1ddms_sales_order_idb
+		// 	INNER JOIN lead_lead_source ON lead_lead_source.id = lead_lead_source_ddms_sales_order_1_c.lead_lead_source_ddms_sales_order_1lead_lead_source_ida
+		// 	INNER JOIN jump_model_description ON jump_model_description.id = jump_model_description_ddms_sales_order_1_c.jump_model7e53ription_ida
+		// 	INNER JOIN jump_base_model_jump_model_description_1_c ON jump_model_description.id = jump_base_model_jump_model_description_1_c.jump_base_ae81ription_idb
+		// 	INNER JOIN jump_base_model ON jump_base_model.id = jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida
+		// 	INNER JOIN ddms_sales_order ON ddms_sales_order_cstm.id_c = ddms_sales_order.id
+		// 	WHERE lead_lead_source.id = '$lead' AND
+		// 	jump_base_model.id = '$base_model' AND
+		// 	ddms_sales_order.date_entered >= '$sdate' AND
+		// 	ddms_sales_order.date_entered <= '$edate' 
+		// 	AND ddms_sales_order_cstm.status_c = '$soStatus' 
+		// 	AND ddms_sales_order.deleted = 0
+		// 	GROUP BY ddms_sales_order.id";
 
 			// $this->pp($qquery);
 
