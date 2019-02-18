@@ -9,7 +9,7 @@
 	  		</div>
 		</div>
 		<div class="box-body">
-	
+		
 			<div class="row">
 				<form id="lead_form">
 					<div class="col-lg-4">
@@ -30,8 +30,8 @@
 							<div class="col-sm-10">
 							    <select name="branch" id="branch" class="form-control input-sm">
 									<option selected disabled></option>
-							    	<?php foreach( $dealers["branches"] as $key => $value ): ?>
-										<option value="<?= $value ?>"> <?= $key ?> </option>
+							    	<?php foreach( $all_branches as $key => $value ): ?>
+										<option value="<?= $value->id ?>"> <?= $value->name ?> </option>
 							    	<?php endforeach?>
 							    </select>
 							</div>
@@ -110,7 +110,15 @@
 
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
-		branch_list(id);
+		var dealer_name = $.trim( $("#dealer option:selected").text() ).toLowerCase() ;
+
+		if( dealer_name == "mmpc" ){
+			mmpc_all_branch();
+		}
+		else{
+			branch_list(id);
+		}
+
 	});
 
 	$("#submit").click(function(event) {
@@ -145,6 +153,22 @@
 		}
 
 	});
+
+
+	function mmpc_all_branch(){
+		
+		var branches = <?php echo json_encode($all_branches); ?>;
+		var options  = "<option disabled selected></option>";
+
+		if( branches ){
+			$.each( branches , function(index, val) {
+				options += "<option value='"+val.id+"' >"+ val.name +"</option>";
+			});
+			$("#branch").html(options)
+		}
+
+	}
+	
 
 	function branch_list(dealer_id){
 		var branches = "";
