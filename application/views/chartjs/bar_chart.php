@@ -4,13 +4,13 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:36:20
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-08 16:52:56
+ * @Last Modified time: 2019-02-15 19:10:00
  */
 
 	
 
 
-	$prepped = prep_data($dataset, $xAxis, $labelField, $sumField, $chartType);
+	$prepped = prep_data($dataset, $xAxis, $labelField, $sumField, $chartType, $chartId);
 
 
 
@@ -26,6 +26,7 @@ var myChart = new Chart(ctx, {
         labels: <?= json_encode($prepped['xAxis']) ?>,
         datasets : <?= json_encode($prepped['data']) ?>
     },
+    bezierCurve : false,
     options: {
         scales: {
             yAxes: [{
@@ -33,6 +34,11 @@ var myChart = new Chart(ctx, {
                     beginAtZero:true
                 }
             }]
+        },
+         elements: {
+            line: {
+                tension: 0, // disables bezier curves
+            }
         }
     }
 });

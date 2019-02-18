@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 17:36:45
+ * @Last Modified time: 2019-02-15 19:27:00
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -12,11 +12,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends MY_Controller {
 
 	function test(){
-		// $branches = $this->get_model_descriptions();
+		$this->load->model('Ddms_sales_order');
+		$all = $this->Ddms_sales_order->get();
+		$date1 = strtotime('2018-11-01');
+		$date2 = strtotime('2019-02-15');
 
-		// echo "<pre>";
-		// print_r ($branches);
-		// echo "</pre>";
+
+		foreach ($all as $value) {
+				$nDate = rand($date1,$date2);
+				$value->date_entered = date('Y-m-d', $nDate);
+				$value->save();
+		}
+
 
 	}
 	function __construct()
@@ -42,6 +49,8 @@ class Dashboard extends MY_Controller {
 		$PerDealer 			= new PerDealerChart;
 		$pI 				= new Pi_prospect_inquiry_cstm;
 		$bm 				= new BaseModel;
+		$bm->sqlQueries['toGroup'] = 'jump_base_model.name';
+
 
 
 		$dealers 	 = $this->allowed_dealers();
@@ -64,7 +73,7 @@ class Dashboard extends MY_Controller {
 			$moDes[] = (object)['id' => $value->id, 'text' => $value->name];
 		}
 		foreach ($bms as $value) {
-			$baseModelSelect[] = (object)['id' => $value->id, 'text' => $value->name];
+			$baseModelSelect[] = (object)['id' => $value->name, 'text' => $value->name];
 		}
 		foreach ($pis as $value) {
 			$MOP[] = (object)['id' => $value->payment_terms_c, 'text' => ucfirst($value->payment_terms_c)];
@@ -99,7 +108,16 @@ class Dashboard extends MY_Controller {
 	function select_PIbyMOP_chart($chart, $str = FALSE, $cond = [])
 	{
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_PI($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_PI($thPost);
 		}
 
 		$this->load->model('pi_prospect_inquiry_cstm');
@@ -122,7 +140,16 @@ class Dashboard extends MY_Controller {
 	{
 
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_PI($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_PI($thPost);
 		}
 
 		$this->load->model('pi_prospect_inquiry_cstm');
@@ -142,9 +169,20 @@ class Dashboard extends MY_Controller {
 		return $this->create_chart($data, $str);
 	}
 	function PI_by_model($chart, $str = FALSE, $cond = []){
+
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_PI($_POST);
 		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_PI($thPost);
+		}
+
 		$this->load->model('pi_prospect_inquiry_cstm');
 		$res  = new Pi_prospect_inquiry_cstm;
 		$res = $res->by_Model($cond);
@@ -162,7 +200,16 @@ class Dashboard extends MY_Controller {
 	}
 	function SObyMOP_chart($chart, $str = FALSE, $cond = []){
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_SO($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_SO($thPost);
 		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
@@ -181,7 +228,16 @@ class Dashboard extends MY_Controller {
 	}
 	function SObyLS_chart($chart, $str = FALSE, $cond = []){
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_SO($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_SO($thPost);
 		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
@@ -200,7 +256,16 @@ class Dashboard extends MY_Controller {
 	}
 	function SObyModel_chart($chart, $str = FALSE, $cond = []){
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_SO($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_SO($thPost);
 		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
@@ -219,7 +284,16 @@ class Dashboard extends MY_Controller {
 	}
 	function SOInvoiced_chart($chart, $str = false, $cond = []){
 		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
 			$cond = $this->refine_condition_for_SO($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_SO($thPost);
 		}
 		$this->load->model('Ddms_sales_order');
 		$res  = new Ddms_sales_order;
@@ -272,6 +346,7 @@ class Dashboard extends MY_Controller {
 		if($cond['from_date'] && $cond['to_date']){
 			$qry .= " pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN '{$cond['from_date']}' AND '{$cond['to_date']}' ";
 		}
+
 		if (isset($cond['dealers'])) {
 			$qry .= $qry != "" ? "AND" : "";
 			$qry .= "(";
@@ -317,7 +392,7 @@ class Dashboard extends MY_Controller {
 			$counter = 0;
 			foreach ($cond['base_models'] as $value) {
 				$counter++;
-				$qry .= " Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = '{$value}' ";
+				$qry .= " jump_base_model.name = '{$value}' ";
 				$qry .= $counter < count($cond['base_models']) ? " OR ": "";
 			}
 
@@ -405,7 +480,7 @@ class Dashboard extends MY_Controller {
 			$counter = 0;
 			foreach ($cond['base_models'] as $value) {
 				$counter++;
-				$qry .= " jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida = '{$value}' ";
+				$qry .= " jump_base_model.name = '{$value}' ";
 				$qry .= $counter < count($cond['base_models']) ? " OR ": "";
 			}
 
@@ -443,6 +518,11 @@ class Dashboard extends MY_Controller {
 	}
 	function apply_search(){
 		$charts = [];
+		if ($_POST['from_date'] == '' || $_POST['to_date'] == '') {
+			$_POST['from_date'] = date('Y-01-d');
+			$_POST['to_date'] = date('Y-t-d');
+		}
+
 		$cond = $this->refine_condition_for_PI($_POST);
 		$SOcond = $this->refine_condition_for_SO($_POST);
 

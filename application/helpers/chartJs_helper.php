@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-08 16:52:35
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-08 16:57:55
+ * @Last Modified time: 2019-02-15 19:12:39
  */
 function prep_data($dataSet, $xAxis, $labelField, $sumField, $chartType){
 
@@ -30,10 +30,12 @@ function prep_data($dataSet, $xAxis, $labelField, $sumField, $chartType){
 				$fill = strtolower($chartType) == 'bar' ?  "rgb({$randR}, {$randG}, {$randB})" : "";
 				$borderColor = strtolower($chartType) == 'line' ?  "rgb({$randR}, {$randG}, {$randB})" : "";
 
-				$lVal = (object)['label' => $value->{$labelField},
-								'borderColor' => $borderColor,
-								'fill' => isset($fill) && $fill ? true : false,
-								'backgroundColor' => "rgb({$randR}, {$randG}, {$randB})"
+				$lVal = (object)['label' 			=> $value->{$labelField},
+								'borderColor' 		=> $borderColor,
+								'borderWidth' 		=> '1.5',
+								'fill' 				=> true,
+								'backgroundColor' 	=> "rgba({$randR}, {$randG}, {$randB},0.2)",
+								'pointRadius' 		=> 3
 								];
 
 				$prepVals['data'][] = $lVal;
