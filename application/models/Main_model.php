@@ -18,11 +18,11 @@ class Main_model extends CI_Model
 		return $this->db->get_where('users',$arr1)->row();
 	}
 	function base_model_records(){
-		return  $this->db->query('SELECT * from jump_base_model')->result();
+		return  $this->db->query('SELECT * from jump_base_model WHERE deleted = 0')->result();
 	}
 	function dealers(){
 		
-		$query = $this->db->query("SELECT * from jump_dealer")->result();
+		$query = $this->db->query("SELECT * from jump_dealer WHERE deleted = 0")->result();
 		return $query;	
 	}
 	function getmmpc(){
