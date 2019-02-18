@@ -20,7 +20,18 @@ class Reports extends MY_Controller {
 		$base_model = $this->base_model_records();
 		$dealers    = $this->dealer_with_branches();
 
-		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
+		$title = trim(strtolower($_SESSION['user']->title));
+		$title = str_replace(" ", "_", $title);
+
+		if( in_array($title, $this->mmpc_user_titles) ){	
+			$branches = $this->all_branches();
+		}
+		else{
+			$branches = [];
+		}
+
+		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);		
+
 		set_header_title("Reports - Inquiry Per Lead Source");
 		$this->put_contents($content,"Lead Source");
 	}
@@ -264,7 +275,7 @@ class Reports extends MY_Controller {
 	}
 
 	public function base_model_records(){
-		return  $this->db->query('SELECT * from jump_base_model')->result();
+		return  $this->db->query('SELECT * from jump_base_model where deleted = 0')->result();
 	}
 
 	public function lead_payment_query($conditions = ""){
@@ -314,8 +325,12 @@ class Reports extends MY_Controller {
 
 	public function dealers(){
 		
-		$query = $this->db->query("SELECT * from jump_dealer")->result();
+		$query = $this->db->query("SELECT * from jump_dealer where deleted = 0")->result();
 		return $query;	
+	}
+
+	public function all_branches(){
+		return $this->db->query(" SELECT * from jump_branch where deleted = 0 ")->result();
 	}
 
 	public function branch(){
@@ -566,7 +581,6 @@ class Reports extends MY_Controller {
 	}
 
 	public function test_method(){
-
 
 	}
 
