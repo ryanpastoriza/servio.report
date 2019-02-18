@@ -27,7 +27,15 @@ class Reports extends MY_Controller {
 			$branches = $this->all_branches();
 		}
 		else{
-			$branches = [];
+
+			if( in_array($title, $this->branch_user_tiles) ){		
+				$branches[] = (object)[ "id" => $_SESSION['user']->dealer->branch_id, "name" => $_SESSION['user']->dealer->branch ];
+			}
+
+			else{
+				$branches = [];	
+			}
+
 		}
 
 		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);		
@@ -41,7 +49,17 @@ class Reports extends MY_Controller {
 		$base_model = $this->base_model_records();
 		$dealers    = $this->dealer_with_branches();
 
-		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
+		$title = trim(strtolower($_SESSION['user']->title));
+		$title = str_replace(" ", "_", $title);
+
+		if( in_array($title, $this->mmpc_user_titles) ){	
+			$branches = $this->all_branches();
+		}
+		else{
+			$branches = [];
+		}
+
+		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);
 		set_header_title("Reports - Inquiry Per Payment Mode");
 		$this->put_contents($content,"Payment Mode");
 	}
@@ -60,7 +78,12 @@ class Reports extends MY_Controller {
 		$date_to   = $_REQUEST['data']['date_to'];
 		
 		if( $dealer ){
-			$conditions .= ' AND jump_dealer.id = '.'"'.$dealer.'"';
+			if( strtolower($dealer) == "mmpc" ){
+				$conditions .= "";	
+			}
+			else{
+				$conditions .= ' AND jump_dealer.id = ' . '"' . $dealer . '"';
+			}
 		}
 		if( $branch ){
 			$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
@@ -157,7 +180,8 @@ class Reports extends MY_Controller {
 		}
 
 		echo json_encode([
-			"data" => $array
+			"data" => $array,
+			"request" => $_REQUEST
 		]);
 	}
 
@@ -175,7 +199,12 @@ class Reports extends MY_Controller {
 		$date_to   = $_REQUEST['data']['date_to'];
 		
 		if( $dealer ){
-			$conditions .= ' AND jump_dealer.id = ' . '"' . $dealer . '"';
+			if( strtolower($dealer) == "mmpc" ){
+				$conditions .= "";	
+			}
+			else{
+				$conditions .= ' AND jump_dealer.id = ' . '"' . $dealer . '"';
+			}
 		}
 		if( $branch ){
 			$conditions .= ' AND jump_branch.id =' . '"' . $branch . '"';
@@ -185,10 +214,9 @@ class Reports extends MY_Controller {
 		}
 		$conditions .= ' AND (pi_prospect_inquiry_cstm.inquiry_date_c BETWEEN DATE("'.$date_from.'") AND DATE("'.$date_to.'") )';
 
-
-		$leads 		 = [["name" => "Bank PO"], ["name" => "cash"], ["name" => "financing"], ["name" => "company po"]];
+		$leads 		 = [["name" => "bank_po"], ["name" => "cash"], ["name" => "financing"], ["name" => "company_po"]];
 		$base_models = $this->base_model_records();
-		$main_query  = $this->lead_payment_query($conditions);
+		$main_query  = $this->payment_mode_query($conditions);
 
 		$base_models_grand_values = [];
 
@@ -206,11 +234,9 @@ class Reports extends MY_Controller {
 				$total_value = "";
 
 				foreach ($main_query as $query_key => $query_value) {
-
-					if($lead->name == $query_value->payment_terms_c &&  $model->name == $query_value->base_model){
+					if(trim($lead->name) == trim($query_value->payment_terms_c) &&  trim($model->id) == trim($query_value->base_model_id) ){
 						$total_value = $query_value->total_value;
-					} 
-
+					}
 				}
 
 				if(array_key_exists("v".$model->name, $base_models_grand_values)){
@@ -268,9 +294,11 @@ class Reports extends MY_Controller {
 			}else{
 				$array[count($leads)] += ["p".$value->name => "<b>" . round(($base_models_grand_values["v".$value->name]["value"] / $grand_total) * 100, 2) . "%</b>" ];
 			}
-		}	
+		}
+
 		echo json_encode([
-			"data" => $array
+			"data" => $array,
+			"requests" => $_REQUEST
 		]);
 	}
 
@@ -285,6 +313,7 @@ class Reports extends MY_Controller {
 										pi_prospect_inquiry.name,
 										pi_prospect_inquiry_cstm.payment_terms_c,
 										jump_model_description.`name` AS model_description,
+										jump_base_model.`id` AS base_model_id,
 										jump_base_model.`name` AS base_model,
 										lead_lead_source.`name` AS lead_source,
 										count(jump_base_model.`name`) as total_value
@@ -317,6 +346,51 @@ class Reports extends MY_Controller {
 
 									WHERE pi_prospect_inquiry.deleted = 0 {$conditions}
 									GROUP by lead_lead_source.id, jump_base_model.id
+
+									ORDER by model_description")->result();
+		
+		return $query;
+	}
+	public function payment_mode_query($conditions = ""){
+
+		$query = $this->db->query("	SELECT
+										pi_prospect_inquiry.id,
+										pi_prospect_inquiry.name,
+										pi_prospect_inquiry_cstm.payment_terms_c,
+										jump_model_description.`name` AS model_description,
+										jump_base_model.`id` AS base_model_id,
+										jump_base_model.`name` AS base_model,
+										lead_lead_source.`name` AS lead_source,
+										count(jump_base_model.`name`) as total_value
+									FROM
+										pi_prospect_inquiry
+									INNER JOIN pi_prospect_inquiry_cstm ON pi_prospect_inquiry.id = pi_prospect_inquiry_cstm.id_c
+									INNER JOIN city_city_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = city_city_pi_prospect_inquiry_1_c.city_city_pi_prospect_inquiry_1pi_prospect_inquiry_idb
+									INNER JOIN city_city ON city_city.id = city_city_pi_prospect_inquiry_1_c.city_city_pi_prospect_inquiry_1city_city_ida
+									INNER JOIN city_city_cstm ON city_city.id = city_city_cstm.id_c
+									INNER JOIN prvn_province ON prvn_province.id = city_city_cstm.prvn_province_id_c
+									INNER JOIN prvn_province_cstm ON prvn_province.id = prvn_province_cstm.id_c
+									INNER JOIN rgin_region ON rgin_region.id = prvn_province_cstm.rgin_region_id_c
+									INNER JOIN ctry_country ON ctry_country.id = prvn_province_cstm.ctry_country_id_c
+									INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id
+									INNER JOIN jump_model_description ON jump_model_description.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida
+									INNER JOIN jump_base_model_jump_model_description_1_c ON jump_base_model_jump_model_description_1_c.jump_base_ae81ription_idb = jump_model_description.id
+									INNER JOIN jump_base_model ON jump_base_model.id = jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida
+									INNER JOIN jump_body_type_jump_base_model_1_c ON jump_body_type_jump_base_model_1_c.jump_body_type_jump_base_model_1jump_base_model_idb = jump_base_model.id
+									INNER JOIN jump_body_type ON jump_body_type.id = jump_body_type_jump_base_model_1_c.jump_body_type_jump_base_model_1jump_body_type_ida
+									INNER JOIN jump_color_jump_model_description_1_c ON jump_color_jump_model_description_1_c.jump_color_jump_model_description_1jump_model_description_idb = jump_model_description.id
+									INNER JOIN jump_color ON jump_color.id = jump_color_jump_model_description_1_c.jump_color_jump_model_description_1jump_color_ida
+									INNER JOIN lead_lead_source_pi_prospect_inquiry_1_c ON lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id
+									INNER JOIN lead_lead_source ON lead_lead_source.id = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1lead_lead_source_ida
+									LEFT JOIN fnct_financing_terms_pi_prospect_inquiry_1_c ON fnct_financing_terms_pi_prospect_inquiry_1_c.fnct_finanda90inquiry_idb = pi_prospect_inquiry.id
+									LEFT JOIN fnct_financing_terms ON fnct_financing_terms.id = fnct_financing_terms_pi_prospect_inquiry_1_c.fnct_finand6a4g_terms_ida
+									INNER JOIN users ON pi_prospect_inquiry.assigned_user_id = users.id
+									INNER JOIN users_cstm ON users_cstm.id_c = users.id
+									LEFT JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+									INNER JOIN jump_branch ON jump_branch.id = users_cstm.jump_branch_id_c
+
+									WHERE pi_prospect_inquiry.deleted = 0 {$conditions}
+									GROUP by payment_terms_c, jump_base_model.id
 
 									ORDER by model_description")->result();
 		
@@ -391,14 +465,12 @@ class Reports extends MY_Controller {
 		if( $user_type == "dealer"){
 
 			$dealer_id 	 = $_SESSION['user']->dealer->dealer_id;
-			$dealer_name = $_SESSION['user']->dealer->dealer;
+			$dealer 	 = $_SESSION['user']->dealer->dealer;
 			$array["dealers"][$dealer] = $dealer_id;
 		}
 
 		if( $user_type == "branch" ){
-
 			$array["branches"][$_SESSION['user']->dealer->branch] = $_SESSION['user']->dealer->branch_id;
-
 		}
 
 		return $array;
@@ -408,13 +480,15 @@ class Reports extends MY_Controller {
 		
 		$base_model = $this->base_model_records();
 		$dealers    = $this->dealers();
-		$user = $_SESSION['user'];
 
-		if( strtolower($user->title) == "mmpc"){	
+		$title = trim(strtolower($_SESSION['user']->title));
+		$title = str_replace(" ", "_", $title);
+
+		if( in_array($title, $this->mmpc_user_titles) ){	
 			$content = $this->load->view("reports/prospect_inquiry_per_dealer/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers], TRUE);
 		}
 		else{
-			$content = $this->load->view("errors/unauthorized.php" ,[ ], TRUE);
+			$content = $this->load->view("errors/unauthorized.php" ,[], TRUE);
 		}
 
 		set_header_title("Reports - Inquiry Per Dealer");
@@ -581,7 +655,27 @@ class Reports extends MY_Controller {
 	}
 
 	public function test_method(){
+		
+		$title = trim(strtolower($_SESSION['user']->title));
+		$title = str_replace(" ", "_", $title);
 
+		if( in_array($title, $this->mmpc_user_titles) ){	
+			$branches = $this->all_branches();
+		}
+		else{
+
+			if( in_array($title, $this->branch_user_tiles) ){		
+				$branches = [ "id" => $_SESSION['user']->dealer->branch_id, "value" => $_SESSION['user']->dealer->branch ];
+			}
+
+			else{
+			$branches = [];	
+			}
+
+		}
+
+		echo "<pre>";
+		print_r($branches);
 	}
 
 	public function table($tbody){

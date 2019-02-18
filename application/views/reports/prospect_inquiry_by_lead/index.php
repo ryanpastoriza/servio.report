@@ -9,7 +9,7 @@
 	  		</div>
 		</div>
 		<div class="box-body">
-		
+			
 			<div class="row">
 				<form id="lead_form">
 					<div class="col-lg-4">
@@ -17,9 +17,13 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" class="form-control input-sm">
-							    	<option disabled selected ></option>
+							    	<option disabled selected>Click to select</option>
 							    	<?php foreach( $dealers["dealers"] as $key => $value ): ?>
-										<option value="<?= $value ?>"> <?= $key ?> </option>
+							    		<?php if( strtolower($key) == "mmpc" ): ?>
+											<option value="<?= $key ?>"> <?= $key ?> </option>
+							    		<?php else: ?>
+											<option value="<?= $value ?>"> <?= $key ?> </option>
+										<?php endif ?>
 							    	<?php endforeach?>
 							    </select>
 							</div>
@@ -75,30 +79,34 @@
 				</form>		
 			</div>
 
-			<table id="lead_table" class="table table-striped table-bordered" style="width:100%">
-	            <thead>
-	                <tr>
-	                    <th rowspan="2">SOURCE OF SALE</th>
-						<th colspan="2"> TOTAL </th>
-						<?php foreach($base_model as $value): ?>
-							<th colspan="2"> <?= $value->name ?> </th>
-						<?php endforeach ?>
-	                </tr>
-	                <tr>
-	                	<th> Value </th>
-	                	<th> Pct </th>
-	                	<?php foreach($base_model as $value): ?>
-							<th> Value </th>
-							<th> Pct </th>
-						<?php endforeach ?>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	<tr>
-	            		<td colspan="<?php echo 2 + (count($base_model)+1)*2 ?>"> Please fill up the fields</td>
-	            	</tr>
-	            </tbody>
-		    </table>
+			<div class="table-responsive">
+					
+				<table id="lead_table" class="table table-striped table-bordered" style="width:100%">
+		            <thead>
+		                <tr>
+		                    <th rowspan="2">SOURCE OF SALE</th>
+							<th colspan="2"> TOTAL </th>
+							<?php foreach($base_model as $value): ?>
+								<th colspan="2"> <?= $value->name ?> </th>
+							<?php endforeach ?>
+		                </tr>
+		                <tr>
+		                	<th> Value </th>
+		                	<th> Pct </th>
+		                	<?php foreach($base_model as $value): ?>
+								<th> Value </th>
+								<th> Pct </th>
+							<?php endforeach ?>
+		                </tr>
+		            </thead>
+		            <tbody>
+		            	<tr>
+		            		<td colspan="<?php echo 2 + (count($base_model)+1)*2 ?>"> Please fill up the fields</td>
+		            	</tr>
+		            </tbody>
+			    </table>
+
+			</div>
 			
 
 		</div>
@@ -224,6 +232,9 @@
 				{"data" : "p<?=$value->name?>"},
 				<?php endforeach ?>
 			],
+	        "initComplete":function( settings, json){
+	            console.log(json);
+	        }
       	});
 
       	$.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
