@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 19:27:00
+ * @Last Modified time: 2019-02-18 16:11:26
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -12,18 +12,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends MY_Controller {
 
 	function test(){
-		$this->load->model('Ddms_sales_order');
-		$all = $this->Ddms_sales_order->get();
-		$date1 = strtotime('2018-11-01');
-		$date2 = strtotime('2019-02-15');
-
-
-		foreach ($all as $value) {
-				$nDate = rand($date1,$date2);
-				$value->date_entered = date('Y-m-d', $nDate);
-				$value->save();
-		}
-
+		echo "<pre>";
+		print_r ($this->user_type());
+		echo "</pre>";
 
 	}
 	function __construct()
@@ -340,6 +331,7 @@ class Dashboard extends MY_Controller {
 		echo json_encode($all_branches);
 	}
 	function refine_condition_for_PI($cond){
+
 		$qry = "";
 
 
@@ -359,6 +351,11 @@ class Dashboard extends MY_Controller {
 			}
 			$qry .= ")";
 		}
+		else{
+			if($this->user_type() == 'dealer'){
+				$qry .= "AND (users_cstm.jump_dealer_id_c = '{$this->user_info->dealer->dealer_id}' )";
+			}
+		}
 		if(isset($cond['branches'])){
 			$qry .= $qry != "" ? "AND" : "";
 			$qry .= "(";
@@ -372,6 +369,12 @@ class Dashboard extends MY_Controller {
 
 			$qry .= ")";
 		}
+		else{
+			if($this->user_type() == 'branch' ){
+				$qry .= "AND (users_cstm.jump_branch_id_c = '{$this->user_info->dealer->branch_id}' )";
+			}
+		}
+
 		if(isset($cond['mode_of_payments'])){
 			$qry .= $qry != "" ? "AND" : "";
 			$qry .= "(";
@@ -447,6 +450,12 @@ class Dashboard extends MY_Controller {
 			}
 			$qry .= ")";
 		}
+		else{
+			if($this->user_type() == 'dealer'){
+				$qry .= "AND (users_cstm.jump_dealer_id_c = '{$this->user_info->dealer->dealer_id}' )";
+			}
+		}
+
 		if(isset($cond['branches'])){
 			$qry .= $qry != "" ? "AND" : "";
 			$qry .= "(";
@@ -459,6 +468,10 @@ class Dashboard extends MY_Controller {
 			}
 
 			$qry .= ")";
+		}else{
+			if($this->user_type() == 'branch' ){
+				$qry .= "AND (users_cstm.jump_branch_id_c = '{$this->user_info->dealer->branch_id}' )";
+			}
 		}
 		if(isset($cond['mode_of_payments'])){
 			$qry .= $qry != "" ? "AND" : "";
@@ -535,7 +548,6 @@ class Dashboard extends MY_Controller {
 		$charts['so_invoiced'] 	= $this->SOInvoiced_chart('line', TRUE, $SOcond);
 
 		echo json_encode($charts);
-
 	}
 	function get_model_descriptions(){
 		$this->load->model('setup/BaseModel');
