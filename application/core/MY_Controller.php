@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-14 16:18:49
+ * @Last Modified time: 2019-02-18 16:02:14
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -121,6 +121,21 @@ class MY_Controller extends CI_Controller {
 			return $dealer;
 		}
 	}
+	function user_type(){
+		$mmpc_user 		= in_array(strtolower($this->user_info->title), $this->mmpc_user_titles);
+		$dealer_user 	= in_array(strtolower($this->user_info->title), $this->dealer_user_titles);
+
+		if($mmpc_user){
+			return "MMPC";
+		}
+		elseif ($dealer_user) {
+			return "dealer";
+		}
+		else{
+			return "branch";
+		}
+
+	}
 	function allowed_branches(){
 		$this->load->model('dealer');
 		$this->load->model('branch');
@@ -148,6 +163,8 @@ class MY_Controller extends CI_Controller {
 			return $branch;
 		}
 	}
+
+
 }
 
 /* End of file MY_Controller.php */
