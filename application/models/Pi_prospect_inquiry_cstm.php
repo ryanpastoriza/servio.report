@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 14:35:36
+ * @Last Modified time: 2019-02-15 19:24:09
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -42,6 +42,7 @@ class Pi_prospect_inquiry_cstm extends My_Model {
         					['users', "users.id = pi_prospect_inquiry.assigned_user_id", "INNER"],
         					['users_cstm', "users_cstm.id_c = users.id", "INNER"],
         					['Jump_base_model_pi_prospect_inquiry_1_c', "Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"],
+        					['jump_base_model',"Jump_base_model_pi_prospect_inquiry_1_c.jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = jump_base_model.id","INNER"],
         					['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
         					['lead_lead_source_pi_prospect_inquiry_1_c', "lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"]
         				];
@@ -74,6 +75,7 @@ class Pi_prospect_inquiry_cstm extends My_Model {
         			['users', "users.id = pi_prospect_inquiry.assigned_user_id", "INNER"],
 					['users_cstm', "users_cstm.id_c = users.id", "INNER"],
 					['Lead_lead_source_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+        			['jump_base_model',"Jump_base_model_pi_prospect_inquiry_1_c.jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = jump_base_model.id","INNER"],
         			['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
 					['lead_lead_source', "lead_lead_source.id = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1lead_lead_source_ida", "INNER"]];
 
@@ -120,7 +122,9 @@ class Pi_prospect_inquiry_cstm extends My_Model {
         $this->sqlQueries['order_type'] = "asc";
 		$this->sqlQueries['order_field'] = "inquiry_date_c";
 		$this->sqlQueries['toGroup'] = "month, model_name";
-		$this->toJoin = [['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
+		$this->toJoin = [
+        			['jump_base_model',"Jump_base_model_pi_prospect_inquiry_1_c.jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = jump_base_model.id","INNER"],
+					['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
 					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"]];
 
 

@@ -4,17 +4,22 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:36:41
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 09:51:47
+ * @Last Modified time: 2019-02-15 19:31:04
  */
 ?>
+<style>
+  .select2-results__option[aria-selected=true]{
+    display: none !important;
+  }
+</style>
 <?= form_open(base_url('dashboard/apply_search'), 'id="filterCharts"'); ?>
 <div class="form-group">
   <label>From Date</label>
-  <input type="date" class="form-control" name="from_date" placeholder="mm/dd/yyyy">
+  <input type="date" class="form-control" name="from_date" value="<?= date('Y-m-01') ?>" placeholder="mm/dd/yyyy">
 </div>
 <div class="form-group">
   <label>To Date</label>
-  <input type="date" class="form-control" name="to_date" placeholder="mm/dd/yyyy">
+  <input type="date" class="form-control" name="to_date" value="<?= date('Y-m-t') ?>" placeholder="mm/dd/yyyy">
 </div>
 <div class="form-group">
   <label>Dealer</label>
