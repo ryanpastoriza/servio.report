@@ -12,10 +12,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends MY_Controller {
 
 	function test(){
-		echo "<pre>";
-		print_r ($this->user_type());
-		echo "</pre>";
+		$dealer = new Dealer;
+		$dealer->load('3f2c1bb1-fc53-7f3e-f6f6-5c3559b9edd0');
 
+		echo "<pre>";
+			print_r($dealer);
+		echo "</pre>";
 	}
 	function __construct()
 	{

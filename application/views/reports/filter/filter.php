@@ -12,7 +12,6 @@
 
 <script>
 	$(function(){
-
 		$('#filterCharts').ajaxForm({
 			beforeSubmit: function(a,b){
 				$(b).find('button').attr('disabled','disabled');

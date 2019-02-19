@@ -85,7 +85,7 @@ class MY_Controller extends CI_Controller {
 									],
 					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
 
-									]
+									
 
 				];
 

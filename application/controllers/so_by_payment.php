@@ -40,6 +40,7 @@ class So_by_payment extends MY_Controller {
 		// die();
 
 		$content = $this->load->view('reports/so_by_payment/index.php', ['data'=>$pt], TRUE);
+		set_header_title("Reports - Sales Order by Mode of Payment");
 		$this->put_contents($content, 'Sales Order Reports');
 		
 		// $pi = new Pi_prospect_inquiry_cstm;
