@@ -128,7 +128,7 @@ class MY_Model extends CI_Model{
 		$this->addJoin();
 		$query = $this->db->where(array($this::DB_TABLE.".".$this::DB_TABLE_PK => $id));
 		$query = $this->db->get();
-		if (count($query->row()) > 0) {
+		if ($query->row()) {
 			$this->populate($query->row());
 		}
 	
