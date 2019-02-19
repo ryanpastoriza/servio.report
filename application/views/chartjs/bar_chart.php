@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:36:20
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 19:10:00
+ * @Last Modified time: 2019-02-18 18:00:06
  */
 
 	
@@ -39,7 +39,7 @@ var myChart = new Chart(ctx, {
             line: {
                 tension: 0, // disables bezier curves
             }
-        }
+        },
     }
 });
 </script>
