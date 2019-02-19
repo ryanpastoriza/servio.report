@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-18 16:02:14
+ * @Last Modified time: 2019-02-18 17:27:28
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -56,6 +56,7 @@ class MY_Controller extends CI_Controller {
 										asset_url('plugins/momentjs/moment.js'),
 										asset_url('plugins/select2/select2.full.min.js'),
 										asset_url('plugins/jquery.form.min.js'),
+										asset_url('plugins/jquery.printThis.js'),
 									],
 					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
 				];

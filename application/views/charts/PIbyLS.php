@@ -4,11 +4,13 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-08 15:40:46
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-18 11:44:20
+ * @Last Modified time: 2019-02-18 17:35:48
  */
 ?>
 
 <script>
+
+
 	$(document).on('click',".pils-chart-selector", function(){
 		$('#pils-chart').css({opacity:'0.3'});
 		$('.pils-chart-selector.bg-gray').removeClass('bg-gray');
