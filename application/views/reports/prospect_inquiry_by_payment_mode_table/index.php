@@ -17,8 +17,12 @@
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" class="form-control input-sm">
 							    	<option disabled selected>Click to select</option>
-							    	<?php foreach($dealers as $value):?>
-								    	<option value="<?= $value->id ?>"> <?= $value->name ?> </option>									
+							    	<?php foreach( $dealers["dealers"] as $key => $value ): ?>
+							    		<?php if( strtolower($key) == "mmpc" ): ?>
+											<option value="<?= $key ?>"> <?= $key ?> </option>
+							    		<?php else: ?>
+											<option value="<?= $value ?>"> <?= $key ?> </option>
+										<?php endif ?>
 							    	<?php endforeach?>
 							    </select>
 							</div>
@@ -27,7 +31,12 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
-							    <select name="branch" id="branch" class="form-control input-sm"></select>
+							    <select name="branch" id="branch" class="form-control input-sm">
+							    	<option selected disabled></option>
+							    	<?php foreach( $all_branches as $key => $value ): ?>
+										<option value="<?= $value->id ?>"> <?= $value->name ?> </option>
+							    	<?php endforeach?>
+							    </select>
 							</div>
 						</div>
 
@@ -35,6 +44,8 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Status: </label>
 							<div class="col-sm-10">
 							    <select name="status" id="status" class="form-control input-sm">
+							    	<option value="">All</option>
+							    	<option value="open">Open</option>
 							    	<option value="qualified">Qualified</option>
 							    	<option value="Disqualified">Disqualified</option>
 							    </select>
@@ -67,27 +78,34 @@
 				</form>		
 			</div>
 
-			<table id="lead_table" class="table table-striped table-bordered" style="width:100%">
-	            <thead>
-	                <tr>
-	                    <th rowspan="2">SOURCE OF SALE</th>
-						<th colspan="2"> TOTAL </th>
-						<?php foreach($base_model as $value): ?>
-							<th colspan="2"> <?= $value->name ?> </th>
-						<?php endforeach ?>
-	                </tr>
-	                <tr>
-	                	<th> Value </th>
-	                	<th> Pct </th>
-	                	<?php foreach($base_model as $value): ?>
-							<th> Value </th>
-							<th> Pct </th>
-						<?php endforeach ?>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            </tbody>
-		    </table>
+			<div class="table-responsive">
+				
+				<table id="lead_table" class="table table-striped table-bordered" style="width:100%">
+		            <thead>
+		                <tr>
+		                    <th rowspan="2">SOURCE OF SALE</th>
+							<th colspan="2"> TOTAL </th>
+							<?php foreach($base_model as $value): ?>
+								<th colspan="2"> <?= $value->name ?> </th>
+							<?php endforeach ?>
+		                </tr>
+		                <tr>
+		                	<th> Value </th>
+		                	<th> Pct </th>
+		                	<?php foreach($base_model as $value): ?>
+								<th> Value </th>
+								<th> Pct </th>
+							<?php endforeach ?>
+		                </tr>
+		            </thead>
+		            <tbody>
+		            	<tr>
+		            		<td colspan="<?php echo 2 + (count($base_model)+1)*2 ?>"> Please fill up the fields</td>
+		            	</tr>
+		            </tbody>
+			    </table>
+			</div>
+
 			
 
 		</div>
@@ -100,7 +118,15 @@
 
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
-		branch_list(id);
+		
+		var dealer_name = $.trim( $("#dealer option:selected").text() ).toLowerCase() ;
+		if( dealer_name == "mmpc" ){
+			mmpc_all_branch();
+		}
+		else{
+			branch_list(id);
+		}
+
 	});
 
 	$("#submit").click(function(event) {
@@ -108,16 +134,47 @@
 		event.preventDefault();
 		var date_from = $("#date_from").val()
 		var date_to   = $("#date_to").val()
+		var status    = $("#status").val()
+		var dealer    = $("#dealer").val();
+		var branch    = $("#branch").val();
+
+		data =  { 
+					date_from : date_from, 
+					date_to: date_to,
+					status: status,
+					branch: branch,
+					dealer: dealer
+				};
 
 		if( date_from && date_to ){
-			var data = $("#lead_form").serializeArray();
-        	lead_datatable(data);
+
+        	if( branch || dealer ){
+        		payment_mode_datatable(data);
+        	}
+        	else{
+        		alert("Branch or Dealer must have a value.")
+        	}
+
 		}
 		else{
 			alert("Please fill required fields.")
 		}
 
 	});
+
+	function mmpc_all_branch(){
+		
+		var branches = <?php echo json_encode($all_branches); ?>;
+		var options  = "<option disabled selected></option>";
+
+		if( branches ){
+			$.each( branches , function(index, val) {
+				options += "<option value='"+val.id+"' >"+ val.name +"</option>";
+			});
+			$("#branch").html(options)
+		}
+
+	}
 
 	function branch_list(dealer_id){
 		var branches = "";
@@ -133,7 +190,7 @@
 			if(data){
 				branches += "<option disabled selected></option>";
 				$.each(data, function(index, val) {
-					branches += "<option value='"+val.branch_name+"' >"+ val.branch_name +"</option>";
+					branches += "<option value='"+val.branch_id+"' >"+ val.branch_name +"</option>";
 				});
 				$("#branch").removeAttr('disabled')
 			}
@@ -146,17 +203,20 @@
 	}
 	
 
-    function lead_datatable(data){
+    function payment_mode_datatable(data){
 
     	var table = $('#lead_table').DataTable({
 	        ajax:{
 	        	url:'<?php echo base_url('index.php/reports/payment_mode_data'); ?>',
 	            cache:true,
+				data: {data: data}
 	        },
 			dom: 'Bfrtip',
-			buttons: [
-				'copy',
-			],
+	        buttons: [
+	            { extend: 'excel', className: 'btn btn-primary fa fa-download', text: ' Excel', exportOptions:
+	                 { columns: ':visible' }
+	            }
+           	],
 	        destroy: true,
 	        "bPaginate": false,
     		"ordering": false,
@@ -171,10 +231,15 @@
 				{"data" : "p<?=$value->name?>"},
 				<?php endforeach ?>
 			],
-			data: {data: data}
+	        "initComplete":function( settings, json){
+	            console.log(json);
+	        }
       	});
 
+      	$.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+		    console.log(message);
+		};
+
     }
-    
 
 </script>
