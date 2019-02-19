@@ -22,10 +22,16 @@ class So_by_leads extends MY_Controller {
 
 	public function index()
 	{	
-		$data = $this->so_leads->leads();	
+		$data = $this->so_leads->leads();
 		$data['dealers'] = $this->allowed_dealers();
-		$data['branches'] = $this->allowed_branches();
-		// $this->pp($allowed_dealers);
+		$data['branches'] = [];
+
+		if(isset($_GET['dealer'])){
+			$d = new Dealer;
+
+		    $d->load($_GET['dealer']);
+		    $data['branches'] = $d->branches();
+		}			
 
 		$content = $this->load->view('reports/SO_by_lead/index.php', ['data'=>$data], TRUE);
 		$this->put_contents($content, 'Sales Order Reports');

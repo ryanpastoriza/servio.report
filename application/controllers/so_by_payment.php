@@ -29,13 +29,21 @@ class So_by_payment extends MY_Controller {
 			$pm[] = $value->payment_terms_c;
 		}
 
-
 		$pt = $this->so_payment_term->soByPaymentTerms($pm);
+
 		$pt['dealers'] = $this->allowed_dealers();
-		$pt['branches'] = $this->allowed_branches();
+		$pt['branches'] = [];
+
+		if(isset($_GET['dealer'])){
+			$d = new Dealer;
+
+		    $d->load($_GET['dealer']);
+		    $pt['branches'] = $d->branches();
+		}		
+    		
 
 		// echo "<pre>";
-		// print_r($pt);
+		// print_r($);
 		// echo "<pre>";
 		// die();
 

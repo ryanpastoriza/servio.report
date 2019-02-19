@@ -131,6 +131,7 @@ class MY_Model extends CI_Model{
 
 		if ($query->row()) {
 			$this->populate($query->row());
+		}
 
 		if(is_array($query->row())){
 			if (count($query->row()) > 0) {

@@ -7,9 +7,10 @@ Class So_payment_term extends CI_MOdel {
 			
 		$data['pm'] = $this->setPm($pm);
 
-		$query = $this->db->get('jump_base_model');
+		$query = $this->db->query("SELECT * FROM jump_base_model WHERE deleted = 0");
 		$data['bm'] = $query->result();
 		$data['total_bm'] = (object) Array();
+		$data['total_bm_pct'] = (object) Array();
 		$data['total_pm'] = 0;
 
 		$sdate = date("Y-m") . "-01";
@@ -68,11 +69,20 @@ Class So_payment_term extends CI_MOdel {
 			foreach ($data['bm'] as $skey => $svalue) { 
 				$bm = $this->paymentMode($value->name, $svalue->id, $sdate, $edate, $soStatus, $data['bbranch'], $data['ddealer']);
 				$data['pm'][$key]->bm[$svalue->name]['count'] = count($bm);
-				if($data['total_bm']->{$svalue->name} != 0){
-					$data['pm'][$key]->bm[$svalue->name]['pct'] = round((count($bm) / $data['total_bm']->{$svalue->name}) * 100, 1);
+
+				if($data['pm'][$key]->total != 0){
+					$data['pm'][$key]->bm[$svalue->name]['pct'] = round((count($bm) / $data['pm'][$key]->total) * 100, 1);
 				}else{
 					$data['pm'][$key]->bm[$svalue->name]['pct'] = 0;
 				}
+
+				if(!isset($data['total_bm_pct']->{$svalue->name})){
+					$data['total_bm_pct']->{$svalue->name} = 0;
+				}
+				if($data['total_pm'] != 0){
+					$data['total_bm_pct']->{$svalue->name} = round(($data['total_bm']->{$svalue->name} / $data['total_pm']) * 100, 1);
+				}
+				// $data['total_bm_pct']->{$svalue->name} += $data['pm'][$key]->bm[$svalue->name]['pct'];
 				
 			}
 		}
