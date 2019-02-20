@@ -7,9 +7,10 @@ Class So_Leads extends MY_Model {
 		$query = $this->db->get('lead_lead_source');
 		$data['ls'] = $query->result();
 
-		$query = $this->db->get('jump_base_model');
+		$query = $this->db->query("SELECT * FROM jump_base_model WHERE deleted = 0");
 		$data['bm'] = $query->result();
 		$data['total_bm'] = (object) Array();
+		$data['total_bm_pct'] = (object) Array();
 		$data['total_ls'] = 0;
 
 		$sdate = date("Y-m") . "-01";
@@ -50,6 +51,7 @@ Class So_Leads extends MY_Model {
 					$data['total_bm']->{$svalue->name} = 0;
 				}
 				$data['total_bm']->{$svalue->name} += count($bm);
+
 			}
 			$data['total_ls'] += $data['ls'][$key]->total;
 		}
@@ -66,13 +68,21 @@ Class So_Leads extends MY_Model {
 			foreach ($data['bm'] as $skey => $svalue) { 
 				$bm = $this->byModel($value->id, $svalue->id, $sdate, $edate, $soStatus, $data['bbranch'], $data['ddealer']);
 				$data['ls'][$key]->bm[$svalue->name]['count'] = count($bm);
-				if($data['total_bm']->{$svalue->name} != 0){
-					$data['ls'][$key]->bm[$svalue->name]['pct'] = round((count($bm) / $data['total_bm']->{$svalue->name}) * 100, 1);
+				if($data['ls'][$key]->total != 0){
+					$data['ls'][$key]->bm[$svalue->name]['pct'] = round((count($bm) / $data['ls'][$key]->total) * 100, 1);
 				}else{
 					$data['ls'][$key]->bm[$svalue->name]['pct'] = 0;
 				}
+
+				if(!isset($data['total_bm_pct']->{$svalue->name})){
+					$data['total_bm_pct']->{$svalue->name} = 0;
+				}
+				if($data['total_ls'] != 0){
+					$data['total_bm_pct']->{$svalue->name} = round(($data['total_bm']->{$svalue->name} / $data['total_ls']) * 100, 1);
+				}
 				
-			}
+			}			
+			
 		}
 
 		// $this->pp($data);
