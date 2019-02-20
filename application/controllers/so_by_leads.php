@@ -34,6 +34,7 @@ class So_by_leads extends MY_Controller {
 		}			
 
 		$content = $this->load->view('reports/SO_by_lead/index.php', ['data'=>$data], TRUE);
+		set_header_title("Reports - Sales Order by Lead Source");
 		$this->put_contents($content, 'Sales Order Reports');
 		
 		// $pi = new Pi_prospect_inquiry_cstm;

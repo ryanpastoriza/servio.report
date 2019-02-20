@@ -58,6 +58,17 @@
         <script src="<?= $value ?>"></script>
     <?php endforeach ?>
 <?php endif ?>
+
+
+<style>
+
+.sidebar-menu,
+.main-sidebar{
+  white-space: normal !important;
+}
+
+</style>
+
 </head>
 <body class="hold-transition skin-red-light sidebar-mini">
   <div class="wrapper">
