@@ -29,17 +29,26 @@ class So_by_payment extends MY_Controller {
 			$pm[] = $value->payment_terms_c;
 		}
 
-
 		$pt = $this->so_payment_term->soByPaymentTerms($pm);
+
 		$pt['dealers'] = $this->allowed_dealers();
-		$pt['branches'] = $this->allowed_branches();
+		$pt['branches'] = [];
+
+		if(isset($_GET['dealer'])){
+			$d = new Dealer;
+
+		    $d->load($_GET['dealer']);
+		    $pt['branches'] = $d->branches();
+		}		
+    		
 
 		// echo "<pre>";
-		// print_r($pt);
+		// print_r($);
 		// echo "<pre>";
 		// die();
 
 		$content = $this->load->view('reports/so_by_payment/index.php', ['data'=>$pt], TRUE);
+		set_header_title("Reports - Sales Order by Mode of Payment");
 		$this->put_contents($content, 'Sales Order Reports');
 		
 		// $pi = new Pi_prospect_inquiry_cstm;
