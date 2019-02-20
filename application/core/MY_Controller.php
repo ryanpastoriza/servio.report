@@ -5,7 +5,7 @@
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
 
- * @Last Modified time: 2019-02-13 09:43:09
+ * @Last Modified time: 2019-02-20 14:34:06
 
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -84,9 +84,6 @@ class MY_Controller extends CI_Controller {
 										asset_url('plugins/jquery.printThis.js'),
 									],
 					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
-
-									
-
 				];
 
 
@@ -101,7 +98,9 @@ class MY_Controller extends CI_Controller {
 						'right' => "Version 1",
 						'left' => "<span class='text-blue'>Engtech Global Solutions Inc.</span> Copyright &copy; 2019"
 						];
-		$nav_vars 	= ['userPanel' => [],
+		$nav_vars 	= ['userPanel' => ['userInfo' => $this->user_info->dealer->branch."<br>".$this->user_info->title,
+										'userName' => $this->user_info->fullname,
+										'userImage' => asset_url('dist/img/avatar5.png')],
 						'searchBar' => false,
 						'options' => ['Dashboard' => 
 										['icon' => 'fa fa-dashboard', 

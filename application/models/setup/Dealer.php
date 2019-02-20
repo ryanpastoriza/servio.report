@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-13 16:15:52
+ * @Last Modified time: 2019-02-19 10:43:36
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -13,7 +13,7 @@ class Dealer extends MY_Model {
     const DB_TABLE = 'jump_dealer';
     const DB_TABLE_PK = 'id';
 
-	
+   	
     function getDealer($dealer_id = null){
         return
         $this->db->select('jump_dealer.`name` AS dealer, jump_dealer.id')

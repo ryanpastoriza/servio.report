@@ -128,10 +128,9 @@ class MY_Model extends CI_Model{
 		$this->addJoin();
 		$query = $this->db->where(array($this::DB_TABLE.".".$this::DB_TABLE_PK => $id));
 		$query = $this->db->get();
-		if ($query->row()) {
-			$this->populate($query->row());
-		}
-	
+			if ($query->row()) {
+				$this->populate($query->row());
+			}
 	}
 	public function empty_table()
 	{
