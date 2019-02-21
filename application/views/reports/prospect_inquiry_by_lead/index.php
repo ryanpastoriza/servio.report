@@ -9,7 +9,6 @@
 	  		</div>
 		</div>
 		<div class="box-body">
-			
 			<div class="row">
 				<form id="lead_form">
 					<div class="col-lg-4">
@@ -17,10 +16,10 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" class="form-control input-sm">
-							    	<option disabled selected>Click to select</option>
+							    	<!-- <option disabled selected>Click to select</option> -->
 							    	<?php foreach( $dealers["dealers"] as $key => $value ): ?>
 							    		<?php if( strtolower($key) == "mmpc" ): ?>
-											<option value="<?= $key ?>"> <?= $key ?> </option>
+											<option value="<?= $key ?>" selected> <?= $key ?> </option>
 							    		<?php else: ?>
 											<option value="<?= $value ?>"> <?= $key ?> </option>
 										<?php endif ?>
@@ -33,10 +32,14 @@
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
 							    <select name="branch" id="branch" class="form-control input-sm">
-									<option selected disabled></option>
-							    	<?php foreach( $all_branches as $key => $value ): ?>
-										<option value="<?= $value->id ?>"> <?= $value->name ?> </option>
-							    	<?php endforeach?>
+									<?php if( count($all_branches) == 1 ): ?>
+										<option value="<?= $all_branches[0]->id ?>" selected> <?= $all_branches[0]->name ?> </option>
+									<?php else: ?>
+										<option selected>All</option>
+										<?php foreach( $all_branches as $key => $value ): ?>
+											<option value="<?= $value->id ?>"> <?= $value->name ?> </option>
+								    	<?php endforeach?>	
+									<?php endif ?>
 							    </select>
 							</div>
 						</div>
@@ -115,6 +118,21 @@
 
 <script>
 	
+	$(function(){
+		if($("#dealer").val()){
+			$("#dealer").trigger('change');
+		}
+
+		var date    = new Date();
+		var year    = date.getFullYear();
+		var month   = date.getMonth();
+		var lastDay = new Date(year, month + 1, 0).getDate();
+
+		$("#date_from").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-01")
+		$("#date_to").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-" + ("0" + lastDay ).slice(-2))
+		$("#date_to").attr("min",$("#date_from").val());
+		$("#submit").click()
+	});
 
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
@@ -126,7 +144,6 @@
 		else{
 			branch_list(id);
 		}
-
 	});
 
 	$("#submit").click(function(event) {
@@ -166,7 +183,7 @@
 	function mmpc_all_branch(){
 		
 		var branches = <?php echo json_encode($all_branches); ?>;
-		var options  = "<option disabled selected></option>";
+		var options  = "<option selected>All</option>";
 
 		if( branches ){
 			$.each( branches , function(index, val) {
@@ -174,7 +191,6 @@
 			});
 			$("#branch").html(options)
 		}
-
 	}
 	
 
@@ -189,7 +205,7 @@
 		})
 		.done(function(data) {
 			if(data){
-				branches += "<option disabled selected></option>";
+				branches += "<option selected>All</option>";
 				$.each(data, function(index, val) {
 					branches += "<option value='"+val.branch_id+"' >"+ val.branch_name +"</option>";
 				});
@@ -205,7 +221,7 @@
 	
 
     function lead_datatable(data){
-    	
+
     	var table = $('#lead_table').DataTable({
 	        ajax:{
 	        	url:'<?php echo base_url('index.php/reports/lead_data'); ?>',

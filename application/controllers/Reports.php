@@ -38,7 +38,7 @@ class Reports extends MY_Controller {
 
 		}
 
-		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);		
+		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers ? $dealers : [], "all_branches" => $branches], TRUE);		
 
 		set_header_title("Reports - Inquiry Per Lead Source");
 		$this->put_contents($content,"Lead Source");
@@ -56,7 +56,13 @@ class Reports extends MY_Controller {
 			$branches = $this->all_branches();
 		}
 		else{
-			$branches = [];
+			if( in_array($title, $this->branch_user_tiles) ){		
+				$branches[] = (object)[ "id" => $_SESSION['user']->dealer->branch_id, "name" => $_SESSION['user']->dealer->branch ];
+			}
+
+			else{
+				$branches = [];	
+			}
 		}
 
 		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);
@@ -86,7 +92,9 @@ class Reports extends MY_Controller {
 			}
 		}
 		if( $branch ){
-			$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
+			if( strtolower($branch) != "all" ){
+				$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
+			}
 		}
 		if( $status != ""){
 			$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = '.'"'. $status .'"';
@@ -181,7 +189,7 @@ class Reports extends MY_Controller {
 
 		echo json_encode([
 			"data" => $array,
-			"request" => $_REQUEST
+			"request" => $conditions
 		]);
 	}
 
@@ -207,7 +215,9 @@ class Reports extends MY_Controller {
 			}
 		}
 		if( $branch ){
-			$conditions .= ' AND jump_branch.id =' . '"' . $branch . '"';
+			if( strtolower($branch) != "all" ){
+				$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
+			}
 		}
 		if( $status != ""){
 			$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = '.'"'. $status .'"';
@@ -298,7 +308,7 @@ class Reports extends MY_Controller {
 
 		echo json_encode([
 			"data" => $array,
-			"requests" => $_REQUEST
+			"requests" => $conditions
 		]);
 	}
 
