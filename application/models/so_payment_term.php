@@ -25,7 +25,7 @@ Class So_payment_term extends CI_MOdel {
 
 		$data['so_status'] = $this->fetchSoStatus();
 
-		if(isset($_GET['start_date']) && isset($_GET['end_date'])){
+		if(isset($_GET['start_date']) && isset($_GET['end_date']) && isset($_GET['dealer'])){
 			$sdate = $_GET['start_date'];
 			$edate = $_GET['end_date'];
 			$data['sdate'] = $_GET['start_date'];
