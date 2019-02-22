@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-22 11:43:02
+ * @Last Modified time: 2019-02-22 17:22:37
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -581,9 +581,7 @@ class Dashboard extends MY_Controller {
 		foreach ($selected as $value) {
 			if($value != ""){
 			$bm = new BaseModel;
-			$bm->load($value);
-
-			$moDes = $bm->model_descriptions();
+			$moDes = $bm->model_descriptions($value);
 
 			foreach ($moDes as $value2) {
 				if(!in_array($value2->id, $all_ids)){
