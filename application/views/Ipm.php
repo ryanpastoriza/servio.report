@@ -16,18 +16,20 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" name="dealer" class="form-control input-sm">
-							    	<option disabled selected>Click to select</option>
+									<option value="3f2c1bb1-fc53-7f3e-f6f6-5c3559b9edd0"> MMPC </option>
 							    	<?php foreach($dealers as $value):?>
 								    	<option value="<?= $value->id ?>"> <?= $value->name ?> </option>									
 							    	<?php endforeach?>
 							    </select>
 							</div>
 						</div>
-
+						<option value="3f2c1bb1-fc53-7f3e-f6f6-5c3559b9edd0"> MMPC </option>
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
-							    <select name="branch" id="branch" name="branch" class="form-control input-sm"></select>
+							    <select name="branch" id="branch" name="branch" class="form-control input-sm">
+								<option value='all'> All </option>
+								</select>
 							</div>
 						</div>
 
@@ -80,10 +82,18 @@
 <script>
 	
 	var table;
-
+	jQuery(window).on("load", function(){
+		var date_from = 'all';
+		var date_to   = 'all';
+		var dealer = $("#dealer").val()
+		var branch   = $("#branch").val()
+			search(date_from,date_to,dealer,branch);
+	});
+	
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
-		branch_list(id);
+			branch_list(id);
+		
 	});
 
 	$("#submit").click(function(event) {
@@ -118,7 +128,6 @@
 			
 			if(data){
 				$.each(data, function(index, val) {
-					console.log(val)
 					tbody += "<tr id='trow'><td>"+ val.bm +"</td><td>"+ val.pi +"</td><td>"+ val.o +"</td></tr>";
 
 				});
@@ -156,8 +165,9 @@
 		.done(function(data) {
 
 			if(data){
-				branches += "<option disabled selected></option>";
+				branches += "<option value='' >All</option>";
 				$.each(data, function(index, val) {
+					console.log("each")
 					branches += "<option value='"+val.branch_name+"' >"+ val.branch_name +"</option>";
 				});
 				$("#branch").removeAttr('disabled')
