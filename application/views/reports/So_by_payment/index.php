@@ -9,11 +9,13 @@
 		</div>
 		<div class="box-body">
 				
+
 			<div style="margin-bottom:15px;display:flex;align-items: top;" class="row">
 				<div style="display:flex;flex-direction:column" class="col-md-4">
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
 						<label style="font-weight:bold;margin-right: 50px;">Dealer: </label>
 						<select class="form-control" style="" name="dealer" id="dealer" value="">
+
 							<?php foreach ($data['dealers'] as $key => $value): ?>
 								<option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
 							<?php endforeach ?>
@@ -22,6 +24,7 @@
 
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
 						<label style="font-weight:bold;margin-right: 47px;">Branch: </label>
+
 						<select class="form-control" style="" name="branch" id="branch" value="">
 							<?php foreach ($data['branches'] as $key => $value): ?>
 								<option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
@@ -30,6 +33,7 @@
 					</div>
 
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
+
 						<label style="font-weight:bold;margin-right: 47px;">SO Status: </label>
 						<select class="form-control" style="" name="so_status" id="so_status" value="">
 							<?php foreach ($data['so_status'] as $key => $value): ?>
@@ -67,6 +71,7 @@
 			
 			
 			<div class="table-responsive">
+
 
 			<div id="dt-buttons" class="dt-buttons"><a class="dt-button buttons-excel buttons-html5" tabindex="0" aria-controls="lead_table" href="#"><span>Excel</span></a></div>
 

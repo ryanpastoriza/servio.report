@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 09:24:10
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 17:35:01
+ * @Last Modified time: 2019-02-22 16:56:28
  */
 ?>
 <script>
@@ -35,7 +35,7 @@
 												'<button type="button" chart="line" chart-name="PI_by_model" class="pibm-chart-selector btn btn-box-tool bg-gray" ><i class="fa fa-line-chart"></i></button>',
 												'<button type="button" chart="bar" chart-name="PI_by_model" class="pibm-chart-selector btn btn-box-tool " ><i class="fa fa-bar-chart"></i></button>',
 											],
-								'body' =>"<div id='pibm-chart'>".$dashboard->PI_by_model('line', TRUE)."</div>"
+								'body' =>"<div id='pibm-chart' style='min-height:300px'>".$dashboard->PI_by_model('line', TRUE)."</div>"
 							]);
 
 ?>

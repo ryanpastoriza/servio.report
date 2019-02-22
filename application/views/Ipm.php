@@ -82,6 +82,7 @@
 	var branch1 ="<?php echo $_SESSION['user']->dealer->branch; ?>";
 	var table;
 	jQuery(window).on("load", function(){
+
 		var date    = new Date();
 		var year    = date.getFullYear();
 		var month   = date.getMonth();
@@ -90,6 +91,7 @@
 		$("#date_from").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-01")
 		$("#date_to").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-" + ("0" + lastDay ).slice(-2))
 		$("#date_to").attr("min",$("#date_from").val());
+
 		var valofText = $("#dealer" + " option").filter(function() {
     		return this.text == dealer1
 		}).val();
@@ -106,8 +108,13 @@
 						return $(this).text() == branch1; 
 					}).prop('selected', true);
 				}
+
+				var date_from = 'all';
+				var date_to   = 'all';
+
 				var date_from = $("#date_from").val()
 				var date_to   = $("#date_to").val()
+
 				var dealer = $("#dealer").val()
 				var branch   = $("#branch").val()
 				

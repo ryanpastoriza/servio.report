@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 16:11:01
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 17:35:15
+ * @Last Modified time: 2019-02-22 16:57:12
  */
 ?>
 
@@ -36,7 +36,7 @@
 												'<button type="button" chart="line" chart-name="SObyMOP" class="sols-chart-selector btn btn-box-tool bg-gray" ><i class="fa fa-line-chart"></i></button>',
 												'<button type="button" chart="bar" chart-name="SObyMOP" class="sols-chart-selector btn btn-box-tool " ><i class="fa fa-bar-chart"></i></button>',
 											],
-								'body' =>"<div id='sols-chart'>".$dashboard->SObyLS_chart('line', TRUE)."</div>"
+								'body' =>"<div id='sols-chart' style='min-height:300px'>".$dashboard->SObyLS_chart('line', TRUE)."</div>"
 							]);
 
 ?>
