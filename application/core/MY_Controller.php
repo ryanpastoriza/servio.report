@@ -61,7 +61,8 @@ class MY_Controller extends CI_Controller {
 										asset_url('datatable_reports/dataTables.buttons.min.js'),
 										asset_url('datatable_reports/buttons.print.min.js'),
 										asset_url('datatable_reports/buttons.flash.min.js'),
-										asset_url('datatable_reports/buttons.html5.min.js'),
+										// asset_url('datatable_reports/buttons.html5.min.js'),
+										asset_url('datatable_reports/buttons.html5.js'),
 										asset_url('datatable_reports/jszip.min.js'),
 										asset_url('datatable_reports/pdfmake.min.js'),
 										asset_url('datatable_reports/vfs_fonts.js'),
@@ -82,6 +83,11 @@ class MY_Controller extends CI_Controller {
 										asset_url('plugins/jquery.form.min.js'),
 
 										asset_url('plugins/jquery.printThis.js'),
+										asset_url('plugins/table_export/tableHTMLExport.js'),
+
+										asset_url('plugins/table_export/xlsx.core.min.js'),
+										asset_url('plugins/table_export/FileSaver.js'),
+										asset_url('plugins/table_export/tableexport.js'),
 									],
 					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
 				];

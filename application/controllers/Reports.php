@@ -38,7 +38,7 @@ class Reports extends MY_Controller {
 
 		}
 
-		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);		
+		$content = $this->load->view("reports/prospect_inquiry_by_lead/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers ? $dealers : [], "all_branches" => $branches], TRUE);		
 
 		set_header_title("Reports - Inquiry Per Lead Source");
 		$this->put_contents($content,"Lead Source");
@@ -56,7 +56,13 @@ class Reports extends MY_Controller {
 			$branches = $this->all_branches();
 		}
 		else{
-			$branches = [];
+			if( in_array($title, $this->branch_user_tiles) ){		
+				$branches[] = (object)[ "id" => $_SESSION['user']->dealer->branch_id, "name" => $_SESSION['user']->dealer->branch ];
+			}
+
+			else{
+				$branches = [];	
+			}
 		}
 
 		$content = $this->load->view("reports/prospect_inquiry_by_payment_mode_table/index.php" ,[ "base_model" => $base_model, "dealers" => $dealers, "all_branches" => $branches], TRUE);
@@ -86,7 +92,9 @@ class Reports extends MY_Controller {
 			}
 		}
 		if( $branch ){
-			$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
+			if( strtolower($branch) != "all" ){
+				$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
+			}
 		}
 		if( $status != ""){
 			$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = '.'"'. $status .'"';
@@ -106,7 +114,7 @@ class Reports extends MY_Controller {
 			$lead_total_pct   = 0;
 
 			$array[$lead_key] = [
-				"source_of_sale" => ucwords($lead->name),
+				"source_of_sale" => strtoupper(ucwords($lead->name)),
 			];
 
 			foreach ($base_models as $bm_key => $model) {
@@ -181,7 +189,7 @@ class Reports extends MY_Controller {
 
 		echo json_encode([
 			"data" => $array,
-			"request" => $_REQUEST
+			"request" => $conditions
 		]);
 	}
 
@@ -207,7 +215,9 @@ class Reports extends MY_Controller {
 			}
 		}
 		if( $branch ){
-			$conditions .= ' AND jump_branch.id =' . '"' . $branch . '"';
+			if( strtolower($branch) != "all" ){
+				$conditions .= ' AND jump_branch.id ='.'"'.$branch.'"';
+			}
 		}
 		if( $status != ""){
 			$conditions .= ' AND pi_prospect_inquiry_cstm.status_c = '.'"'. $status .'"';
@@ -226,7 +236,7 @@ class Reports extends MY_Controller {
 			$lead_total_pct   = 0;
 
 			$array[$lead_key] = [
-				"source_of_sale" => ucwords($lead->name),
+				"source_of_sale" => strtoupper((str_replace("_", " ", $lead->name))),
 			];
 
 			foreach ($base_models as $bm_key => $model) {
@@ -298,7 +308,7 @@ class Reports extends MY_Controller {
 
 		echo json_encode([
 			"data" => $array,
-			"requests" => $_REQUEST
+			"requests" => $conditions
 		]);
 	}
 
@@ -602,55 +612,49 @@ class Reports extends MY_Controller {
 
 		foreach ($db_array as $dealer => $d_value) {
 
-			$branches_tr  = "";
-			$prospects_tr = "";
-			$sales_order_tr    = "";
-			$sales_invoice_tr  = "";
 			$dealer_total_pros = 0;
 			$dealer_total_so   = 0;
 			$dealer_total_si   = 0;
 
+			$counter = 0;
 			foreach ($d_value['branches'] as $branch => $b_value) {
-				
-				$branches_tr  .= "<tr><td>{$branch}</td></tr>";
-				$prospects_tr .= "<tr><td>{$b_value['prospects']}</td></tr>";
-				$sales_order_tr   .= "<tr><td>{$b_value['sales_order']}</td></tr>";
-				$sales_invoice_tr .= "<tr><td>{$b_value['sales_invoice']}</td></tr>";
 
 				$dealer_total_pros += $b_value['prospects'];
 				$dealer_total_so   += $b_value['sales_order'];
 				$dealer_total_si   += $b_value['sales_invoice'];
 
+				$array[] =  [
+					"dealer" =>  !$counter ? "<h5><b>{$dealer}</b></h5>" : "",
+					"branch" => $branch,
+					"prospect_inquiry" => $b_value['prospects'],
+					"sales_order" => $b_value['sales_order'],
+					"sales_invoice" => $b_value['sales_invoice']
+				];
+				$counter++;
 			}
 
-			$branch = $this->table($branches_tr);
-			$prospect = $this->table($prospects_tr);
-			$sales_order = $this->table($sales_order_tr);
-			$sales_invoice = $this->table($sales_invoice_tr);
-
-			$array[] =  [
-				"dealer" => "<h5><b>{$dealer}</b></h5>",
-				"branch" => $branch,
-				"prospect_inquiry" => $prospect,
-				"sales_order" => $sales_order,
-				"sales_invoice" => $sales_invoice
-			];
-
-			$total_prospect_tr 		= "<tr> <td><b>" . $dealer_total_pros . "</b> </td> </tr>";
-			$total_sales_order_tr 	= "<tr> <td><b>" . $dealer_total_so . "</b> </td> </tr>";
-			$total_sales_invoice_tr = "<tr> <td><b>" . $dealer_total_si . "</b> </td> </tr>";
+			// for directs
+			// $array[] = [
+			// 	"dealer" => "",
+			// 	"branch" => $dealer . " <small><i>(main)</i></small>",
+			// 	"prospect_inquiry" => $d_value['directs']['prospects'],
+			// 	"sales_order" => $d_value['directs']['sales_order'],
+			// 	"sales_invoice" => $d_value['directs']['sales_invoice']
+			// ];
 
 			$array[] = [
 				"dealer" => "",
 				"branch" => "<i class='pull-right'>Total {$dealer}</i>",
-				"prospect_inquiry" => $this->table($total_prospect_tr),
-				"sales_order" => $this->table($total_sales_order_tr),
-				"sales_invoice" => $this->table($total_sales_invoice_tr)
+				"prospect_inquiry" => $dealer_total_pros,
+				"sales_order" => $dealer_total_so,
+				"sales_invoice" => $dealer_total_si
 			];
+
 		}
 
 		echo json_encode([
-			"data" => $array
+			"data" => $array,
+			"array" => $db_array
 		]);
 	}
 

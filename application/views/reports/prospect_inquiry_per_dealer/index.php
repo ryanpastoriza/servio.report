@@ -61,32 +61,32 @@
 <script>
 	
 	$(function(){
-		$("#date_to").attr("disabled", "disabled");
+
+		var date    = new Date();
+		var year    = date.getFullYear();
+		var month   = date.getMonth();
+		var lastDay = new Date(year, month + 1, 0).getDate();
+
+		$("#date_from").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-01")
+		$("#date_to").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-" + ("0" + lastDay ).slice(-2))
+		$("#date_to").attr("min",$("#date_from").val());
+
+		$("#date_to").trigger('change')
+
 	});
 
-	$("#date_from").change(function(event) {
+	$("#date_from, #date_to").change(function(event) {
 
 		$("#date_to").attr("min", $(this).val())
-		$("#date_to").removeAttr('disabled');
-
 		var date_from = $("#date_from").val();
 		var date_to   = $("#date_to").val();
-		if($("#date_to").val()){
+
+		if(date_from && date_to){
 			ajax(date_from, date_to);
 		}
 
 	});
 
-
-	$("#date_to").change(function(event) {
-
-		var date_from = $("#date_from").val();
-		var date_to   = $("#date_to").val();
-
-		ajax(date_from, date_to);
-		ajax(date_from, date_to);
-		ajax(date_from, date_to);
-	});
 
 	function ajax(date_from, date_to){
 		
@@ -116,7 +116,10 @@
 	        	{"data": "prospect_inquiry"},
 	        	{"data": "sales_order"},
 	        	{"data": "sales_invoice"},
-			]
+			],
+	        "initComplete":function( settings, json){
+	            console.log(json);
+	        }
       	});
 
 	}
