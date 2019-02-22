@@ -68,7 +68,7 @@
 			
 			<div class="table-responsive">
 
-			<div id="dt-buttons" class="dt-buttons"><a class="dt-button buttons-excel buttons-html5 btn btn-primary fa fa-download" tabindex="0" aria-controls="lead_table" href="#"><span> Excel</span></a></div>
+			<div id="dt-buttons" class="dt-buttons"><a class="dt-button buttons-excel buttons-html5" tabindex="0" aria-controls="lead_table" href="#"><span>Excel</span></a></div>
 
 				<table id="lead_table" class="table table-striped table-bordered table-hover" style="width:100%;font-size:14px;">
 		            <thead>
