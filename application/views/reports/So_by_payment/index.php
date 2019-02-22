@@ -10,7 +10,7 @@
 		<div class="box-body">
 				
 			<div style="margin-bottom:15px;display:flex;align-items: top;" class="row">
-				<div style="display:flex;flex-direction:column" class="col-md-5">
+				<div style="display:flex;flex-direction:column" class="col-md-4">
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
 						<label style="font-weight:bold;margin-right: 50px;">Dealer: </label>
 						<select class="form-control" style="" name="dealer" id="dealer" value="">
@@ -39,7 +39,7 @@
 					</div>
 				</div>
 
-				<div style="display:flex;flex-direction:column;overflow:hidden" class="col-md-5">
+				<div style="display:flex;flex-direction:column;overflow:hidden" class="col-md-4">
 					<div style="margin-bottom: 10px; display:flex;">
 						<label style="font-weight:bold;margin-right: 32px;">From: </label>
 						<input value="<?php echo $data['sdate'] ?>" class="form-control" type="date" id="startDate" style=""></input>
