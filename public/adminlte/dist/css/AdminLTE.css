@@ -10,10 +10,20 @@
  * Core: General Layout Style
  * -------------------------
  */
+
+.xlsx {
+  display: none;
+} 
+
 html,
 body {
   min-height: 100%;
 }
+
+.xlsx{
+  display: none!important;
+}
+
 .layout-boxed html,
 .layout-boxed body {
   height: 100%;
