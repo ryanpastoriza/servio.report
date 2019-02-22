@@ -16,14 +16,12 @@
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
 							    <select name="dealer" id="dealer" name="dealer" class="form-control input-sm">
-									<option value="3f2c1bb1-fc53-7f3e-f6f6-5c3559b9edd0"> MMPC </option>
 							    	<?php foreach($dealers as $value):?>
 								    	<option value="<?= $value->id ?>"> <?= $value->name ?> </option>									
 							    	<?php endforeach?>
 							    </select>
 							</div>
 						</div>
-						<option value="3f2c1bb1-fc53-7f3e-f6f6-5c3559b9edd0"> MMPC </option>
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
@@ -47,14 +45,15 @@
 							    <input date="date_to" type="date" id="date_to" name="date_to" class="form-control input-sm" required="required">
 							</div>
 						</div>
-					</div>
-					<div class="col-lg-4">
 						<div class="form-group row">
 							<label for="submit" class="col-sm-2 col-form-label"></label>
 							<div class="col-sm-10">
 								<button class="btn btn-primary btn-sm pull-right form-control" id="submit">Search</button>
 							</div>
 						</div>
+					</div>
+					<div class="col-lg-4">
+						
 					</div>
 					<div class="col-lg-4"></div>		
 				</form>		
@@ -83,6 +82,14 @@
 	var branch1 ="<?php echo $_SESSION['user']->dealer->branch; ?>";
 	var table;
 	jQuery(window).on("load", function(){
+		var date    = new Date();
+		var year    = date.getFullYear();
+		var month   = date.getMonth();
+		var lastDay = new Date(year, month + 1, 0).getDate();
+
+		$("#date_from").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-01")
+		$("#date_to").val(year + "-" + ("0" + (month +1) ).slice(-2) + "-" + ("0" + lastDay ).slice(-2))
+		$("#date_to").attr("min",$("#date_from").val());
 		var valofText = $("#dealer" + " option").filter(function() {
     		return this.text == dealer1
 		}).val();
@@ -99,8 +106,8 @@
 						return $(this).text() == branch1; 
 					}).prop('selected', true);
 				}
-				var date_from = 'all';
-				var date_to   = 'all';
+				var date_from = $("#date_from").val()
+				var date_to   = $("#date_to").val()
 				var dealer = $("#dealer").val()
 				var branch   = $("#branch").val()
 				
