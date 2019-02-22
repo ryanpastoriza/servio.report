@@ -62,7 +62,7 @@
 			<table id="ipmtable"  class="table table-striped table-bordered" style="width:100%">
 	            <thead>
 	               <tr>
-					   <td style="width:40%">MODEL DESCRIPTION</td>
+					   <td style="width:40%">BASE MODEL</td>
 					   <td>PROSPECT INQUIRY</td>
 					   <td>SALES ORDER</td>
 				   </tr>
