@@ -57,7 +57,7 @@
 	define('RYAN_IP', '192.168.1.11');
 	define('RYAN_USER', 'developers');
 	define('RYAN_PASSWORD', '1234');
-	define('RYAN_DB', 'suitecrm_dms_test');
+	define('RYAN_DB', 'pbaid_db');
 	define('SITE_NAME', 'PBAID REPORTS');
 	
 /*
