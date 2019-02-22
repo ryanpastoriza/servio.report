@@ -2,7 +2,7 @@
 <div class="col-lg-12">
 	<div class="box box-default box-solid">
 		<div class="box-header with-border">
-	  		<h3 class="box-title"><b>Inquiry per Model</b> <small> Report</small></h3>
+	  		<h3 class="box-title"><b>Base Model</b> <small> Report</small></h3>
 
 		  	<div class="box-tools pull-right">
 	    		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -28,7 +28,6 @@
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
 							    <select name="branch" id="branch" name="branch" class="form-control input-sm">
-								<option value='all'> All </option>
 								</select>
 							</div>
 						</div>
@@ -80,20 +79,40 @@
 </div>
 
 <script>
-	
+	var dealer1 ="<?php echo $_SESSION['user']->dealer->dealer; ?>";
+	var branch1 ="<?php echo $_SESSION['user']->dealer->branch; ?>";
 	var table;
 	jQuery(window).on("load", function(){
-		var date_from = 'all';
-		var date_to   = 'all';
-		var dealer = $("#dealer").val()
-		var branch   = $("#branch").val()
-			search(date_from,date_to,dealer,branch);
+		var valofText = $("#dealer" + " option").filter(function() {
+    		return this.text == dealer1
+		}).val();
+		$("#dealer").val(valofText);
+		var id1 = $("#dealer").val();
+		branch_list(id1);
+		
+				if (!branch1) {
+					$("select option").filter(function() {
+						return $(this).text() == ""; 
+					}).prop('selected', true);
+				}else{
+					$("select option").filter(function() {
+						return $(this).text() == branch1; 
+					}).prop('selected', true);
+				}
+				var date_from = 'all';
+				var date_to   = 'all';
+				var dealer = $("#dealer").val()
+				var branch   = $("#branch").val()
+				
+				search(date_from,date_to,dealer,branch);
+		
+		
 	});
 	
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
 			branch_list(id);
-		
+		console.log("branch")
 	});
 
 	$("#submit").click(function(event) {
@@ -165,12 +184,12 @@
 		.done(function(data) {
 
 			if(data){
-				branches += "<option value='' >All</option>";
+				
 				$.each(data, function(index, val) {
-					console.log("each")
 					branches += "<option value='"+val.branch_name+"' >"+ val.branch_name +"</option>";
 				});
 				$("#branch").removeAttr('disabled')
+				branches += "<option value='' >All</option>";
 			}
 			$("#branch").html(branches)
 
@@ -178,6 +197,9 @@
 		.fail(function() {
 			console.log("error");
 		})	
+		$("select option").filter(function() {
+						return $(this).text() == branch1; 
+					}).prop('selected', true);
 	}
 	
 
