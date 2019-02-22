@@ -9,11 +9,11 @@
 		</div>
 		<div class="box-body">
 				
-			<div style="margin-bottom:15px;display:flex;align-items: top;">
-				<div style="display:flex;flex-direction:column">
+			<div style="margin-bottom:15px;display:flex;align-items: top;" class="row">
+				<div style="display:flex;flex-direction:column" class="col-md-5">
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
 						<label style="font-weight:bold;margin-right: 50px;">Dealer: </label>
-						<select class="form-control" style="width:300px;" name="dealer" id="dealer" value="">
+						<select class="form-control" style="" name="dealer" id="dealer" value="">
 							<?php foreach ($data['dealers'] as $key => $value): ?>
 								<option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
 							<?php endforeach ?>
@@ -22,7 +22,7 @@
 
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
 						<label style="font-weight:bold;margin-right: 47px;">Branch: </label>
-						<select class="form-control" style="width:300px;" name="branch" id="branch" value="">
+						<select class="form-control" style="" name="branch" id="branch" value="">
 							<?php foreach ($data['branches'] as $key => $value): ?>
 								<option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
 							<?php endforeach ?>
@@ -30,8 +30,8 @@
 					</div>
 
 					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
-						<label style="font-weight:bold;margin-right: 32px;">SO Status: </label>
-						<select class="form-control" style="width:300px;" name="so_status" id="so_status" value="">
+						<label style="font-weight:bold;margin-right: 47px;">SO Status: </label>
+						<select class="form-control" style="" name="so_status" id="so_status" value="">
 							<?php foreach ($data['so_status'] as $key => $value): ?>
 								<option value="<?php echo $value->status_c ?>"><?php echo $value->status_c ?></option>
 							<?php endforeach ?>
@@ -39,17 +39,17 @@
 					</div>
 				</div>
 
-				<div style="display:flex;flex-direction:column">
-					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
+				<div style="display:flex;flex-direction:column;overflow:hidden" class="col-md-5">
+					<div style="margin-bottom: 10px; display:flex;">
 						<label style="font-weight:bold;margin-right: 32px;">From: </label>
-						<input value="<?php echo $data['sdate'] ?>" class="form-control" type="date" id="startDate" style="margin-right:15px;width:300px;"></input>
+						<input value="<?php echo $data['sdate'] ?>" class="form-control" type="date" id="startDate" style=""></input>
 					</div>
 
-					<div style="margin-right:25px;margin-bottom: 10px; display:flex;align-items:center">
+					<div style="margin-bottom: 10px; display:flex;align-items:center">
 						<label style="font-weight:bold;margin-right: 50px;">To: </label>
-						<input value="<?php echo $data['edate'] ?>" class="form-control" type="date" id="endDate" style="margin-right:15px;width:300px;"></input>
+						<input value="<?php echo $data['edate'] ?>" class="form-control" type="date" id="endDate" style=""></input>
 					</div>
-					<a href="" class="btn btn-primary btn-sm" id="setBtn" style="margin-left:69px;width:300px;">Submit</a>
+					<a href="" class="btn btn-primary btn-sm" id="setBtn" style="margin-left:69px;">Submit</a>
 				</div>
 				
 
@@ -60,10 +60,16 @@
 						<a href="" class="btn btn-primary btn-sm" id="setBtn">Submit</a>
 					</div> -->
 				</div>
+
+				
 			</div>
+
 			
 			
 			<div class="table-responsive">
+
+			<div id="dt-buttons" class="dt-buttons"><a class="dt-button buttons-excel buttons-html5 btn btn-primary fa fa-download" tabindex="0" aria-controls="lead_table" href="#"><span> Excel</span></a></div>
+
 				<table id="lead_table" class="table table-striped table-bordered table-hover" style="width:100%;font-size:14px;">
 		            <thead>
 		            	<tr>
@@ -196,7 +202,11 @@
 
 
 
-	
+	$("#dt-buttons").click(function(e){
+		e.preventDefault();
+		let btn = document.getElementsByClassName('button-default xlsx')[0];
+		btn.click();
+	});
 
 
 
