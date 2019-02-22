@@ -8,7 +8,7 @@ class Ipm extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('main_model');
-		set_header_title("Reports - Inquiry per Model");
+		set_header_title("Reports - Base Model");
 	}
 	
 
@@ -21,7 +21,7 @@ class Ipm extends MY_Controller {
 		$dealers    = $this->main_model->dealers();
 
 		$content = $this->load->view("ipm" ,["dealers" => $dealers], TRUE);
-		$this->put_contents($content,"Inquiry per Model");
+		$this->put_contents($content,"Base Model");
 	}
 	public function branch(){
 		echo $this->main_model->branch();
