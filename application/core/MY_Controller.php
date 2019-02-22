@@ -83,6 +83,11 @@ class MY_Controller extends CI_Controller {
 										asset_url('plugins/jquery.form.min.js'),
 
 										asset_url('plugins/jquery.printThis.js'),
+										asset_url('plugins/table_export/tableHTMLExport.js'),
+
+										asset_url('plugins/table_export/xlsx.core.min.js'),
+										asset_url('plugins/table_export/FileSaver.js'),
+										asset_url('plugins/table_export/tableexport.js'),
 									],
 					'rightNav' => ["<a href='#'><span>{$this->user_info->fullname}</span></a>"]
 				];
