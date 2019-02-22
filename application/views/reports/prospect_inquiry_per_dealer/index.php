@@ -116,7 +116,10 @@
 	        	{"data": "prospect_inquiry"},
 	        	{"data": "sales_order"},
 	        	{"data": "sales_invoice"},
-			]
+			],
+	        "initComplete":function( settings, json){
+	            console.log(json);
+	        }
       	});
 
 	}

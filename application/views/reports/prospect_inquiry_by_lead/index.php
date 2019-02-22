@@ -90,7 +90,7 @@
 		                    <th rowspan="2">SOURCE OF SALE</th>
 							<th colspan="2"> TOTAL </th>
 							<?php foreach($base_model as $value): ?>
-								<th colspan="2"> <?= $value->name ?> </th>
+								<th colspan="2" class="text-center"> <?= $value->name ?> </th>
 							<?php endforeach ?>
 		                </tr>
 		                <tr>
@@ -230,9 +230,9 @@
 	        },
 			dom: 'Bfrtip',
 	        buttons: [
-	            { extend: 'excel', className: 'btn btn-primary fa fa-download', text: ' Excel', exportOptions:
-	                 { columns: ':visible' }
-	            }
+	            { 	extend: 'excelHtml5', className: 'btn btn-primary fa fa-download', text: ' Excel', exportOptions:
+	                 { columns: ':visible', orderCellsTop: true }
+	            },
            	],
 	        destroy: true,
 	        "bPaginate": false,
