@@ -73,7 +73,7 @@
 		            <tbody>	            	
 		            	<?php foreach ($data['pm'] as $key => $value): ?>
 		            		<tr>
-		            			<td><?php echo $value->name ?></td>
+		            			<td><?php echo strtoupper(str_replace('_', ' ', $value->name)) ?></td>
 		            			<td><?php echo $value->total ?></td>
 		            			<td><?php echo $value->pct ?>%</td>
 		            			<?php foreach ($value->bm as $skey => $svalue): ?>
