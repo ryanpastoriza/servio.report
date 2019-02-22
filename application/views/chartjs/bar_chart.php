@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:36:20
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-22 11:41:14
+ * @Last Modified time: 2019-02-22 16:56:23
  */
 
 	
@@ -28,6 +28,7 @@ var myChart = new Chart(ctx, {
     },
     bezierCurve : false,
     options: {
+        maintainAspectRatio: false,
         scales: {
             yAxes: [{
                 ticks: {

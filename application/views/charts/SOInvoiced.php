@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 17:03:07
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 17:35:29
+ * @Last Modified time: 2019-02-22 16:57:21
  */
 ?>
 
@@ -36,7 +36,7 @@
 												'<button type="button" chart="line" chart-name="SOInvoiced" class="soInvoiced-chart-selector btn btn-box-tool bg-gray" ><i class="fa fa-line-chart"></i></button>',
 												'<button type="button" chart="bar" chart-name="SOInvoiced" class="soInvoiced-chart-selector btn btn-box-tool " ><i class="fa fa-bar-chart"></i></button>',
 											],
-								'body' =>"<div id='soInvoiced-chart'>".$dashboard->SOInvoiced_chart('line', TRUE)."</div>"
+								'body' =>"<div id='soInvoiced-chart' style='min-height:300px'>".$dashboard->SOInvoiced_chart('line', TRUE)."</div>"
 							]);
 
 ?>

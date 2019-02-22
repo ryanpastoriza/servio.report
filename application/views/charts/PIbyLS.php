@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-08 15:40:46
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-22 11:40:31
+ * @Last Modified time: 2019-02-22 16:57:01
  */
 ?>
 
@@ -37,7 +37,7 @@
 												'<button type="button" chart="line" class="pils-chart-selector btn btn-box-tool bg-gray" ><i class="fa fa-line-chart"></i></button>',
 												'<button type="button" chart="bar" class="pils-chart-selector btn btn-box-tool " ><i class="fa fa-bar-chart"></i></button>',
 											],
-								'body' =>"<div id='pils-chart'>".$dashboard->PI_by_LS('line', TRUE)."</div>"
+								'body' =>"<div id='pils-chart' style='min-height:300px'>".$dashboard->PI_by_LS('line', TRUE)."</div>"
 							]);
 
 ?>
