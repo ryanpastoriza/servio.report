@@ -58,7 +58,7 @@
 	define('RYAN_USER', 'developers');
 	define('RYAN_PASSWORD', '1234');
 	define('RYAN_DB', 'pbaid_db');
-	define('SITE_NAME', 'SERVIO REPORTS');
+	define('SITE_NAME', 'PBAID REPORTS');
 	
 /*
  *---------------------------------------------------------------

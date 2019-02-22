@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="login-box">
 			<div class="login-logo">
 			<!-- <img src="<?php //echo base_url('public/images/dms_header.png'); ?>" style="width: 100%;" /> -->
-				<a href=""><b>SERVIO</b>REPORTS</a>
+				<a href=""><b><?= SITE_NAME; ?></a>
 			</div>
 			<!-- /.login-logo -->
 			<div class="login-box-body">
