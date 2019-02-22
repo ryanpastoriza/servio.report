@@ -10,6 +10,11 @@
  * Core: General Layout Style
  * -------------------------
  */
+
+.xlsx {
+  display: none;
+} 
+
 html,
 body {
   min-height: 100%;
