@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-18 16:11:26
+ * @Last Modified time: 2019-02-22 11:43:02
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -160,6 +160,25 @@ class Dashboard extends MY_Controller {
 			];
 
 		return $this->create_chart($data, $str);
+	}
+	function PI_by_status(){
+
+		$this->load->model('pi_prospect_inquiry_cstm');
+		$res  = new Pi_prospect_inquiry_cstm;
+		$res = $res->by_LS([]);
+
+
+		$data = [
+					'dataset' 	=> $res,
+					'chartType' => 'pie',
+					'chartId' => 'PiByLeadSource',
+					'sumField' => 'total',
+					'xAxis' => "month",
+					'labelField' => "ls_name"
+
+			];
+
+		return $this->create_chart($data, TRUE);
 	}
 	function PI_by_model($chart, $str = FALSE, $cond = []){
 

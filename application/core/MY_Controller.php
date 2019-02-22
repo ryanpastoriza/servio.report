@@ -5,7 +5,7 @@
  * @Date:   2019-02-06 10:46:14
  * @Last Modified by:   IanJayBronola
 
- * @Last Modified time: 2019-02-20 14:34:06
+ * @Last Modified time: 2019-02-20 14:37:35
 
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -115,7 +115,6 @@ class MY_Controller extends CI_Controller {
 										'Reports' => 
 										['icon' => 'fa fa-line-chart', 
 										'link' => [
-													// 'Prospect Inquiry Details' => base_url('reports/prospect_inquiry_details'),
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
 													'Prospect Inquiry by Mode of Payment' => '',
 													'Inquiry per Dealer' => '',
@@ -123,8 +122,6 @@ class MY_Controller extends CI_Controller {
 													'Prospect Inquiry by Mode of Payment' => base_url('reports/payment_mode'),
 													'Inquiry per Dealer' => base_url('reports/inquiry_per_dealer'),
 													'Inquiry per Model' => base_url('ipm/inquiry_per_model'),
-													// 'Sales Summary per Dealer' => '',
-													// 'Sales Summary per Model' => '',
 													'Sales Order by Lead Source' => base_url('so_by_leads'),
 													'Sales Order by Payment Mode' => base_url('so_by_payment'),
 
