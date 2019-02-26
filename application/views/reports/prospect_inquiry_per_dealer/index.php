@@ -15,7 +15,7 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">From: *</label>
 							<div class="col-sm-10">
-							    <input type="date" id="date_from" class="form-control input-sm" required="required">
+							    <input type="date" id="date_from" class="form-control" required="required">
 							</div>
 						</div>
 					</div>
@@ -23,7 +23,7 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">To: *</label>
 							<div class="col-sm-10">
-							    <input type="date" id="date_to" class="form-control input-sm" required="required">
+							    <input type="date" id="date_to" class="form-control" required="required">
 							</div>
 						</div>	
 					</div>

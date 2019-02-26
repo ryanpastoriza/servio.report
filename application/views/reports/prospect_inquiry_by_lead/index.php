@@ -15,7 +15,7 @@
 						<div class="form-group row">
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
-							    <select name="dealer" id="dealer" class="form-control input-sm">
+							    <select name="dealer" id="dealer" class="form-control">
 							    	<!-- <option disabled selected>Click to select</option> -->
 							    	<?php foreach( $dealers["dealers"] as $key => $value ): ?>
 							    		<?php if( strtolower($key) == "mmpc" ): ?>
@@ -31,7 +31,7 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
-							    <select name="branch" id="branch" class="form-control input-sm">
+							    <select name="branch" id="branch" class="form-control">
 									<?php if( count($all_branches) == 1 ): ?>
 										<option value="<?= $all_branches[0]->id ?>" selected> <?= $all_branches[0]->name ?> </option>
 									<?php else: ?>
@@ -47,7 +47,7 @@
 						<div class="form-group row">
 							<label for="dealer" class="col-sm-2 col-form-label">Status: </label>
 							<div class="col-sm-10">
-							    <select name="status" id="status" class="form-control input-sm">
+							    <select name="status" id="status" class="form-control">
 							    	<option value="">All</option>
 							    	<option value="open">Open</option>
 							    	<option value="qualified">Qualified</option>
@@ -62,13 +62,13 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">From: *</label>
 							<div class="col-sm-10">
-							    <input date="date_from" type="date" id="date_from" class="form-control input-sm" required="required">
+							    <input date="date_from" type="date" id="date_from" class="form-control" required="required">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">To: *</label>
 							<div class="col-sm-10">
-							    <input date="date_to" type="date" id="date_to" class="form-control input-sm" required="required">
+							    <input date="date_to" type="date" id="date_to" class="form-control" required="required">
 							</div>
 						</div>
 						<div class="form-group row">
