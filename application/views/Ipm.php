@@ -15,7 +15,7 @@
 						<div class="form-group row">
 							<label for="dealer" class="col-sm-2 col-form-label">Dealer:  </label>
 							<div class="col-sm-10">
-							    <select name="dealer" id="dealer" name="dealer" class="form-control input-sm">
+							    <select name="dealer" id="dealer" name="dealer" class="form-control">
 							    	<?php foreach($dealers as $value):?>
 								    	<option value="<?= $value->id ?>"> <?= $value->name ?> </option>									
 							    	<?php endforeach?>
@@ -25,7 +25,7 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label">Branch: </label>
 							<div class="col-sm-10">
-							    <select name="branch" id="branch" name="branch" class="form-control input-sm">
+							    <select name="branch" id="branch" name="branch" class="form-control">
 								</select>
 							</div>
 						</div>
@@ -36,13 +36,13 @@
 						<div class="form-group row">
 							<label for="date_from" class="col-sm-2 col-form-label">From:</label>
 							<div class="col-sm-10">
-							    <input date="date_from" type="date" id="date_from" name="date_from" class="form-control input-sm" required="required">
+							    <input date="date_from" type="date" id="date_from" name="date_from" class="form-control" required="required">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label for="date_to" class="col-sm-2 col-form-label">To:</label>
 							<div class="col-sm-10">
-							    <input date="date_to" type="date" id="date_to" name="date_to" class="form-control input-sm" required="required">
+							    <input date="date_to" type="date" id="date_to" name="date_to" class="form-control" required="required">
 							</div>
 						</div>
 						<div class="form-group row">
