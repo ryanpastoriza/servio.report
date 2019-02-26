@@ -60,13 +60,13 @@
 
 					<div class="col-lg-4">
 						<div class="form-group row">
-							<label for="branch" class="col-sm-2 col-form-label">From: *</label>
+							<label for="branch" class="col-sm-2 col-form-label">From:</label>
 							<div class="col-sm-10">
 							    <input date="date_from" type="date" id="date_from" class="form-control" required="required">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="branch" class="col-sm-2 col-form-label">To: *</label>
+							<label for="branch" class="col-sm-2 col-form-label">To:</label>
 							<div class="col-sm-10">
 							    <input date="date_to" type="date" id="date_to" class="form-control" required="required">
 							</div>

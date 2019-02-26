@@ -54,7 +54,7 @@
 						<label style="font-weight:bold;margin-right: 50px;">To: </label>
 						<input value="<?php echo $data['edate'] ?>" class="form-control" type="date" id="endDate" style=""></input>
 					</div>
-					<a href="" class="btn btn-primary btn-sm" id="setBtn" style="margin-left:69px;">Submit</a>
+					<a href="" class="btn btn-primary" id="setBtn" style="margin-left:69px;">Submit</a>
 
 				</div>
 				
