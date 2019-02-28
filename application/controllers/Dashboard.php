@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-22 17:22:37
+ * @Last Modified time: 2019-02-26 17:07:27
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -63,7 +63,7 @@ class Dashboard extends MY_Controller {
 			$lss[] = (object)['id' => $value->id, 'text' => $value->name];
 		}
 		foreach ($mds as $value) {
-			$moDes[] = (object)['id' => $value->id, 'text' => $value->name];
+			$moDes[] = (object)['id' => $value->name, 'text' => $value->name];
 		}
 		foreach ($bms as $value) {
 			$baseModelSelect[] = (object)['id' => $value->name, 'text' => $value->name];
@@ -429,7 +429,7 @@ class Dashboard extends MY_Controller {
 			$counter = 0;
 			foreach ($cond['vehicle_descriptions'] as $value) {
 				$counter++;
-				$qry .= " jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = '{$value}' ";
+				$qry .= " jump_model_description.name = '{$value}' ";
 				$qry .= $counter < count($cond['vehicle_descriptions']) ? " OR ": "";
 			}
 
@@ -527,7 +527,7 @@ class Dashboard extends MY_Controller {
 			$counter = 0;
 			foreach ($cond['vehicle_descriptions'] as $value) {
 				$counter++;
-				$qry .= " jump_model_description.id = '{$value}' ";
+				$qry .= " jump_model_description.name = '{$value}' ";
 				$qry .= $counter < count($cond['vehicle_descriptions']) ? " OR ": "";
 			}
 
@@ -585,7 +585,7 @@ class Dashboard extends MY_Controller {
 
 			foreach ($moDes as $value2) {
 				if(!in_array($value2->id, $all_ids)){
-					$all_model_descriptions[] = (object)['id' => $value2->id, 'text' => $value2->name];
+					$all_model_descriptions[] = (object)['id' => $value2->name, 'text' => $value2->name];
 					$all_ids[] = $value2->id;
 				}
 			}

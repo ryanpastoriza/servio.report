@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 19:24:09
+ * @Last Modified time: 2019-02-26 16:31:44
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -44,6 +44,7 @@ class Pi_prospect_inquiry_cstm extends My_Model {
         					['Jump_base_model_pi_prospect_inquiry_1_c', "Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"],
         					['jump_base_model',"Jump_base_model_pi_prospect_inquiry_1_c.jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = jump_base_model.id","INNER"],
         					['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
+		        			['jump_model_description', "jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id", "INNER"],
         					['lead_lead_source_pi_prospect_inquiry_1_c', "lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb = pi_prospect_inquiry.id", "INNER"]
         				];
 
@@ -77,6 +78,7 @@ class Pi_prospect_inquiry_cstm extends My_Model {
 					['Lead_lead_source_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
         			['jump_base_model',"Jump_base_model_pi_prospect_inquiry_1_c.jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = jump_base_model.id","INNER"],
         			['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
+        			['jump_model_description', "jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id", "INNER"],
 					['lead_lead_source', "lead_lead_source.id = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1lead_lead_source_ida", "INNER"]];
 
 		$conditions = $conditions ?  $conditions." AND (pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0  AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0)" : "pi_prospect_inquiry.deleted = 0 AND Jump_base_model_pi_prospect_inquiry_1_c.deleted = 0 AND jump_model_description_pi_prospect_inquiry_1_c.deleted = 0 AND lead_lead_source_pi_prospect_inquiry_1_c.deleted = 0";
@@ -103,6 +105,7 @@ class Pi_prospect_inquiry_cstm extends My_Model {
 					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"],
 					['Lead_lead_source_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = lead_lead_source_pi_prospect_inquiry_1_c.lead_lead_source_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
         			['jump_model_description_pi_prospect_inquiry_1_c', "jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb = pi_prospect_inquiry.id", "INNER"],
+        			['jump_model_description', "jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id", "INNER"],
 					];
 
 
@@ -125,7 +128,10 @@ class Pi_prospect_inquiry_cstm extends My_Model {
 		$this->toJoin = [
         			['jump_base_model',"Jump_base_model_pi_prospect_inquiry_1_c.jump_base_model_pi_prospect_inquiry_1jump_base_model_ida = jump_base_model.id","INNER"],
 					['Jump_base_model_pi_prospect_inquiry_1_c', $this::DB_TABLE.".id_c = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1pi_prospect_inquiry_idb", "INNER" ],
-					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"]];
+					['Jump_base_model', "Jump_base_model.id = Jump_base_model_pi_prospect_inquiry_1_c.Jump_base_model_pi_prospect_inquiry_1jump_base_model_ida", "INNER"],
+		        	['jump_model_description', "jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id", "INNER"],
+
+				];
 
 
 		$res = $this->search();

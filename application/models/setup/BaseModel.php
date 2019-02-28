@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-22 17:22:18
+ * @Last Modified time: 2019-02-26 16:18:15
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -23,6 +23,8 @@ class BaseModel extends MY_Model {
   							['jump_base_model_jump_model_description_1_c', "jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida = jump_base_model.id", "INNER"],
   							['jump_model_description', "jump_base_model_jump_model_description_1_c.jump_base_ae81ription_idb = jump_model_description.id", "INNER"],
   						];
+
+      $this->sqlQueries['toGroup'] = "jump_model_description.name";
   		return $this->search("jump_model_description.name like '%{$like}%'");
   	}
 
