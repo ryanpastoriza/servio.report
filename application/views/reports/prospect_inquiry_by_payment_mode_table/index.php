@@ -74,7 +74,7 @@
 						<div class="form-group row">
 							<label for="branch" class="col-sm-2 col-form-label"></label>
 							<div class="col-sm-10">
-								<button class="btn btn-primary btn-sm pull-right form-control" id="submit">Submit</button>
+								<button class="btn btn-primary btn-sm pull-right form-control" id="submit">Search</button>
 							</div>
 						</div>
 					</div>
