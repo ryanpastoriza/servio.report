@@ -62,9 +62,9 @@
 			<table id="ipmtable"  class="table table-striped table-bordered" style="width:100%">
 	            <thead>
 	               <tr>
-					   <td style="width:40%">BASE MODEL</td>
-					   <td>PROSPECT INQUIRY</td>
-					   <td>SALES ORDER</td>
+					   <th style="width:40%">BASE MODEL</th>
+					   <th>PROSPECT INQUIRY</th>
+					   <th>SALES ORDER</th>
 				   </tr>
 	            </thead>
 
@@ -126,7 +126,6 @@
 	$("#dealer").change(function(event) {
 		var id = $(this).val();
 			branch_list(id);
-		console.log("branch")
 	});
 
 	$("#submit").click(function(event) {
