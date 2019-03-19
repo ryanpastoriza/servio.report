@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-11 10:58:40
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-15 19:25:56
+ * @Last Modified time: 2019-03-19 17:10:33
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -127,7 +127,38 @@ class Ddms_sales_order extends MY_Model {
 		$res = $this->search($conditions);
 
 		return $res;
+	}
+	function by_group($conditions = false){
+		$this->selects = [$this::DB_TABLE.".".$this::DB_TABLE_PK, "CONCAT('WK ', WEEK(".$this::DB_TABLE.".date_entered, 3) -
+                  	WEEK(".$this::DB_TABLE.".date_entered - INTERVAL DAY(".$this::DB_TABLE.".date_entered)-1 DAY, 3) + 1 , ' ' , DATE_FORMAT(".$this::DB_TABLE.".date_entered, '%b %Y')) as month",
+                  	'SUM('.$this::DB_TABLE.".".$this::DB_TABLE_PK.') as total', "group_dealer_by_region.name as region_name", "users_cstm.jump_dealer_id_c as dealer_id"
+              		];
 
+        $this->sqlQueries['order_type'] = "asc";
+		$this->sqlQueries['order_field'] = $this::DB_TABLE.".date_entered";
+		$this->sqlQueries['toGroup'] = "month, region_name";
+		$this->toJoin = [
+							['Ddms_sales_order_cstm', $this::DB_TABLE.".id = Ddms_sales_order_cstm.id_c", "INNER" ],
+							['users', "users.id = ddms_sales_order.assigned_user_id", "INNER"],
+        					['users_cstm', "users_cstm.id_c = users.id", "INNER"],
+        					['lead_lead_source_ddms_sales_order_1_c', "lead_lead_source_ddms_sales_order_1_c.Lead_lead_source_ddms_sales_order_1ddms_sales_order_idb = ddms_sales_order.id", "INNER"],
+		        			['jump_model_description_ddms_sales_order_1_c', "jump_model_description_ddms_sales_order_1_c.jump_model_description_ddms_sales_order_1ddms_sales_order_idb = Ddms_sales_order_cstm.id_c", "INNER"],
+		        			['jump_model_description', "jump_model_description.id = jump_model_description_ddms_sales_order_1_c.jump_model7e53ription_ida", "INNER"],
+		        			['jump_base_model_jump_model_description_1_c', "jump_base_model_jump_model_description_1_c.jump_base_ae81ription_idb = jump_model_description.id", "INNER"],
+		        			['jump_base_model', "jump_base_model_jump_model_description_1_c.jump_base_model_jump_model_description_1jump_base_model_ida = jump_base_model.id", "INNER"],
+		        			['group_dealer_by_region_jump_dealer_1_c', 'group_dealer_by_region_jump_dealer_1_c.group_dealer_by_region_jump_dealer_1jump_dealer_idb = users_cstm.jump_dealer_id_c',"LEFT"],
+		        			['group_dealer_by_region', 'group_dealer_by_region.id = group_dealer_by_region_jump_dealer_1_c.group_dealer_by_region_jump_dealer_1group_dealer_by_region_ida',"LEFT"],
+						];
+
+
+		$conditions = $conditions ?  $conditions." AND (ddms_sales_order.deleted = 0 AND jump_model_description_ddms_sales_order_1_c.deleted = 0 AND group_dealer_by_region.id != '' )" : "ddms_sales_order.deleted = 0 AND jump_model_description_ddms_sales_order_1_c.deleted = 0 AND group_dealer_by_region.id != '' ";
+
+
+		// AND group_dealer_by_region.id != '' 
+
+		$res = $this->search($conditions);
+
+		return $res;
 	}
 }
 

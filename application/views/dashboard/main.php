@@ -4,13 +4,14 @@
  * @Author: ET
  * @Date:   2019-02-05 17:29:08
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-22 15:48:48
+ * @Last Modified time: 2019-03-19 16:09:38
  */
 
 
 $prospectInquiryContent = $this->load->view('charts/PIbyMOP', [], True);
 $prospectInquiryContent .=  $this->load->view('charts/PIbyLS', [], True);
 $prospectInquiryContent .=  $this->load->view('charts/PIperModel', [], True);
+$BPRContent  = $this->load->view('charts/BPR',[], TRUE);
 
 
 $soContent = $this->load->view('charts/SObyMOP', [], True);
@@ -42,6 +43,10 @@ $siContent = $this->load->view('charts/SOInvoiced', [], True);
 
 	$accord_vars = ['header' => '',
 						'items' => [
+
+										['title' => "Average SE Booking per Region",
+										'content' => $BPRContent
+										],
 										['title' => "Prospect Inquiry",
 										'content' => $prospectInquiryContent
 										],
