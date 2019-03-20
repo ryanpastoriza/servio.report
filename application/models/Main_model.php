@@ -24,6 +24,11 @@ class Main_model extends CI_Model
 		$query = $this->db->query("SELECT * from jump_dealer WHERE deleted = 0")->result();
 		return $query;	
 	}
+	function region(){
+		
+		$query = $this->db->query("SELECT * from group_dealer_by_region WHERE deleted = 0")->result();
+		return $query;	
+	}
 	function getmmpc(){
 		$arr1['name']='MMPC';
 		return $this->db->get_where('jump_dealer',$arr1)->row('id');	
@@ -47,6 +52,65 @@ class Main_model extends CI_Model
 									where jump_dealer.id = '{$dealer_id}'")->result();
 		return json_encode($query);
 	}
+	function dealer1(){
+
+		$region_id = $_GET['region_id'];
+		if ($region_id=="all") {
+			$query = $this->db->query("SELECT jump_dealer.id, jump_dealer.`name` AS ` dealer_name` from jump_dealer WHERE deleted = 0")->result();
+			return json_encode($query);
+		} else {
+			$query = $this->db->query("	SELECT
+			jump_dealer.id,
+			jump_dealer.`name` AS ` dealer_name`
+			FROM
+			group_dealer_by_region_jump_dealer_1_c
+			INNER JOIN jump_dealer ON group_dealer_by_region_jump_dealer_1_c.group_dealer_by_region_jump_dealer_1jump_dealer_idb = jump_dealer.id
+			WHERE
+			group_dealer_by_region_jump_dealer_1_c.group_dealer_by_region_jump_dealer_1group_dealer_by_region_ida = '{$region_id}' AND
+			group_dealer_by_region_jump_dealer_1_c.deleted = '0' AND
+			jump_dealer.deleted = '0'")->result();
+			return json_encode($query);
+		}
+		
+		
+	}
+	function allsem($bm){
+		
+		$query = $this->db->query("SELECT
+		Count(users.user_name) as `allse`
+		FROM
+		users_cstm
+		INNER JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+		INNER JOIN users ON users_cstm.id_c = users.id
+		WHERE
+		jump_dealer.`id` = '{$bm}' AND
+		users.title = 'Sales Executive'
+		")->row('allse');
+
+		return ($query);
+	}
+	function allavem($date_from,$date_to,$bm){
+		
+		$query = $this->db->query("SELECT
+		Count(ddms_sales_order.id) as `o`
+		FROM
+				pi_prospect_inquiry
+				INNER JOIN jump_model_description_pi_prospect_inquiry_1_c ON pi_prospect_inquiry.id = jump_model_description_pi_prospect_inquiry_1_c.jump_modeldc9einquiry_idb
+				INNER JOIN jump_model_description ON jump_model_description_pi_prospect_inquiry_1_c.jump_modela8cbription_ida = jump_model_description.id
+				INNER JOIN users ON pi_prospect_inquiry.created_by = users.id
+				INNER JOIN users_cstm ON users.id = users_cstm.id_c
+				INNER JOIN jump_dealer ON users_cstm.jump_dealer_id_c = jump_dealer.id
+				INNER JOIN jump_branch ON users_cstm.jump_branch_id_c = jump_branch.id
+				INNER JOIN pi_prospect_inquiry_ddms_sales_order_1_c ON pi_prospect_inquiry.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1pi_prospect_inquiry_ida
+				INNER JOIN ddms_sales_order ON ddms_sales_order.id = pi_prospect_inquiry_ddms_sales_order_1_c.pi_prospect_inquiry_ddms_sales_order_1ddms_sales_order_idb
+		WHERE
+		ddms_sales_order.date_entered BETWEEN '{$date_from}' AND '{$date_to}' AND
+		jump_dealer.`id` = '{$bm}' AND
+		ddms_sales_order.deleted = '0'")->row('o');
+
+		return ($query);
+	}
+
 	function getpi($date_from,$date_to,$dealer,$branch,$bm){
 		$basemodel = $bm;
 		if ($date_from=="all") {

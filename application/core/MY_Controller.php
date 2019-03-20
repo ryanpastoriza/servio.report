@@ -116,14 +116,12 @@ class MY_Controller extends CI_Controller {
 										['icon' => 'fa fa-line-chart', 
 										'link' => [
 													'Prospect Inquiry by Lead Source' => base_url('reports/lead_source'),
-													'Prospect Inquiry by Mode of Payment' => '',
-													'Inquiry per Dealer' => '',
-													'Inquiry per Model' => '',
 													'Prospect Inquiry by Mode of Payment' => base_url('reports/payment_mode'),
 													'Inquiry per Dealer' => base_url('reports/inquiry_per_dealer'),
 													'Inquiry per Model' => base_url('ipm/inquiry_per_model'),
 													'Sales Order by Lead Source' => base_url('so_by_leads'),
 													'Sales Order by Payment Mode' => base_url('so_by_payment'),
+													'Reports for Dealers' => base_url('rd/dealers'),
 
  												  ]
 
