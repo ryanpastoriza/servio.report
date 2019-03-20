@@ -4,7 +4,7 @@
  * @Author: IanJayBronola
  * @Date:   2019-02-07 16:23:37
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-19 10:43:36
+ * @Last Modified time: 2019-03-19 17:07:36
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -38,6 +38,10 @@ class Dealer extends MY_Model {
             return $branch->search(['jump_branch_cstm.jump_dealer_id_c' => $this->id]);
         }
     }
+    function code(){
+        
+
+    }
 
     function getDealerBranch($dealer = null, $branch = null) {
 
@@ -70,5 +74,13 @@ class Dealer extends MY_Model {
         
         return $dealerArray;
     }
-        
+    function totalSE(){
+        $this->load->model('users');
+        $users  = new Users;
+        $users->toJoin = [['users_cstm', "users_cstm.id_c = users.id", "LEFT"]];
+        $all =  $users->search(['jump_dealer_id_c' => $this->id, 'users.title' => "Sales Executive"]);
+
+        return count($all);
+
+    }
 }

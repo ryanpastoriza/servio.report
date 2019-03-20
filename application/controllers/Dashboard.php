@@ -4,7 +4,7 @@
  * @Author: ET
  * @Date:   2019-02-04 15:55:06
  * @Last Modified by:   IanJayBronola
- * @Last Modified time: 2019-02-26 17:07:27
+ * @Last Modified time: 2019-03-19 17:08:30
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -12,12 +12,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends MY_Controller {
 
 	function test(){
-		$dealer = new Dealer;
-		$dealer->load('3f2c1bb1-fc53-7f3e-f6f6-5c3559b9edd0');
+		$this->SO_PER_GROUP('line');
 
-		echo "<pre>";
-			print_r($dealer);
-		echo "</pre>";
 	}
 	function __construct()
 	{
@@ -594,6 +590,44 @@ class Dashboard extends MY_Controller {
 		}
 
 		echo json_encode($all_model_descriptions);
+	}
+	function SO_PER_GROUP($chart, $str = false, $cond = []){
+		$this->load->model('dealer');
+
+		if (count($_POST) > 0 ) {
+			if($_POST['from_date'] == '' || $_POST['to_date'] == ''){
+				$_POST['from_date'] = date('Y-m-01');
+				$_POST['to_date'] = date('Y-m-t');
+			}
+			$cond = $this->refine_condition_for_SO($_POST);
+		}
+		else{
+			$thPost = ['from_date' => date('Y-m-01'),
+						'to_date' => date('Y-m-t')];
+			$cond = $this->refine_condition_for_SO($thPost);
+		}
+		$this->load->model('Ddms_sales_order');
+		$res  = new Ddms_sales_order;
+		$res = $res->by_group($cond);
+
+		foreach ($res as $value) {
+			$dealer = new Dealer;
+			$dealer->load($value->dealer_id);
+			$seCount = $dealer->totalSE();
+			$value->total = $seCount > 0 ?  $value->total / $seCount : 0;
+		}
+
+
+		$data = [
+				'dataset' 		=> $res,
+				'chartType' 	=> $chart,
+				'chartId' 		=> 'SPG',
+				'sumField' 		=> 'total',
+				'xAxis' 		=> "month",
+				'labelField' 	=> "region_name"
+			];
+
+		return $this->create_chart($data, $str);
 	}
 	public function create_chart($data, $str = FALSE){
 		return $this->load->view('chartjs/bar_chart', $data, $str);
